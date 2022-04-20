@@ -26,6 +26,7 @@ namespace PriceStalkerScrape
         {
             InitializeComponent();
             LoadData();
+            FillComboBox();
         }
         private void Initialize(string title, string price, string rating, string summary)
         {
@@ -143,9 +144,22 @@ namespace PriceStalkerScrape
                 System.Windows.MessageBox.Show(ex.Message);
             }
         }
-
+        public void FillComboBox()
+        {
+            cbProducts.DisplayMember = "Text";
+            cbProducts.ValueMember = "Value";
+            using (var context = new Data.StalkerEntities())
+            {
+                var data = context.tblProducts.ToList();
+                foreach (var item in data)
+                {
+                    cbProducts.Items.Add(new ComboboxItem() {Text = item.Title.ToString(),Value =item.Id });
+                }
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
+            chart1.Series.Clear();
             chart1.Series.Add("test");
             //chart1.Series.Add("test2");
             //chart1.Series["test"].Points.AddXY("test1",12);
@@ -159,6 +173,23 @@ namespace PriceStalkerScrape
                     chart1.Series["test"].Points.AddXY(item.Date.ToString(), item.Price);
                 }
             }
+        }
+
+        private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            //ComboBoxItem selectedCar = (ComboBoxItem)cbProducts.SelectedItem;
+            //int selecteVal = Convert.ToInt32(selectedCar.Content);
+            System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
+        }
+    }
+    public class ComboboxItem
+    {
+        public string Text { get; set; }
+        public object Value { get; set; }
+
+        public override string ToString()
+        {
+            return Text;
         }
     }
 }
