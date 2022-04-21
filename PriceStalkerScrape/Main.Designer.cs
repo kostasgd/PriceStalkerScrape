@@ -28,9 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.lblProductTitle = new System.Windows.Forms.Label();
             this.lblProductPrice = new System.Windows.Forms.Label();
             this.lblProductRating = new System.Windows.Forms.Label();
@@ -42,18 +39,18 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.cbProducts = new System.Windows.Forms.ComboBox();
+            this.button1 = new System.Windows.Forms.Button();
             this.txtLink = new System.Windows.Forms.TextBox();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.button1 = new System.Windows.Forms.Button();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.cbProducts = new System.Windows.Forms.ComboBox();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -82,11 +79,11 @@
             // 
             // txtDescription
             // 
-            this.txtDescription.Location = new System.Drawing.Point(8, 167);
+            this.txtDescription.Location = new System.Drawing.Point(8, 114);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.ReadOnly = true;
-            this.txtDescription.Size = new System.Drawing.Size(821, 315);
+            this.txtDescription.Size = new System.Drawing.Size(822, 368);
             this.txtDescription.TabIndex = 12;
             // 
             // panel1
@@ -165,8 +162,8 @@
             // 
             // tabPage3
             // 
+            this.tabPage3.Controls.Add(this.elementHost1);
             this.tabPage3.Controls.Add(this.cbProducts);
-            this.tabPage3.Controls.Add(this.chart1);
             this.tabPage3.Controls.Add(this.button1);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
@@ -174,6 +171,26 @@
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // cbProducts
+            // 
+            this.cbProducts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbProducts.FormattingEnabled = true;
+            this.cbProducts.Location = new System.Drawing.Point(8, 19);
+            this.cbProducts.Name = "cbProducts";
+            this.cbProducts.Size = new System.Drawing.Size(574, 32);
+            this.cbProducts.TabIndex = 2;
+            this.cbProducts.SelectedIndexChanged += new System.EventHandler(this.cbProducts_SelectedIndexChanged);
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(599, 19);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(171, 32);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "Load";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtLink
             // 
@@ -197,41 +214,14 @@
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
             this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
             // 
-            // button1
+            // elementHost1
             // 
-            this.button1.Location = new System.Drawing.Point(599, 19);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(171, 32);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Load";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // chart1
-            // 
-            chartArea3.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea3);
-            legend3.Name = "Legend1";
-            this.chart1.Legends.Add(legend3);
-            this.chart1.Location = new System.Drawing.Point(8, 70);
-            this.chart1.Name = "chart1";
-            series3.ChartArea = "ChartArea1";
-            series3.Legend = "Legend1";
-            series3.Name = "Series1";
-            this.chart1.Series.Add(series3);
-            this.chart1.Size = new System.Drawing.Size(574, 234);
-            this.chart1.TabIndex = 1;
-            this.chart1.Text = "chart1";
-            // 
-            // cbProducts
-            // 
-            this.cbProducts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbProducts.FormattingEnabled = true;
-            this.cbProducts.Location = new System.Drawing.Point(8, 19);
-            this.cbProducts.Name = "cbProducts";
-            this.cbProducts.Size = new System.Drawing.Size(574, 32);
-            this.cbProducts.TabIndex = 2;
-            this.cbProducts.SelectedIndexChanged += new System.EventHandler(this.cbProducts_SelectedIndexChanged);
+            this.elementHost1.Location = new System.Drawing.Point(8, 68);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(762, 276);
+            this.elementHost1.TabIndex = 3;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.cartesianChart1;
             // 
             // Main
             // 
@@ -253,7 +243,6 @@
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -274,8 +263,9 @@
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
         private System.Windows.Forms.ComboBox cbProducts;
+        private System.Windows.Forms.Integration.ElementHost elementHost1;
+        private LiveCharts.Wpf.CartesianChart cartesianChart1;
     }
 }
 

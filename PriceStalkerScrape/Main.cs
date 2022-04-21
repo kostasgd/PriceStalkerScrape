@@ -38,7 +38,6 @@ namespace PriceStalkerScrape
         private void LoadData()
         {
             var stalkerEntities = new Data.StalkerEntities();
-            //var .
             dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
         }
         private void InsertIntoDb()
@@ -159,27 +158,30 @@ namespace PriceStalkerScrape
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            chart1.Series.Clear();
-            chart1.Series.Add("test");
-            //chart1.Series.Add("test2");
-            //chart1.Series["test"].Points.AddXY("test1",12);
-            //chart1.Series["test2"].Points.AddXY("test2", 16);
-            
+            int id = Int32.Parse((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
+            cartesianChart1.Series.Clear();
             using (var context = new Data.StalkerEntities())
             {
-                var data = context.PriceHistory.Where(x=>x.PId==7).ToList();
+                var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
                 foreach (var item in data)
                 {
-                    chart1.Series["test"].Points.AddXY(item.Date.ToString(), item.Price);
+                    double[] ys2 = {item.Price};
+                    var series2 = new LiveCharts.Wpf.ColumnSeries()
+                    {
+                        Title = item.Date.ToString(),
+                        Values = new LiveCharts.ChartValues<double>(ys2)
+                    };
+                    cartesianChart1.Series.Add(series2);
                 }
             }
+            double[] ys1 = {20,15 };
         }
 
         private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
         {
             //ComboBoxItem selectedCar = (ComboBoxItem)cbProducts.SelectedItem;
             //int selecteVal = Convert.ToInt32(selectedCar.Content);
-            System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
+            //System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
         }
     }
     public class ComboboxItem
