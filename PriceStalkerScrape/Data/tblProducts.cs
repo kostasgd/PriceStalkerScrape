@@ -14,6 +14,12 @@ namespace PriceStalkerScrape.Data
     
     public partial class tblProducts
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public tblProducts()
+        {
+            this.PriceHistory = new HashSet<PriceHistory>();
+        }
+    
         public int Id { get; set; }
         public string Title { get; set; }
         public double Price { get; set; }
@@ -21,6 +27,7 @@ namespace PriceStalkerScrape.Data
         public string Description { get; set; }
         public string Link { get; set; }
     
-        public virtual PriceHistory PriceHistory { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<PriceHistory> PriceHistory { get; set; }
     }
 }

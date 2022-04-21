@@ -5,8 +5,8 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="bccbedbddbdf47909689829e2a653118" Name="Diagram1">
-        <EntityTypeShape EntityType="StalkerModel.tblProducts" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="StalkerModel.PriceHistory" Width="1.5" PointX="3" PointY="1" />
+        <EntityTypeShape EntityType="StalkerModel.tblProducts" Width="1.5" PointX="2.5" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="StalkerModel.PriceHistory" Width="1.5" PointX="5" PointY="1.375" />
         <AssociationConnector Association="StalkerModel.FK_PriceHistory_tblProducts" />
       </Diagram>
     </edmx:Diagrams>

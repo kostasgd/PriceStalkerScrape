@@ -17,6 +17,7 @@ using LiveCharts.Wpf;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Color = System.Windows.Media.Color;
 
 namespace PriceStalkerScrape
 {
@@ -48,7 +49,11 @@ namespace PriceStalkerScrape
                 {
                     Data.tblProducts product = new Data.tblProducts();
 
-                    if (context.tblProducts.Any(x => x.Link == txtLink.Text)) return;
+                    if (context.tblProducts.Any(x => x.Link == txtLink.Text)) 
+                    {
+                        System.Windows.MessageBox.Show("Record already exists..","Warning",MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning); 
+                        return; 
+                    }
                     product.Link = txtLink.Text;
                     product.Title = lblProductTitle.Text;
                     string ignoreSign = lblProductPrice.Text.ToString().Replace("€", "").Trim();
@@ -57,6 +62,20 @@ namespace PriceStalkerScrape
                     product.Rating = float.Parse(rating);
                     product.Description = txtDescription.Text;
                     context.tblProducts.Add(product);
+
+                    context.SaveChanges();
+                    int pid = context.tblProducts.Max(x => x.Id);
+                    Data.PriceHistory priceHistory = new Data.PriceHistory() 
+                    {
+                        PId= product.Id,
+                        Price = float.Parse(ignoreSign),
+                        Date = DateTime.Now
+                    };
+                    //priceHistory.PId = pid;
+                    //priceHistory.Price = float.Parse(ignoreSign);
+                    //priceHistory.Date = DateTime.Now;
+                    context.PriceHistory.Add(priceHistory);
+
                     context.SaveChanges();
                     new ToastContentBuilder()
                     .AddArgument("action", "viewConversation")
@@ -115,36 +134,85 @@ namespace PriceStalkerScrape
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
                     // From Web 
-                    var url = txtLink.Text;
-                    var web = new HtmlWeb();
-                    var doc = web.Load(url);
-                    var title = doc?.DocumentNode?.SelectSingleNode("//h1[@class='page-title']")?.InnerText;
-                    var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
-                    string price = prices?.FirstOrDefault().InnerText.ToString();
-                    var rating = doc?.DocumentNode?.SelectSingleNode("//span[@itemprop='ratingValue']")?.InnerText; //actual-rating 
-                                                                                                                    //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
-                    var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'summary')]")?.ToList(); //summary
-                    string description = "";
-                    if (summary != null)
-                    {
-                        foreach (var s in summary)
-                        {
-                            description += s.InnerText +"\n";
-                        }
-                    }
-                    if(string.IsNullOrEmpty(rating))
-                    {
-                        rating = "0";
-                    }
-                    if (title != null && price != null)
-                    {
-                        Initialize(title, price.ToString(), rating.ToString(), description);
-                    }
+                    ScrapeSkroutz();
+                }
+                else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
+                {
+                    ScrapeBestPrice();
                 }
             }
             catch (System.NullReferenceException ex)
             {
                 System.Windows.MessageBox.Show(ex.Message);
+            }
+        }
+        private void ScrapeBestPrice()
+        {
+            try
+            {
+                // From Web 
+                var url = txtLink.Text;
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
+                var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
+                var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
+                string price = prices?.FirstOrDefault().InnerText.ToString();
+                var rating = doc?.DocumentNode?.SelectSingleNode("//span[contains(@class,'Header__StarRating')]")?.InnerText; //actual-rating 
+                                                                                                                              //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
+                var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
+                string description = "";
+                Console.WriteLine("Title :" + title + " Price :" + price + " Rating :" + rating);
+                foreach (var j in summary)
+                {
+                    Console.WriteLine(j.InnerText);
+                }
+                if (summary != null)
+                {
+                    foreach (var s in summary)
+                    {
+                        description += s.InnerText + "\n";
+                    }
+                }
+                if (string.IsNullOrEmpty(rating))
+                {
+                    rating = "0";
+                }
+                if (title != null && price != null)
+                {
+                    Initialize(title, price.ToString(), rating.ToString(), description);
+                }
+            }
+            catch (System.NullReferenceException ex)
+            {
+                Console.Write(ex.Message);
+            }
+        }
+        private void ScrapeSkroutz()
+        {
+            var url = txtLink.Text;
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
+            var title = doc?.DocumentNode?.SelectSingleNode("//h1[@class='page-title']")?.InnerText;
+            var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
+            string price = prices?.FirstOrDefault().InnerText.ToString();
+            var rating = doc?.DocumentNode?.SelectSingleNode("//span[@itemprop='ratingValue']")?.InnerText; //actual-rating 
+                                                                                                            //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
+            var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'summary')]")?.ToList(); //summary
+            string description = "";
+            if (summary != null)
+            {
+                foreach (var s in summary)
+                {
+                    description += s.InnerText + "\n";
+                }
+            }
+            if (string.IsNullOrEmpty(rating))
+            {
+                rating = "0";
+            }
+            if (title != null && price != null)
+            {
+                Initialize(title, price.ToString(), rating.ToString(), description);
             }
         }
         public void FillComboBox()
@@ -176,9 +244,14 @@ namespace PriceStalkerScrape
                     {
                         Title = item.Date.ToString(),
                         DataLabels =true,
-                        VerticalAlignment = VerticalAlignment.Stretch,
+                        ColumnPadding = 15,
+                        VerticalAlignment = VerticalAlignment.Bottom,
+                        Margin = new Thickness(10, 10, 10, 10),
+                        
                         Values = new LiveCharts.ChartValues<double>(ys2),
                     };
+                    cartesianChart1.LegendLocation = LegendLocation.Right;
+                    
                     cartesianChart1.Series.Add(columnSeries[counter]);
                     counter++;
                 }
@@ -190,6 +263,48 @@ namespace PriceStalkerScrape
             //ComboBoxItem selectedCar = (ComboBoxItem)cbProducts.SelectedItem;
             //int selecteVal = Convert.ToInt32(selectedCar.Content);
             //System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
+        }
+
+        private void materialRaisedButton2_Click(object sender, EventArgs e)
+        {
+            //εδω θα υλοποιηθεί η λειτουργία ελέγχου για αλλαγή τιμών προιόντων
+            using(var context = new Data.StalkerEntities())
+            {
+                var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id ,i.Price}).ToList();
+                foreach(var link in data)
+                {
+                    var url = link.Link;
+                    var web = new HtmlWeb();
+                    var doc = web.Load(url);
+                    var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
+                    var test = link.Price.ToString();
+                    string newprice = prices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
+                    var testlink = link.Id;
+                    float saveprice = float.Parse(link.Price.ToString());
+                    if (float.Parse(newprice) != saveprice)
+                    {
+                        CheckPrices(testlink, float.Parse(newprice), (float)link.Price);
+                    }
+                }
+                
+            }
+        }
+        private void CheckPrices(int pid , float newprice,float oldprice)
+        {
+            if (newprice != oldprice)
+            {
+                using (var context = new Data.StalkerEntities())
+                {
+                    Data.PriceHistory priceHistory = new Data.PriceHistory()
+                    {
+                        PId = pid,
+                        Price = newprice,
+                        Date = DateTime.Now
+                    };
+                    context.PriceHistory.Add(priceHistory);
+                    context.SaveChanges();
+                }
+            }
         }
     }
     public class ComboboxItem

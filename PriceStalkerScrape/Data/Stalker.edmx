@@ -22,18 +22,18 @@
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
           <Property Name="Rating" Type="float" />
-          <Property Name="Description" Type="varchar(max)" />
+          <Property Name="Description" Type="nvarchar" MaxLength="555" />
           <Property Name="Link" Type="varchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <Association Name="FK_PriceHistory_tblProducts">
           <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="1" />
-          <End Role="PriceHistory" Type="Self.PriceHistory" Multiplicity="0..1" />
+          <End Role="PriceHistory" Type="Self.PriceHistory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tblProducts">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PriceHistory">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="PId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -57,7 +57,7 @@
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
           <Property Name="Rating" Type="Double" />
-          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="555" FixedLength="false" Unicode="true" />
           <Property Name="Link" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="PriceHistory" Relationship="StalkerModel.FK_PriceHistory_tblProducts" FromRole="tblProducts" ToRole="PriceHistory" />
         </EntityType>
@@ -81,13 +81,13 @@
         </EntityType>
         <Association Name="FK_PriceHistory_tblProducts">
           <End Type="StalkerModel.tblProducts" Role="tblProducts" Multiplicity="1" />
-          <End Type="StalkerModel.PriceHistory" Role="PriceHistory" Multiplicity="0..1" />
+          <End Type="StalkerModel.PriceHistory" Role="PriceHistory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tblProducts">
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="PriceHistory">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="PId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
