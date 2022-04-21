@@ -133,6 +133,7 @@
       <DependentUpon>Stalker.edmx</DependentUpon>
       <LastGenOutput>Stalker.cs</LastGenOutput>
     </Content>
+    <Content Include="logo.png" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework">

@@ -198,8 +198,8 @@
             this.txtLink.Name = "txtLink";
             this.txtLink.Size = new System.Drawing.Size(708, 20);
             this.txtLink.TabIndex = 14;
-            this.txtLink.Text = "https://www.skroutz.gr/s/31019956/Xiaomi-Redmi-Buds-3-Pro-Bluetooth-Handsfree-%CE" +
-    "%9C%CE%B1%CF%8D%CF%81%CE%BF.html";
+            this.txtLink.Text = "https://www.skroutz.gr/s/23842226/The-North-Face-Mountain-Line-NF00A3G2JK3-Black." +
+    "html";
             // 
             // materialRaisedButton1
             // 

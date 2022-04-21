@@ -61,7 +61,7 @@ namespace PriceStalkerScrape
                     new ToastContentBuilder()
                     .AddArgument("action", "viewConversation")
                     .AddArgument("conversationId", 123)
-                    .AddText("Record with title " + lblProductTitle.Text + " Successfully Saved")
+                    .AddText("Product with title " + lblProductTitle.Text + " Successfully Saved")
                     .Show();
                 }
             }
@@ -129,10 +129,14 @@ namespace PriceStalkerScrape
                     {
                         foreach (var s in summary)
                         {
-                            description += s.InnerText;
+                            description += s.InnerText +"\n";
                         }
                     }
-                    if (title != null && price != null && rating != null & summary != null)
+                    if(string.IsNullOrEmpty(rating))
+                    {
+                        rating = "0";
+                    }
+                    if (title != null && price != null)
                     {
                         Initialize(title, price.ToString(), rating.ToString(), description);
                     }
@@ -163,18 +167,22 @@ namespace PriceStalkerScrape
             using (var context = new Data.StalkerEntities())
             {
                 var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                int counter = 0;
+                LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
                 foreach (var item in data)
                 {
                     double[] ys2 = {item.Price};
-                    var series2 = new LiveCharts.Wpf.ColumnSeries()
+                    columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
                     {
                         Title = item.Date.ToString(),
-                        Values = new LiveCharts.ChartValues<double>(ys2)
+                        DataLabels =true,
+                        VerticalAlignment = VerticalAlignment.Stretch,
+                        Values = new LiveCharts.ChartValues<double>(ys2),
                     };
-                    cartesianChart1.Series.Add(series2);
+                    cartesianChart1.Series.Add(columnSeries[counter]);
+                    counter++;
                 }
             }
-            double[] ys1 = {20,15 };
         }
 
         private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
