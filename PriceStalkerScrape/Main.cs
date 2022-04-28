@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Entity;
+using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -57,9 +59,11 @@ namespace PriceStalkerScrape
                     product.Link = txtLink.Text;
                     product.Title = lblProductTitle.Text;
                     string ignoreSign = lblProductPrice.Text.ToString().Replace("€", "").Trim();
-                    product.Price = float.Parse(ignoreSign);
+                    float price = (float)Math.Round(float.Parse(ignoreSign), 2); 
+                    product.Price =price;
                     string rating = lblProductRating.Text.Replace(".", ",");
-                    product.Rating = float.Parse(rating);
+                    float rate = (float)Math.Round(float.Parse(rating), 2);
+                    product.Rating = rate;
                     product.Description = txtDescription.Text;
                     context.tblProducts.Add(product);
 
@@ -68,7 +72,7 @@ namespace PriceStalkerScrape
                     Data.PriceHistory priceHistory = new Data.PriceHistory() 
                     {
                         PId= product.Id,
-                        Price = float.Parse(ignoreSign),
+                        Price = price,
                         Date = DateTime.Now
                     };
                     //priceHistory.PId = pid;
@@ -84,9 +88,20 @@ namespace PriceStalkerScrape
                     .Show();
                 }
             }
-            catch (System.Data.Entity.Validation.DbEntityValidationException ex)
+            catch (DbEntityValidationException e)
             {
-                System.Windows.Forms.MessageBox.Show(ex.Message);
+                System.Windows.Forms.MessageBox.Show(e.Message);
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
             }
         }
 
@@ -270,8 +285,9 @@ namespace PriceStalkerScrape
             //εδω θα υλοποιηθεί η λειτουργία ελέγχου για αλλαγή τιμών προιόντων
             using(var context = new Data.StalkerEntities())
             {
-                var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id ,i.Price}).ToList();
-                foreach(var link in data)
+                var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id ,i.Price,i.Rating,i.Title}).ToList();
+                
+                foreach (var link in data)
                 {
                     var url = link.Link;
                     var web = new HtmlWeb();
@@ -280,10 +296,17 @@ namespace PriceStalkerScrape
                     var test = link.Price.ToString();
                     string newprice = prices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
                     var testlink = link.Id;
-                    float saveprice = float.Parse(link.Price.ToString());
-                    if (float.Parse(newprice) != saveprice)
+                    float saveprice = (float)Math.Round(float.Parse(link.Price.ToString()), 2);
+                    var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x=>x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
+                    Console.WriteLine(joinprice.Price);
+                    float compPrice = (float)Math.Round(float.Parse(newprice.ToString()), 2);
+                    if (compPrice != joinprice.Price)
                     {
-                        CheckPrices(testlink, float.Parse(newprice), (float)link.Price);
+                        CheckPrices(testlink, float.Parse(newprice), compPrice);
+                        Data.tblProducts updProduct = context.tblProducts.Where(x=>x.Id == link.Id).FirstOrDefault();
+                        updProduct.Id = link.Id;
+                        updProduct.Price = compPrice;
+                        context.SaveChanges();
                     }
                 }
                 
@@ -291,19 +314,33 @@ namespace PriceStalkerScrape
         }
         private void CheckPrices(int pid , float newprice,float oldprice)
         {
-            if (newprice != oldprice)
+            using (var context = new Data.StalkerEntities())
             {
-                using (var context = new Data.StalkerEntities())
+                Data.PriceHistory priceHistory = new Data.PriceHistory()
                 {
-                    Data.PriceHistory priceHistory = new Data.PriceHistory()
-                    {
-                        PId = pid,
-                        Price = newprice,
-                        Date = DateTime.Now
-                    };
-                    context.PriceHistory.Add(priceHistory);
-                    context.SaveChanges();
-                }
+                    PId = pid,
+                    Price = Math.Round(newprice, 2),
+                    Date = DateTime.Now
+                };
+                context.PriceHistory.Add(priceHistory);
+                context.SaveChanges();
+            }
+            
+        }
+        private System.Drawing.Point _mouseLoc;
+
+        private void Main_MouseDown(object sender, MouseEventArgs e)
+        {
+            _mouseLoc = e.Location;
+        }
+
+        private void Main_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                int dx = e.Location.X - _mouseLoc.X;
+                int dy = e.Location.Y - _mouseLoc.Y;
+                this.Location = new System.Drawing.Point(this.Location.X + dx, this.Location.Y + dy);
             }
         }
     }

@@ -29,5 +29,6 @@ namespace PriceStalkerScrape.Data
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<PriceHistory> PriceHistory { get; set; }
+
     }
 }

@@ -22,11 +22,13 @@
           <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
           <Property Name="Rating" Type="float" />
-          <Property Name="Description" Type="nvarchar" MaxLength="555" />
-          <Property Name="Link" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="855" />
+          <Property Name="Link" Type="nvarchar" MaxLength="250" Nullable="false" />
         </EntityType>
         <Association Name="FK_PriceHistory_tblProducts">
-          <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="1" />
+          <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="PriceHistory" Type="Self.PriceHistory" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="tblProducts">
@@ -57,8 +59,8 @@
           <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
           <Property Name="Rating" Type="Double" />
-          <Property Name="Description" Type="String" MaxLength="555" FixedLength="false" Unicode="true" />
-          <Property Name="Link" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="855" FixedLength="false" Unicode="true" />
+          <Property Name="Link" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PriceHistory" Relationship="StalkerModel.FK_PriceHistory_tblProducts" FromRole="tblProducts" ToRole="PriceHistory" />
         </EntityType>
         <EntityContainer Name="StalkerEntities" annotation:LazyLoadingEnabled="true">

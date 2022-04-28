@@ -39,13 +39,13 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
+            this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.cbProducts = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
             this.txtLink = new System.Windows.Forms.TextBox();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
-            this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
-            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -174,6 +174,28 @@
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
+            // materialRaisedButton2
+            // 
+            this.materialRaisedButton2.Depth = 0;
+            this.materialRaisedButton2.Location = new System.Drawing.Point(956, 17);
+            this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton2.Name = "materialRaisedButton2";
+            this.materialRaisedButton2.Primary = true;
+            this.materialRaisedButton2.Size = new System.Drawing.Size(124, 48);
+            this.materialRaisedButton2.TabIndex = 4;
+            this.materialRaisedButton2.Text = "Check new prices";
+            this.materialRaisedButton2.UseVisualStyleBackColor = true;
+            this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
+            // 
+            // elementHost1
+            // 
+            this.elementHost1.Location = new System.Drawing.Point(8, 86);
+            this.elementHost1.Name = "elementHost1";
+            this.elementHost1.Size = new System.Drawing.Size(762, 379);
+            this.elementHost1.TabIndex = 3;
+            this.elementHost1.Text = "elementHost1";
+            this.elementHost1.Child = this.cartesianChart1;
+            // 
             // cbProducts
             // 
             this.cbProducts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -216,28 +238,6 @@
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
             this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
             // 
-            // elementHost1
-            // 
-            this.elementHost1.Location = new System.Drawing.Point(8, 86);
-            this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(762, 379);
-            this.elementHost1.TabIndex = 3;
-            this.elementHost1.Text = "elementHost1";
-            this.elementHost1.Child = this.cartesianChart1;
-            // 
-            // materialRaisedButton2
-            // 
-            this.materialRaisedButton2.Depth = 0;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(956, 17);
-            this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton2.Name = "materialRaisedButton2";
-            this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(124, 48);
-            this.materialRaisedButton2.TabIndex = 4;
-            this.materialRaisedButton2.Text = "Check new prices";
-            this.materialRaisedButton2.UseVisualStyleBackColor = true;
-            this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -251,6 +251,8 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load_1);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
             this.panel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
