@@ -46,12 +46,16 @@
             this.button1 = new System.Windows.Forms.Button();
             this.txtLink = new System.Windows.Forms.TextBox();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage3.SuspendLayout();
+            this.tabPage4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -100,6 +104,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
+            this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
@@ -238,6 +243,27 @@
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
             this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
             // 
+            // tabPage4
+            // 
+            this.tabPage4.Controls.Add(this.dgvOrders);
+            this.tabPage4.Location = new System.Drawing.Point(4, 33);
+            this.tabPage4.Name = "tabPage4";
+            this.tabPage4.Size = new System.Drawing.Size(1088, 492);
+            this.tabPage4.TabIndex = 3;
+            this.tabPage4.Text = "Orders";
+            this.tabPage4.UseVisualStyleBackColor = true;
+            // 
+            // dgvOrders
+            // 
+            this.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvOrders.Location = new System.Drawing.Point(0, 0);
+            this.dgvOrders.Name = "dgvOrders";
+            this.dgvOrders.ReadOnly = true;
+            this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvOrders.Size = new System.Drawing.Size(1088, 492);
+            this.dgvOrders.TabIndex = 1;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -260,6 +286,8 @@
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage3.ResumeLayout(false);
+            this.tabPage4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -284,6 +312,8 @@
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private LiveCharts.Wpf.CartesianChart cartesianChart1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
+        private System.Windows.Forms.TabPage tabPage4;
+        private System.Windows.Forms.DataGridView dgvOrders;
     }
 }
 

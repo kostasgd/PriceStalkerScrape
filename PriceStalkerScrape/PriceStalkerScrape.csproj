@@ -58,6 +58,12 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\Customer.cs">
+      <DependentUpon>Stalker.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Data\Orders.cs">
+      <DependentUpon>Stalker.tt</DependentUpon>
+    </Compile>
     <Compile Include="Data\PriceHistory.cs">
       <DependentUpon>Stalker.tt</DependentUpon>
     </Compile>

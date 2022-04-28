@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Validation;
 using System.Drawing;
 using System.Linq;
@@ -41,7 +42,13 @@ namespace PriceStalkerScrape
         private void LoadData()
         {
             var stalkerEntities = new Data.StalkerEntities();
-            dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
+            //stalkerEntities.Configuration.ProxyCreationEnabled = false;
+            var ProductQuery =from t in stalkerEntities.tblProducts
+                        select new { t.Id, t.Title, t.Price, t.Rating,t.Link,t.Description };
+            dgvProducts.DataSource = ProductQuery.ToList();
+            var OrderQuery = from x in stalkerEntities.Orders
+                               select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
+            dgvOrders.DataSource = OrderQuery.ToList();
         }
         private void InsertIntoDb()
         {

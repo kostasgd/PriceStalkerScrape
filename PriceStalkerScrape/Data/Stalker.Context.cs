@@ -18,6 +18,7 @@ namespace PriceStalkerScrape.Data
         public StalkerEntities()
             : base("name=StalkerEntities")
         {
+            this.Configuration.LazyLoadingEnabled = false;
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
@@ -27,5 +28,7 @@ namespace PriceStalkerScrape.Data
     
         public virtual DbSet<tblProducts> tblProducts { get; set; }
         public virtual DbSet<PriceHistory> PriceHistory { get; set; }
+        public virtual DbSet<Customer> Customer { get; set; }
+        public virtual DbSet<Orders> Orders { get; set; }
     }
 }
