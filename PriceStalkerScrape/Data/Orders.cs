@@ -18,6 +18,8 @@ namespace PriceStalkerScrape.Data
         public int ProductId { get; set; }
         public int CustomerId { get; set; }
         public string Address { get; set; }
+        public int Qty { get; set; }
+        public double TotalPrice { get; set; }
     
         public virtual Customer Customer { get; set; }
         public virtual tblProducts tblProducts { get; set; }

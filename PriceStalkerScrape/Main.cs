@@ -60,7 +60,7 @@ namespace PriceStalkerScrape
 
                     if (context.tblProducts.Any(x => x.Link == txtLink.Text)) 
                     {
-                        System.Windows.MessageBox.Show("Record already exists..","Warning",MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning); 
+                        System.Windows.MessageBox.Show("Something went wrong, please try again..","Warning",MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning); 
                         return; 
                     }
                     product.Link = txtLink.Text;
@@ -132,6 +132,8 @@ namespace PriceStalkerScrape
         private void materialFlatButton1_Click_1(object sender, EventArgs e)
         {
             InsertIntoDb();
+            LoadData();
+            FillComboBox();
         }
 
         private void dgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -239,6 +241,7 @@ namespace PriceStalkerScrape
         }
         public void FillComboBox()
         {
+            cbProducts.Items.Clear();
             cbProducts.DisplayMember = "Text";
             cbProducts.ValueMember = "Value";
             using (var context = new Data.StalkerEntities())
@@ -268,12 +271,11 @@ namespace PriceStalkerScrape
                         DataLabels =true,
                         ColumnPadding = 15,
                         VerticalAlignment = VerticalAlignment.Bottom,
-                        Margin = new Thickness(10, 10, 10, 10),
-                        
+                        Margin = new Thickness(10, 10, 10, 10),                        
                         Values = new LiveCharts.ChartValues<double>(ys2),
                     };
                     cartesianChart1.LegendLocation = LegendLocation.Right;
-                    
+                    cartesianChart1.FontStretch = new FontStretch();
                     cartesianChart1.Series.Add(columnSeries[counter]);
                     counter++;
                 }
@@ -309,30 +311,36 @@ namespace PriceStalkerScrape
                     float compPrice = (float)Math.Round(float.Parse(newprice.ToString()), 2);
                     if (compPrice != joinprice.Price)
                     {
-                        CheckPrices(testlink, float.Parse(newprice), compPrice);
+                        CheckPrices(link.Title,testlink, float.Parse(newprice),(float) joinprice.Price);
                         Data.tblProducts updProduct = context.tblProducts.Where(x=>x.Id == link.Id).FirstOrDefault();
                         updProduct.Id = link.Id;
                         updProduct.Price = compPrice;
                         context.SaveChanges();
                     }
                 }
-                
             }
         }
-        private void CheckPrices(int pid , float newprice,float oldprice)
+        private void CheckPrices(string title , int pid , float newprice,float oldprice)
         {
-            using (var context = new Data.StalkerEntities())
+            if (newprice != oldprice)
             {
-                Data.PriceHistory priceHistory = new Data.PriceHistory()
+                using (var context = new Data.StalkerEntities())
                 {
-                    PId = pid,
-                    Price = Math.Round(newprice, 2),
-                    Date = DateTime.Now
-                };
-                context.PriceHistory.Add(priceHistory);
-                context.SaveChanges();
+                    Data.PriceHistory priceHistory = new Data.PriceHistory()
+                    {
+                        PId = pid,
+                        Price = Math.Round(newprice, 2),
+                        Date = DateTime.Now
+                    };
+                    context.PriceHistory.Add(priceHistory);
+                    context.SaveChanges();
+                    new ToastContentBuilder()
+                    .AddArgument("action", "viewConversation")
+                            .AddArgument("conversationId", 123)
+                            .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
+                            .Show();
+                }
             }
-            
         }
         private System.Drawing.Point _mouseLoc;
 
@@ -343,12 +351,12 @@ namespace PriceStalkerScrape
 
         private void Main_MouseMove(object sender, MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
-            {
-                int dx = e.Location.X - _mouseLoc.X;
-                int dy = e.Location.Y - _mouseLoc.Y;
-                this.Location = new System.Drawing.Point(this.Location.X + dx, this.Location.Y + dy);
-            }
+            //if (e.Button == MouseButtons.Left)
+            //{
+            //    int dx = e.Location.X - _mouseLoc.X;
+            //    int dy = e.Location.Y - _mouseLoc.Y;
+            //    this.Location = new System.Drawing.Point(this.Location.X + dx, this.Location.Y + dy);
+            //}
         }
     }
     public class ComboboxItem

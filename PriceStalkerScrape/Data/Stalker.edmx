@@ -22,6 +22,8 @@
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="CustomerId" Type="int" Nullable="false" />
           <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Qty" Type="int" Nullable="false" />
+          <Property Name="TotalPrice" Type="float" Nullable="false" />
         </EntityType>
         <EntityType Name="PriceHistory">
           <Key>
@@ -37,11 +39,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Title" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
-          <Property Name="Rating" Type="float" />
+          <Property Name="Rating" Type="float" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="855" />
-          <Property Name="Link" Type="nvarchar" MaxLength="250" Nullable="false" />
+          <Property Name="Link" Type="nvarchar" MaxLength="550" Nullable="false" />
         </EntityType>
         <Association Name="FK_Orders_Customer">
           <End Role="Customer" Type="Self.Customer" Multiplicity="1" />
@@ -67,20 +69,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_PriceHistory_tblProducts">
-          <End Role="tblProducts" Type="Self.tblProducts" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="PriceHistory" Type="Self.PriceHistory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="tblProducts">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="PriceHistory">
-              <PropertyRef Name="PId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="StalkerModelStoreContainer">
           <EntitySet Name="Customer" EntityType="Self.Customer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
@@ -94,10 +82,6 @@
             <End Role="tblProducts" EntitySet="tblProducts" />
             <End Role="Orders" EntitySet="Orders" />
           </AssociationSet>
-          <AssociationSet Name="FK_PriceHistory_tblProducts" Association="Self.FK_PriceHistory_tblProducts">
-            <End Role="tblProducts" EntitySet="tblProducts" />
-            <End Role="PriceHistory" EntitySet="PriceHistory" />
-          </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -108,11 +92,11 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Title" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
-          <Property Name="Rating" Type="Double" />
+          <Property Name="Rating" Type="Double" Nullable="false" />
           <Property Name="Description" Type="String" MaxLength="855" FixedLength="false" Unicode="true" />
-          <Property Name="Link" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Link" Type="String" Nullable="false" MaxLength="550" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PriceHistory" Relationship="StalkerModel.FK_PriceHistory_tblProducts" FromRole="tblProducts" ToRole="PriceHistory" />
           <NavigationProperty Name="Orders" Relationship="StalkerModel.FK_Orders_tblProducts" FromRole="tblProducts" ToRole="Orders" />
         </EntityType>
@@ -176,6 +160,8 @@
           <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Customer" Relationship="StalkerModel.FK_Orders_Customer" FromRole="Orders" ToRole="Customer" />
           <NavigationProperty Name="tblProducts" Relationship="StalkerModel.FK_Orders_tblProducts" FromRole="Orders" ToRole="tblProducts" />
+          <Property Name="Qty" Type="Int32" Nullable="false" />
+          <Property Name="TotalPrice" Type="Double" Nullable="false" />
         </EntityType>
         <Association Name="FK_Orders_Customer">
           <End Type="StalkerModel.Customer" Role="Customer" Multiplicity="1" />
@@ -242,6 +228,8 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="StalkerModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
                 <ScalarProperty Name="Address" ColumnName="Address" />
                 <ScalarProperty Name="CustomerId" ColumnName="CustomerId" />
                 <ScalarProperty Name="ProductId" ColumnName="ProductId" />
