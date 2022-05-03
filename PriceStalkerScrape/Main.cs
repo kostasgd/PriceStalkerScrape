@@ -307,7 +307,6 @@ namespace PriceStalkerScrape
                     var testlink = link.Id;
                     float saveprice = (float)Math.Round(float.Parse(link.Price.ToString()), 2);
                     var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x=>x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
-                    Console.WriteLine(joinprice.Price);
                     float compPrice = (float)Math.Round(float.Parse(newprice.ToString()), 2);
                     if (compPrice != joinprice.Price)
                     {
@@ -324,22 +323,26 @@ namespace PriceStalkerScrape
         {
             if (newprice != oldprice)
             {
-                using (var context = new Data.StalkerEntities())
+                float deservedDifference = newprice - oldprice;
+                if (deservedDifference >= 5)
                 {
-                    Data.PriceHistory priceHistory = new Data.PriceHistory()
+                    using (var context = new Data.StalkerEntities())
                     {
-                        PId = pid,
-                        Price = Math.Round(newprice, 2),
-                        Date = DateTime.Now
-                    };
-                    context.PriceHistory.Add(priceHistory);
-                    context.SaveChanges();
-                    new ToastContentBuilder()
-                    .AddArgument("action", "viewConversation")
-                            .AddArgument("conversationId", 123)
-                            .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
-                            .Show();
-                }
+                        Data.PriceHistory priceHistory = new Data.PriceHistory()
+                        {
+                            PId = pid,
+                            Price = Math.Round(newprice, 2),
+                            Date = DateTime.Now
+                        };
+                        context.PriceHistory.Add(priceHistory);
+                        context.SaveChanges();
+                        new ToastContentBuilder()
+                        .AddArgument("action", "viewConversation")
+                                .AddArgument("conversationId", 123)
+                                .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
+                                .Show();
+                    }
+                }   
             }
         }
         private System.Drawing.Point _mouseLoc;
