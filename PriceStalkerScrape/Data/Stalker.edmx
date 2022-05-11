@@ -12,7 +12,6 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Age" Type="int" />
-          <Property Name="OrderId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Orders">
           <Key>
@@ -21,7 +20,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductId" Type="int" Nullable="false" />
           <Property Name="CustomerId" Type="int" Nullable="false" />
-          <Property Name="Address" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address" Type="nvarchar" MaxLength="350" />
           <Property Name="Qty" Type="int" Nullable="false" />
           <Property Name="TotalPrice" Type="float" Nullable="false" />
         </EntityType>
@@ -42,7 +41,7 @@
           <Property Name="Title" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Price" Type="float" Nullable="false" />
           <Property Name="Rating" Type="float" Nullable="false" />
-          <Property Name="Description" Type="nvarchar" MaxLength="855" />
+          <Property Name="Description" Type="nvarchar" MaxLength="855" Nullable="false" />
           <Property Name="Link" Type="nvarchar" MaxLength="550" Nullable="false" />
         </EntityType>
         <Association Name="FK_Orders_Customer">
@@ -95,7 +94,7 @@
           <Property Name="Title" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Price" Type="Double" Nullable="false" />
           <Property Name="Rating" Type="Double" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="855" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="855" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Link" Type="String" Nullable="false" MaxLength="550" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="PriceHistory" Relationship="StalkerModel.FK_PriceHistory_tblProducts" FromRole="tblProducts" ToRole="PriceHistory" />
           <NavigationProperty Name="Orders" Relationship="StalkerModel.FK_Orders_tblProducts" FromRole="tblProducts" ToRole="Orders" />
@@ -147,7 +146,6 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Age" Type="Int32" />
-          <Property Name="OrderId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Orders" Relationship="StalkerModel.FK_Orders_Customer" FromRole="Customer" ToRole="Orders" />
         </EntityType>
         <EntityType Name="Orders">
@@ -157,7 +155,7 @@
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="ProductId" Type="Int32" Nullable="false" />
           <Property Name="CustomerId" Type="Int32" Nullable="false" />
-          <Property Name="Address" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="350" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Customer" Relationship="StalkerModel.FK_Orders_Customer" FromRole="Orders" ToRole="Customer" />
           <NavigationProperty Name="tblProducts" Relationship="StalkerModel.FK_Orders_tblProducts" FromRole="Orders" ToRole="tblProducts" />
           <Property Name="Qty" Type="Int32" Nullable="false" />
@@ -218,7 +216,6 @@
           <EntitySetMapping Name="Customer">
             <EntityTypeMapping TypeName="StalkerModel.Customer">
               <MappingFragment StoreEntitySet="Customer">
-                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
                 <ScalarProperty Name="Age" ColumnName="Age" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />

@@ -39,13 +39,15 @@
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.button2 = new System.Windows.Forms.Button();
             this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.cbProducts = new System.Windows.Forms.ComboBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.txtLink = new System.Windows.Forms.TextBox();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
@@ -54,6 +56,7 @@
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage4.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
             this.tabPage3.SuspendLayout();
             this.SuspendLayout();
@@ -168,6 +171,7 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Controls.Add(this.dgvOrders);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
@@ -176,15 +180,34 @@
             this.tabPage4.Text = "Orders";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.button2);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel2.Location = new System.Drawing.Point(0, 0);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(1088, 73);
+            this.panel2.TabIndex = 2;
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(910, 16);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(170, 38);
+            this.button2.TabIndex = 0;
+            this.button2.Text = "New Order";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
             // dgvOrders
             // 
             this.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvOrders.Location = new System.Drawing.Point(0, 0);
+            this.dgvOrders.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.dgvOrders.Location = new System.Drawing.Point(0, 79);
             this.dgvOrders.Name = "dgvOrders";
             this.dgvOrders.ReadOnly = true;
             this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOrders.Size = new System.Drawing.Size(1088, 492);
+            this.dgvOrders.Size = new System.Drawing.Size(1088, 413);
             this.dgvOrders.TabIndex = 1;
             // 
             // tabPage3
@@ -192,7 +215,7 @@
             this.tabPage3.Controls.Add(this.materialRaisedButton2);
             this.tabPage3.Controls.Add(this.elementHost1);
             this.tabPage3.Controls.Add(this.cbProducts);
-            this.tabPage3.Controls.Add(this.button1);
+            this.tabPage3.Controls.Add(this.btnLoad);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Size = new System.Drawing.Size(1088, 492);
@@ -232,15 +255,15 @@
             this.cbProducts.TabIndex = 2;
             this.cbProducts.SelectedIndexChanged += new System.EventHandler(this.cbProducts_SelectedIndexChanged);
             // 
-            // button1
+            // btnLoad
             // 
-            this.button1.Location = new System.Drawing.Point(599, 33);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(171, 32);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Load";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.btnLoad.Location = new System.Drawing.Point(599, 33);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(171, 32);
+            this.btnLoad.TabIndex = 0;
+            this.btnLoad.Text = "Load";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.button1_Click);
             // 
             // txtLink
             // 
@@ -248,8 +271,6 @@
             this.txtLink.Name = "txtLink";
             this.txtLink.Size = new System.Drawing.Size(484, 20);
             this.txtLink.TabIndex = 14;
-            this.txtLink.Text = "https://www.skroutz.gr/s/23842226/The-North-Face-Mountain-Line-NF00A3G2JK3-Black." +
-    "html";
             // 
             // materialRaisedButton1
             // 
@@ -278,7 +299,7 @@
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load_1);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
+           // this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
             this.panel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -286,6 +307,7 @@
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage4.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).EndInit();
             this.tabPage3.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -307,13 +329,15 @@
         private System.Windows.Forms.DataGridView dgvProducts;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.ComboBox cbProducts;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private LiveCharts.Wpf.CartesianChart cartesianChart1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.DataGridView dgvOrders;
+        private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Button button2;
     }
 }
 

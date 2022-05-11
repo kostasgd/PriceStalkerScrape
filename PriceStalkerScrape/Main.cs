@@ -20,6 +20,7 @@ using LiveCharts.Wpf;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Application = System.Windows.Forms.Application;
 using Color = System.Windows.Media.Color;
 
 namespace PriceStalkerScrape
@@ -52,66 +53,76 @@ namespace PriceStalkerScrape
         }
         private void InsertIntoDb()
         {
-            try
+            if (Check())
             {
-                using (var context = new Data.StalkerEntities())
+                try
                 {
-                    Data.tblProducts product = new Data.tblProducts();
-
-                    if (context.tblProducts.Any(x => x.Link == txtLink.Text)) 
+                    using (var context = new Data.StalkerEntities())
                     {
-                        System.Windows.MessageBox.Show("Something went wrong, please try again..","Warning",MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning); 
-                        return; 
-                    }
-                    product.Link = txtLink.Text;
-                    product.Title = lblProductTitle.Text;
-                    string ignoreSign = lblProductPrice.Text.ToString().Replace("€", "").Trim();
-                    float price = (float)Math.Round(float.Parse(ignoreSign), 2); 
-                    product.Price =price;
-                    string rating = lblProductRating.Text.Replace(".", ",");
-                    float rate = (float)Math.Round(float.Parse(rating), 2);
-                    product.Rating = rate;
-                    product.Description = txtDescription.Text;
-                    context.tblProducts.Add(product);
+                        Data.tblProducts product = new Data.tblProducts();
 
-                    context.SaveChanges();
-                    int pid = context.tblProducts.Max(x => x.Id);
-                    Data.PriceHistory priceHistory = new Data.PriceHistory() 
-                    {
-                        PId= product.Id,
-                        Price = price,
-                        Date = DateTime.Now
-                    };
-                    //priceHistory.PId = pid;
-                    //priceHistory.Price = float.Parse(ignoreSign);
-                    //priceHistory.Date = DateTime.Now;
-                    context.PriceHistory.Add(priceHistory);
+                        if (context.tblProducts.Any(x => x.Link == txtLink.Text))
+                        {
+                            System.Windows.MessageBox.Show("Something went wrong, please try again..", "Warning", MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning);
+                            return;
+                        }
+                        product.Link = txtLink.Text;
+                        product.Title = lblProductTitle.Text;
+                        string ignoreSign = lblProductPrice.Text.ToString().Replace("€", "").Trim();
+                        float price = (float)Math.Round(float.Parse(ignoreSign), 2);
+                        product.Price = price;
+                        string rating = lblProductRating.Text.Replace(".", ",");
+                        float rate = (float)Math.Round(float.Parse(rating), 2);
+                        product.Rating = rate;
+                        product.Description = txtDescription.Text;
+                        context.tblProducts.Add(product);
 
-                    context.SaveChanges();
-                    new ToastContentBuilder()
-                    .AddArgument("action", "viewConversation")
-                    .AddArgument("conversationId", 123)
-                    .AddText("Product with title " + lblProductTitle.Text + " Successfully Saved")
-                    .Show();
-                }
-            }
-            catch (DbEntityValidationException e)
-            {
-                System.Windows.Forms.MessageBox.Show(e.Message);
-                foreach (var eve in e.EntityValidationErrors)
-                {
-                    Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
-                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
-                    foreach (var ve in eve.ValidationErrors)
-                    {
-                        Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
-                            ve.PropertyName, ve.ErrorMessage);
+                        context.SaveChanges();
+                        int pid = context.tblProducts.Max(x => x.Id);
+                        Data.PriceHistory priceHistory = new Data.PriceHistory()
+                        {
+                            PId = product.Id,
+                            Price = price,
+                            Date = DateTime.Now
+                        };
+                        //priceHistory.PId = pid;
+                        //priceHistory.Price = float.Parse(ignoreSign);
+                        //priceHistory.Date = DateTime.Now;
+                        context.PriceHistory.Add(priceHistory);
+
+                        context.SaveChanges();
+                        new ToastContentBuilder()
+                        .AddArgument("action", "viewConversation")
+                        .AddArgument("conversationId", 123)
+                        .AddText("Product with title " + lblProductTitle.Text + " Successfully Saved")
+                        .Show();
                     }
                 }
-                throw;
-            }
+                catch (DbEntityValidationException e)
+                {
+                    System.Windows.Forms.MessageBox.Show(e.Message);
+                    foreach (var eve in e.EntityValidationErrors)
+                    {
+                        Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                            eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                        foreach (var ve in eve.ValidationErrors)
+                        {
+                            Console.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                                ve.PropertyName, ve.ErrorMessage);
+                        }
+                    }
+                    throw;
+                }
+            }  
         }
-
+        private bool Check()
+        {
+            if(lblProductPrice.Text.Length>0 && lblProductPrice.Text.Length>0&& lblProductRating.Text.Length > 0)
+            {
+                return true;
+            }
+            return false;
+        }
         private void materialFlatButton1_Click(object sender, EventArgs e)
         {
             
@@ -255,31 +266,35 @@ namespace PriceStalkerScrape
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            int id = Int32.Parse((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
-            cartesianChart1.Series.Clear();
-            using (var context = new Data.StalkerEntities())
+            if (cbProducts.SelectedIndex >= 0)
             {
-                var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
-                int counter = 0;
-                LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                foreach (var item in data)
+                int id = Int32.Parse((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
+                cartesianChart1.Series.Clear();
+                using (var context = new Data.StalkerEntities())
                 {
-                    double[] ys2 = {item.Price};
-                    columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                    var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                    int counter = 0;
+                    LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
+                    foreach (var item in data)
                     {
-                        Title = item.Date.ToString(),
-                        DataLabels =true,
-                        ColumnPadding = 15,
-                        VerticalAlignment = VerticalAlignment.Bottom,
-                        Margin = new Thickness(10, 10, 10, 10),                        
-                        Values = new LiveCharts.ChartValues<double>(ys2),
-                    };
-                    cartesianChart1.LegendLocation = LegendLocation.Right;
-                    cartesianChart1.FontStretch = new FontStretch();
-                    cartesianChart1.Series.Add(columnSeries[counter]);
-                    counter++;
+                        double[] ys2 = { item.Price };
+                        columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                        {
+                            Title = item.Date.ToString(),
+                            DataLabels = true,
+                            ColumnPadding = 15,
+                            VerticalAlignment = VerticalAlignment.Bottom,
+                            Margin = new Thickness(10, 10, 10, 10),
+                            Values = new LiveCharts.ChartValues<double>(ys2),
+                        };
+                        cartesianChart1.LegendLocation = LegendLocation.Right;
+                        cartesianChart1.FontStretch = new FontStretch();
+                        cartesianChart1.Series.Add(columnSeries[counter]);
+                        counter++;
+                    }
                 }
             }
+            
         }
 
         private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
@@ -295,28 +310,44 @@ namespace PriceStalkerScrape
             using(var context = new Data.StalkerEntities())
             {
                 var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id ,i.Price,i.Rating,i.Title}).ToList();
-                
+                //btnLoad.Invoke(new Action(() => btnLoad.Enabled = false));
+                materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled=false));
                 foreach (var link in data)
                 {
+                    Application.DoEvents();
                     var url = link.Link;
                     var web = new HtmlWeb();
                     var doc = web.Load(url);
-                    var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
+                    var skroutzprices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
+                    var bestpprices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
+                    string bestpprice = bestpprices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
                     var test = link.Price.ToString();
-                    string newprice = prices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
+                    string newskroutzprice = skroutzprices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
+                    
                     var testlink = link.Id;
                     float saveprice = (float)Math.Round(float.Parse(link.Price.ToString()), 2);
                     var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x=>x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
-                    float compPrice = (float)Math.Round(float.Parse(newprice.ToString()), 2);
+                    float compPrice = 0;
+                    if (newskroutzprice != null)
+                    {
+                        compPrice = (float)Math.Round(float.Parse(newskroutzprice.ToString()), 2);
+                    }
+                    else
+                    {
+                        compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
+                    }
+                    
                     if (compPrice != joinprice.Price)
                     {
-                        CheckPrices(link.Title,testlink, float.Parse(newprice),(float) joinprice.Price);
+                        CheckPrices(link.Title,testlink, compPrice,(float) joinprice.Price);
                         Data.tblProducts updProduct = context.tblProducts.Where(x=>x.Id == link.Id).FirstOrDefault();
                         updProduct.Id = link.Id;
                         updProduct.Price = compPrice;
                         context.SaveChanges();
                     }
                 }
+                //'btnLoad.Invoke(new Action(() => btnLoad.Enabled = true));
+                materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
             }
         }
         private void CheckPrices(string title , int pid , float newprice,float oldprice)
@@ -324,7 +355,7 @@ namespace PriceStalkerScrape
             if (newprice != oldprice)
             {
                 float deservedDifference = newprice - oldprice;
-                if (deservedDifference >= 5)
+                if (deservedDifference >= 4)
                 {
                     using (var context = new Data.StalkerEntities())
                     {
@@ -346,20 +377,15 @@ namespace PriceStalkerScrape
             }
         }
         private System.Drawing.Point _mouseLoc;
-
         private void Main_MouseDown(object sender, MouseEventArgs e)
         {
             _mouseLoc = e.Location;
         }
 
-        private void Main_MouseMove(object sender, MouseEventArgs e)
+        private void button2_Click(object sender, EventArgs e)
         {
-            //if (e.Button == MouseButtons.Left)
-            //{
-            //    int dx = e.Location.X - _mouseLoc.X;
-            //    int dy = e.Location.Y - _mouseLoc.Y;
-            //    this.Location = new System.Drawing.Point(this.Location.X + dx, this.Location.Y + dy);
-            //}
+            Order order = new Order();
+            order.ShowDialog();
         }
     }
     public class ComboboxItem
