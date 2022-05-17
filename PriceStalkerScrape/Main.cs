@@ -6,6 +6,8 @@ using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Validation;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,8 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using HtmlAgilityPack;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using LiveCharts;
 using LiveCharts.Wpf;
 using MaterialSkin;
@@ -30,9 +34,119 @@ namespace PriceStalkerScrape
         public Main()
         {
             InitializeComponent();
-            LoadData();
-            FillComboBox();
+            //LoadData();
+            //FillComboBox();
+            //SplitTiff(@"C:\source2.tiff");
+            //Export();
+            exportJpgToPdf();
         }
+        public static void SplitTiff(string filepath)
+        {
+            int activePage;
+            int pages;
+
+            var dest = @"c:\Tiffs";
+
+            System.Drawing.Image image = System.Drawing.Image.FromFile(filepath);
+            pages = image.GetFrameCount(System.Drawing.Imaging.FrameDimension.Page);
+
+            for (int index = 0; index < pages; index++)
+            {
+                activePage = index + 1;
+                image.SelectActiveFrame(System.Drawing.Imaging.FrameDimension.Page, index);
+                image.Save(dest + @"\file_" + activePage.ToString() + ".tiff", System.Drawing.Imaging.ImageFormat.Tiff);
+            }
+            image.Dispose();
+        }
+        public static string[] ConvertTiffToJpeg(string fileName)
+        {
+            using (System.Drawing.Image imageFile = System.Drawing.Image.FromFile(fileName))
+            {
+                FrameDimension frameDimensions = new FrameDimension(
+                    imageFile.FrameDimensionsList[0]);
+
+                // Gets the number of pages from the tiff image (if multipage) 
+                int frameNum = imageFile.GetFrameCount(frameDimensions);
+                string[] jpegPaths = new string[frameNum];
+
+                for (int frame = 0; frame < frameNum; frame++)
+                {
+                    // Selects one frame at a time and save as jpeg. 
+                    imageFile.SelectActiveFrame(frameDimensions, frame);
+                    using (Bitmap bmp = new Bitmap(imageFile))
+                    {
+                        jpegPaths[frame] = String.Format("{0}\\{1}{2}.jpg",
+                            Path.GetDirectoryName(fileName),
+                            Path.GetFileNameWithoutExtension(fileName),
+                            frame);
+                        bmp.Save(jpegPaths[frame], ImageFormat.Jpeg);
+                    }
+                }
+
+                return jpegPaths;
+            }
+        }
+        public static String[] GetFilesFrom(String searchFolder, String[] filters, bool isRecursive)
+        {
+            List<String> filesFound = new List<String>();
+            var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            foreach (var filter in filters)
+            {
+                filesFound.AddRange(Directory.GetFiles(searchFolder, String.Format("*.{0}", filter), searchOption));
+            }
+            return filesFound.ToArray();
+        }
+        private static void exportJpgToPdf()
+        {
+            String searchFolder = @"C:\";
+            var filters = new String[] { "jpg", "jpeg",};
+            var files = GetFilesFrom(searchFolder, filters, false);
+            Document document = new Document();
+            using (var stream = new FileStream(@"C:\test.pdf", FileMode.Create, FileAccess.Write, FileShare.None))
+            {
+                PdfWriter.GetInstance(document, stream);
+                document.Open();
+                foreach(var i in files)
+                {
+                    var image = System.Drawing.Image.FromFile(i.ToString());
+                    document.Add((IElement)image);
+                }
+                document.Close();
+            }
+        }
+        private static void Export()
+        {
+            using (var stream = new FileStream(@"C:\result.pdf", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
+            {
+                Document document = new Document();
+                var writer = PdfWriter.GetInstance(document, stream);
+                var bitmap = new System.Drawing.Bitmap(@"C:\source2.tiff");
+                var pages = bitmap.GetFrameCount(System.Drawing.Imaging.FrameDimension.Page);
+
+                document.Open();
+                iTextSharp.text.pdf.PdfContentByte cb = writer.DirectContent;
+                for (int i = 0; i < pages; ++i)
+                {
+                    bitmap.SelectActiveFrame(System.Drawing.Imaging.FrameDimension.Page, i);
+                    iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(bitmap, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    // scale the image to fit in the page 
+                    if(img.Width > img.Height)
+                    {
+                        document.SetPageSize(PageSize.A4);
+                    }
+                    else if (img.Width < img.Height)
+                    {
+                        document.SetPageSize(PageSize.A4.Rotate());
+                    }
+                    img.ScalePercent(72f / img.DpiX * 100);
+                    img.SetAbsolutePosition(0, 0);
+                    cb.AddImage(img);
+                    document.NewPage();
+                }
+                document.Close();
+            }
+        }
+    
         private void Initialize(string title, string price, string rating, string summary)
         {
             lblProductPrice.Text = price;
