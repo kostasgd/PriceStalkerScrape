@@ -101,15 +101,27 @@ namespace PriceStalkerScrape
             String searchFolder = @"C:\";
             var filters = new String[] { "jpg", "jpeg",};
             var files = GetFilesFrom(searchFolder, filters, false);
-            Document document = new Document();
+            Document document = new Document(PageSize.A4);
             using (var stream = new FileStream(@"C:\test.pdf", FileMode.Create, FileAccess.Write, FileShare.None))
             {
                 PdfWriter.GetInstance(document, stream);
                 document.Open();
                 foreach(var i in files)
                 {
-                    var image = System.Drawing.Image.FromFile(i.ToString());
-                    document.Add((IElement)image);
+                    var logo = iTextSharp.text.Image.GetInstance(i.ToString());
+                    if(logo.Width > logo.Height)
+                    {
+                        document.SetPageSize(PageSize.A4.Rotate());
+                    }
+                    else
+                    {
+                        document.SetPageSize(PageSize.A4);
+                    }
+                    logo.ScalePercent(100f / logo.DpiX *23);
+                    logo.SetAbsolutePosition(0,0);
+                    document.Add(logo);
+ 
+                    document.NewPage();
                 }
                 document.Close();
             }
