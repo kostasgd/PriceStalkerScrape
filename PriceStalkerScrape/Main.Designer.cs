@@ -35,30 +35,39 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.pbLoadImage = new System.Windows.Forms.PictureBox();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
             this.button2 = new System.Windows.Forms.Button();
-            this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.panel5 = new System.Windows.Forms.Panel();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.cbProducts = new System.Windows.Forms.ComboBox();
+            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new System.Windows.Forms.Button();
             this.txtLink = new System.Windows.Forms.TextBox();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.rtbImpressions = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLoadImage)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage4.SuspendLayout();
-            this.panel2.SuspendLayout();
+            this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
+            this.panel2.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -87,38 +96,44 @@
             // 
             // txtDescription
             // 
-            this.txtDescription.Location = new System.Drawing.Point(8, 114);
+            this.txtDescription.Location = new System.Drawing.Point(8, 397);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.ReadOnly = true;
-            this.txtDescription.Size = new System.Drawing.Size(822, 368);
+            this.txtDescription.Size = new System.Drawing.Size(578, 87);
             this.txtDescription.TabIndex = 12;
             // 
             // panel1
             // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.tabControl1);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel1.Location = new System.Drawing.Point(0, 128);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1096, 532);
+            this.panel1.Size = new System.Drawing.Size(1090, 532);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
             // 
+            this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage3);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(161)));
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1096, 529);
+            this.tabControl1.Size = new System.Drawing.Size(1090, 529);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.rtbImpressions);
+            this.tabPage1.Controls.Add(this.pbLoadImage);
             this.tabPage1.Controls.Add(this.materialFlatButton1);
             this.tabPage1.Controls.Add(this.lblProductRating);
             this.tabPage1.Controls.Add(this.lblProductTitle);
@@ -128,10 +143,19 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1088, 492);
+            this.tabPage1.Size = new System.Drawing.Size(1082, 492);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // pbLoadImage
+            // 
+            this.pbLoadImage.Location = new System.Drawing.Point(592, 149);
+            this.pbLoadImage.Name = "pbLoadImage";
+            this.pbLoadImage.Size = new System.Drawing.Size(488, 340);
+            this.pbLoadImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbLoadImage.TabIndex = 14;
+            this.pbLoadImage.TabStop = false;
             // 
             // materialFlatButton1
             // 
@@ -171,8 +195,8 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.panel3);
             this.tabPage4.Controls.Add(this.panel2);
-            this.tabPage4.Controls.Add(this.dgvOrders);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Size = new System.Drawing.Size(1088, 492);
@@ -180,86 +204,116 @@
             this.tabPage4.Text = "Orders";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.dgvOrders);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(0, 61);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1088, 431);
+            this.panel3.TabIndex = 3;
+            // 
+            // dgvOrders
+            // 
+            this.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvOrders.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvOrders.Location = new System.Drawing.Point(0, 0);
+            this.dgvOrders.Name = "dgvOrders";
+            this.dgvOrders.ReadOnly = true;
+            this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvOrders.Size = new System.Drawing.Size(1088, 431);
+            this.dgvOrders.TabIndex = 1;
+            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.button2);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1088, 73);
+            this.panel2.Size = new System.Drawing.Size(1088, 61);
             this.panel2.TabIndex = 2;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(910, 16);
+            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button2.Location = new System.Drawing.Point(0, 0);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(170, 38);
+            this.button2.Size = new System.Drawing.Size(140, 61);
             this.button2.TabIndex = 0;
             this.button2.Text = "New Order";
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // dgvOrders
-            // 
-            this.dgvOrders.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvOrders.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.dgvOrders.Location = new System.Drawing.Point(0, 79);
-            this.dgvOrders.Name = "dgvOrders";
-            this.dgvOrders.ReadOnly = true;
-            this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOrders.Size = new System.Drawing.Size(1088, 413);
-            this.dgvOrders.TabIndex = 1;
-            // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.materialRaisedButton2);
-            this.tabPage3.Controls.Add(this.elementHost1);
-            this.tabPage3.Controls.Add(this.cbProducts);
-            this.tabPage3.Controls.Add(this.btnLoad);
+            this.tabPage3.Controls.Add(this.panel5);
+            this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1088, 492);
+            this.tabPage3.Size = new System.Drawing.Size(1082, 492);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // materialRaisedButton2
+            // panel5
             // 
-            this.materialRaisedButton2.Depth = 0;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(956, 17);
-            this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton2.Name = "materialRaisedButton2";
-            this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(124, 48);
-            this.materialRaisedButton2.TabIndex = 4;
-            this.materialRaisedButton2.Text = "Check new prices";
-            this.materialRaisedButton2.UseVisualStyleBackColor = true;
-            this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
+            this.panel5.Controls.Add(this.elementHost1);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 97);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1082, 395);
+            this.panel5.TabIndex = 6;
             // 
             // elementHost1
             // 
-            this.elementHost1.Location = new System.Drawing.Point(8, 86);
+            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.elementHost1.Location = new System.Drawing.Point(0, 0);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(762, 379);
+            this.elementHost1.Size = new System.Drawing.Size(1082, 395);
             this.elementHost1.TabIndex = 3;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.cartesianChart1;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.cbProducts);
+            this.panel4.Controls.Add(this.materialRaisedButton2);
+            this.panel4.Controls.Add(this.btnLoad);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(1082, 97);
+            this.panel4.TabIndex = 5;
             // 
             // cbProducts
             // 
             this.cbProducts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbProducts.FormattingEnabled = true;
-            this.cbProducts.Location = new System.Drawing.Point(8, 34);
+            this.cbProducts.Location = new System.Drawing.Point(8, 33);
             this.cbProducts.Name = "cbProducts";
-            this.cbProducts.Size = new System.Drawing.Size(574, 32);
+            this.cbProducts.Size = new System.Drawing.Size(762, 32);
             this.cbProducts.TabIndex = 2;
             this.cbProducts.SelectedIndexChanged += new System.EventHandler(this.cbProducts_SelectedIndexChanged);
             // 
+            // materialRaisedButton2
+            // 
+            this.materialRaisedButton2.Depth = 0;
+            this.materialRaisedButton2.Dock = System.Windows.Forms.DockStyle.Right;
+            this.materialRaisedButton2.Location = new System.Drawing.Point(955, 0);
+            this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton2.Name = "materialRaisedButton2";
+            this.materialRaisedButton2.Primary = true;
+            this.materialRaisedButton2.Size = new System.Drawing.Size(127, 97);
+            this.materialRaisedButton2.TabIndex = 4;
+            this.materialRaisedButton2.Text = "Check new prices";
+            this.materialRaisedButton2.UseVisualStyleBackColor = true;
+            this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
+            // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(599, 33);
+            this.btnLoad.Location = new System.Drawing.Point(818, 0);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(171, 32);
+            this.btnLoad.Size = new System.Drawing.Size(137, 97);
             this.btnLoad.TabIndex = 0;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
@@ -269,7 +323,7 @@
             // 
             this.txtLink.Location = new System.Drawing.Point(126, 77);
             this.txtLink.Name = "txtLink";
-            this.txtLink.Size = new System.Drawing.Size(484, 20);
+            this.txtLink.Size = new System.Drawing.Size(958, 20);
             this.txtLink.TabIndex = 14;
             // 
             // materialRaisedButton1
@@ -285,11 +339,19 @@
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
             this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
             // 
+            // rtbImpressions
+            // 
+            this.rtbImpressions.Location = new System.Drawing.Point(8, 121);
+            this.rtbImpressions.Name = "rtbImpressions";
+            this.rtbImpressions.Size = new System.Drawing.Size(578, 270);
+            this.rtbImpressions.TabIndex = 15;
+            this.rtbImpressions.Text = "";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1096, 660);
+            this.ClientSize = new System.Drawing.Size(1090, 660);
             this.Controls.Add(this.materialRaisedButton1);
             this.Controls.Add(this.txtLink);
             this.Controls.Add(this.panel1);
@@ -299,17 +361,20 @@
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load_1);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
-           // this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Main_MouseMove);
             this.panel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbLoadImage)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage4.ResumeLayout(false);
-            this.panel2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).EndInit();
+            this.panel2.ResumeLayout(false);
             this.tabPage3.ResumeLayout(false);
+            this.panel5.ResumeLayout(false);
+            this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -338,6 +403,11 @@
         private System.Windows.Forms.DataGridView dgvOrders;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Panel panel4;
+        private System.Windows.Forms.PictureBox pbLoadImage;
+        private System.Windows.Forms.RichTextBox rtbImpressions;
     }
 }
 

@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,8 +18,6 @@ using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using HtmlAgilityPack;
-using iTextSharp.text;
-using iTextSharp.text.pdf;
 using LiveCharts;
 using LiveCharts.Wpf;
 using MaterialSkin;
@@ -36,129 +35,8 @@ namespace PriceStalkerScrape
             InitializeComponent();
             //LoadData();
             //FillComboBox();
-            //SplitTiff(@"C:\source2.tiff");
-            //Export();
-            exportJpgToPdf();
+            SetImpression();
         }
-        public static void SplitTiff(string filepath)
-        {
-            int activePage;
-            int pages;
-
-            var dest = @"c:\Tiffs";
-
-            System.Drawing.Image image = System.Drawing.Image.FromFile(filepath);
-            pages = image.GetFrameCount(System.Drawing.Imaging.FrameDimension.Page);
-
-            for (int index = 0; index < pages; index++)
-            {
-                activePage = index + 1;
-                image.SelectActiveFrame(System.Drawing.Imaging.FrameDimension.Page, index);
-                image.Save(dest + @"\file_" + activePage.ToString() + ".tiff", System.Drawing.Imaging.ImageFormat.Tiff);
-            }
-            image.Dispose();
-        }
-        public static string[] ConvertTiffToJpeg(string fileName)
-        {
-            using (System.Drawing.Image imageFile = System.Drawing.Image.FromFile(fileName))
-            {
-                FrameDimension frameDimensions = new FrameDimension(
-                    imageFile.FrameDimensionsList[0]);
-
-                // Gets the number of pages from the tiff image (if multipage) 
-                int frameNum = imageFile.GetFrameCount(frameDimensions);
-                string[] jpegPaths = new string[frameNum];
-
-                for (int frame = 0; frame < frameNum; frame++)
-                {
-                    // Selects one frame at a time and save as jpeg. 
-                    imageFile.SelectActiveFrame(frameDimensions, frame);
-                    using (Bitmap bmp = new Bitmap(imageFile))
-                    {
-                        jpegPaths[frame] = String.Format("{0}\\{1}{2}.jpg",
-                            Path.GetDirectoryName(fileName),
-                            Path.GetFileNameWithoutExtension(fileName),
-                            frame);
-                        bmp.Save(jpegPaths[frame], ImageFormat.Jpeg);
-                    }
-                }
-
-                return jpegPaths;
-            }
-        }
-        public static String[] GetFilesFrom(String searchFolder, String[] filters, bool isRecursive)
-        {
-            List<String> filesFound = new List<String>();
-            var searchOption = isRecursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-            foreach (var filter in filters)
-            {
-                filesFound.AddRange(Directory.GetFiles(searchFolder, String.Format("*.{0}", filter), searchOption));
-            }
-            return filesFound.ToArray();
-        }
-        private static void exportJpgToPdf()
-        {
-            String searchFolder = @"C:\";
-            var filters = new String[] { "jpg", "jpeg",};
-            var files = GetFilesFrom(searchFolder, filters, false);
-            Document document = new Document(PageSize.A4);
-            using (var stream = new FileStream(@"C:\test.pdf", FileMode.Create, FileAccess.Write, FileShare.None))
-            {
-                PdfWriter.GetInstance(document, stream);
-                document.Open();
-                foreach(var i in files)
-                {
-                    var logo = iTextSharp.text.Image.GetInstance(i.ToString());
-                    if(logo.Width > logo.Height)
-                    {
-                        document.SetPageSize(PageSize.A4.Rotate());
-                    }
-                    else
-                    {
-                        document.SetPageSize(PageSize.A4);
-                    }
-                    logo.ScalePercent(100f / logo.DpiX *23);
-                    logo.SetAbsolutePosition(0,0);
-                    document.Add(logo);
- 
-                    document.NewPage();
-                }
-                document.Close();
-            }
-        }
-        private static void Export()
-        {
-            using (var stream = new FileStream(@"C:\result.pdf", FileMode.OpenOrCreate, FileAccess.Write, FileShare.None))
-            {
-                Document document = new Document();
-                var writer = PdfWriter.GetInstance(document, stream);
-                var bitmap = new System.Drawing.Bitmap(@"C:\source2.tiff");
-                var pages = bitmap.GetFrameCount(System.Drawing.Imaging.FrameDimension.Page);
-
-                document.Open();
-                iTextSharp.text.pdf.PdfContentByte cb = writer.DirectContent;
-                for (int i = 0; i < pages; ++i)
-                {
-                    bitmap.SelectActiveFrame(System.Drawing.Imaging.FrameDimension.Page, i);
-                    iTextSharp.text.Image img = iTextSharp.text.Image.GetInstance(bitmap, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    // scale the image to fit in the page 
-                    if(img.Width > img.Height)
-                    {
-                        document.SetPageSize(PageSize.A4);
-                    }
-                    else if (img.Width < img.Height)
-                    {
-                        document.SetPageSize(PageSize.A4.Rotate());
-                    }
-                    img.ScalePercent(72f / img.DpiX * 100);
-                    img.SetAbsolutePosition(0, 0);
-                    cb.AddImage(img);
-                    document.NewPage();
-                }
-                document.Close();
-            }
-        }
-    
         private void Initialize(string title, string price, string rating, string summary)
         {
             lblProductPrice.Text = price;
@@ -253,7 +131,6 @@ namespace PriceStalkerScrape
         {
             
         }
-
         private void Main_Load_1(object sender, EventArgs e)
         {
             var materialSkinManager = MaterialSkinManager.Instance;
@@ -262,9 +139,7 @@ namespace PriceStalkerScrape
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);   
         }
 
-        private void btnScrape_Click(object sender, EventArgs e)
-        {
-        }
+        private void btnScrape_Click(object sender, EventArgs e){}
 
         private void materialFlatButton1_Click_1(object sender, EventArgs e)
         {
@@ -287,14 +162,71 @@ namespace PriceStalkerScrape
                 dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
             }
         }
+        private void SetImpression()
+        {
+            var url = "https://www.skroutz.gr/s/24996052/AOC-C27G2AE-VA-Curved-Gaming-Monitor-27-FHD-1920x1080-165Hz-%CE%BC%CE%B5-%CF%87%CF%81%CF%8C%CE%BD%CE%BF-%CE%B1%CF%80%CF%8C%CE%BA%CF%81%CE%B9%CF%83%CE%B7%CF%82-4ms-GTG.html?from=comparison_table";
+            var web = new HtmlWeb();
+            var doc = web.Load(url);
 
+            List<string> listpros = new List<string>();
+            List<string> listsoso = new List<string>();
+            List<string> listcons = new List<string>();
+            var prosImpressions = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]/li")?.ToList();
+            foreach (var pros in prosImpressions.GroupBy(x => x.InnerText))
+            {
+                listpros.Add(pros.Key.ToString());
+                Console.WriteLine("pros " + pros.Key.ToString());
+            }
+
+            var soso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]/li")?.ToList();
+            foreach (var so in soso.GroupBy(x => x.InnerText))
+            {
+                listsoso.Add(so.Key.ToString());
+                Console.WriteLine("soso " + so.Key.ToString());
+            }
+
+            var cons = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]/li")?.ToList();
+            if (cons != null)
+            {
+                foreach (var c in cons.GroupBy(x => x.InnerText))
+                {
+                    listcons.Add(c.Key.ToString());
+                    Console.WriteLine("cons " + c.Key.ToString());
+                }
+            }
+            int total = prosImpressions.Count() + soso.Count() + cons.Count();
+            
+            
+            //var commons = prosImpressions.Intersect(soso);
+            List<string> commons = prosImpressions.Select(s1 => s1.InnerText).ToList().Intersect(soso.Select(s2 => s2.InnerText).ToList()).ToList();
+            foreach (var com in commons)
+            {
+                Console.WriteLine("Commons "+com.ToString());
+            }
+
+            var joinpros = String.Join(",", listpros.ToArray());
+            var joinsoso = String.Join(",", listsoso.ToArray());
+            var joincons = String.Join(",", listcons.ToArray());
+            string common = "";
+            foreach(var k in commons)
+            {
+                common += k+",";
+            }
+            common = common.Remove(common.Length-1);
+            rtbImpressions.Text += "+" + joinpros.ToString() +"\n";
+            rtbImpressions.Text += "\n";
+            rtbImpressions.Text += "^" + joinsoso.ToString() + "\n";
+            rtbImpressions.Text += "\n";
+            rtbImpressions.Text += "-" + joincons.ToString() + "\n";
+            rtbImpressions.Text += "\n";
+            rtbImpressions.Text += "+-"+ common;
+        }
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
             try
             {
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
-                    // From Web 
                     ScrapeSkroutz();
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
@@ -311,7 +243,6 @@ namespace PriceStalkerScrape
         {
             try
             {
-                // From Web 
                 var url = txtLink.Text;
                 var web = new HtmlWeb();
                 var doc = web.Load(url);
@@ -319,7 +250,7 @@ namespace PriceStalkerScrape
                 var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
                 string price = prices?.FirstOrDefault().InnerText.ToString();
                 var rating = doc?.DocumentNode?.SelectSingleNode("//span[contains(@class,'Header__StarRating')]")?.InnerText; //actual-rating 
-                                                                                                                              //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
+                var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;                                                                                   //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
                 var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
                 string description = "";
                 Console.WriteLine("Title :" + title + " Price :" + price + " Rating :" + rating);
@@ -333,6 +264,10 @@ namespace PriceStalkerScrape
                     {
                         description += s.InnerText + "\n";
                     }
+                }
+                if (picture != null)
+                {
+                    pbLoadImage.Load("https:" + picture);
                 }
                 if (string.IsNullOrEmpty(rating))
                 {
@@ -356,6 +291,7 @@ namespace PriceStalkerScrape
             var title = doc?.DocumentNode?.SelectSingleNode("//h1[@class='page-title']")?.InnerText;
             var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
             string price = prices?.FirstOrDefault().InnerText.ToString();
+            var picture = doc?.DocumentNode?.SelectSingleNode("//div[@class='image']//a//img")?.Attributes["src"].Value;
             var rating = doc?.DocumentNode?.SelectSingleNode("//span[@itemprop='ratingValue']")?.InnerText; //actual-rating 
                                                                                                             //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
             var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'summary')]")?.ToList(); //summary
@@ -370,6 +306,10 @@ namespace PriceStalkerScrape
             if (string.IsNullOrEmpty(rating))
             {
                 rating = "0";
+            }
+            if (picture != null)
+            {
+                pbLoadImage.Load("https:" + picture.ToString());
             }
             if (title != null && price != null)
             {
@@ -513,12 +453,12 @@ namespace PriceStalkerScrape
             Order order = new Order();
             order.ShowDialog();
         }
+
     }
     public class ComboboxItem
     {
         public string Text { get; set; }
         public object Value { get; set; }
-
         public override string ToString()
         {
             return Text;
