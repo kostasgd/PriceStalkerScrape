@@ -33,9 +33,8 @@ namespace PriceStalkerScrape
         public Main()
         {
             InitializeComponent();
-            //LoadData();
-            //FillComboBox();
-            SetImpression();
+            LoadData();
+            FillComboBox();
         }
         private void Initialize(string title, string price, string rating, string summary)
         {
@@ -228,6 +227,7 @@ namespace PriceStalkerScrape
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
                     ScrapeSkroutz();
+                    SetImpression();
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
@@ -370,7 +370,7 @@ namespace PriceStalkerScrape
             //System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
         }
 
-        private void materialRaisedButton2_Click(object sender, EventArgs e)
+        private async void materialRaisedButton2_Click(object sender, EventArgs e)
         {
             //εδω θα υλοποιηθεί η λειτουργία ελέγχου για αλλαγή τιμών προιόντων
             using(var context = new Data.StalkerEntities())
@@ -378,6 +378,7 @@ namespace PriceStalkerScrape
                 var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id ,i.Price,i.Rating,i.Title}).ToList();
                 //btnLoad.Invoke(new Action(() => btnLoad.Enabled = false));
                 materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled=false));
+                
                 foreach (var link in data)
                 {
                     Application.DoEvents();
@@ -403,44 +404,49 @@ namespace PriceStalkerScrape
                         compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
                     }
                     
-                    if (compPrice != joinprice.Price)
-                    {
-                        CheckPrices(link.Title,testlink, compPrice,(float) joinprice.Price);
+                    //if (compPrice != joinprice.Price)
+                    //{
+                        await CheckPrices(link.Title,testlink, compPrice,(float) joinprice.Price);
                         Data.tblProducts updProduct = context.tblProducts.Where(x=>x.Id == link.Id).FirstOrDefault();
                         updProduct.Id = link.Id;
                         updProduct.Price = compPrice;
                         context.SaveChanges();
-                    }
+                    //}
                 }
                 //'btnLoad.Invoke(new Action(() => btnLoad.Enabled = true));
                 materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
             }
         }
-        private void CheckPrices(string title , int pid , float newprice,float oldprice)
+        private Task CheckPrices(string title , int pid , float newprice,float oldprice)
         {
-            if (newprice != oldprice)
+            Task task1 = Task.Run(() =>
             {
-                float deservedDifference = newprice - oldprice;
-                if (deservedDifference >= 4)
+                if (newprice != oldprice)
                 {
-                    using (var context = new Data.StalkerEntities())
+                    float deservedDifference = newprice - oldprice;
+                    if (deservedDifference >= 4)
                     {
-                        Data.PriceHistory priceHistory = new Data.PriceHistory()
+                        using (var context = new Data.StalkerEntities())
                         {
-                            PId = pid,
-                            Price = Math.Round(newprice, 2),
-                            Date = DateTime.Now
-                        };
-                        context.PriceHistory.Add(priceHistory);
-                        context.SaveChanges();
-                        new ToastContentBuilder()
-                        .AddArgument("action", "viewConversation")
-                                .AddArgument("conversationId", 123)
-                                .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
-                                .Show();
+                            Data.PriceHistory priceHistory = new Data.PriceHistory()
+                            {
+                                PId = pid,
+                                Price = Math.Round(newprice, 2),
+                                Date = DateTime.Now
+                            };
+                            context.PriceHistory.Add(priceHistory);
+                            context.SaveChanges();
+                            new ToastContentBuilder()
+                            .AddArgument("action", "viewConversation")
+                                    .AddArgument("conversationId", 123)
+                                    .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
+                                    .Show();
+                        }
                     }
-                }   
-            }
+                }
+            });
+
+            return task1;
         }
         private System.Drawing.Point _mouseLoc;
         private void Main_MouseDown(object sender, MouseEventArgs e)

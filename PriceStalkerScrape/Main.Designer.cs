@@ -73,7 +73,7 @@
             // lblProductTitle
             // 
             this.lblProductTitle.AutoSize = true;
-            this.lblProductTitle.Location = new System.Drawing.Point(33, 27);
+            this.lblProductTitle.Location = new System.Drawing.Point(34, 10);
             this.lblProductTitle.Name = "lblProductTitle";
             this.lblProductTitle.Size = new System.Drawing.Size(0, 20);
             this.lblProductTitle.TabIndex = 9;
@@ -81,7 +81,7 @@
             // lblProductPrice
             // 
             this.lblProductPrice.AutoSize = true;
-            this.lblProductPrice.Location = new System.Drawing.Point(33, 60);
+            this.lblProductPrice.Location = new System.Drawing.Point(34, 43);
             this.lblProductPrice.Name = "lblProductPrice";
             this.lblProductPrice.Size = new System.Drawing.Size(0, 20);
             this.lblProductPrice.TabIndex = 10;
@@ -89,18 +89,18 @@
             // lblProductRating
             // 
             this.lblProductRating.AutoSize = true;
-            this.lblProductRating.Location = new System.Drawing.Point(115, 60);
+            this.lblProductRating.Location = new System.Drawing.Point(116, 43);
             this.lblProductRating.Name = "lblProductRating";
             this.lblProductRating.Size = new System.Drawing.Size(0, 20);
             this.lblProductRating.TabIndex = 11;
             // 
             // txtDescription
             // 
-            this.txtDescription.Location = new System.Drawing.Point(8, 397);
+            this.txtDescription.Location = new System.Drawing.Point(8, 353);
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.ReadOnly = true;
-            this.txtDescription.Size = new System.Drawing.Size(578, 87);
+            this.txtDescription.Size = new System.Drawing.Size(578, 131);
             this.txtDescription.TabIndex = 12;
             // 
             // panel1
@@ -150,9 +150,9 @@
             // 
             // pbLoadImage
             // 
-            this.pbLoadImage.Location = new System.Drawing.Point(592, 149);
+            this.pbLoadImage.Location = new System.Drawing.Point(592, 77);
             this.pbLoadImage.Name = "pbLoadImage";
-            this.pbLoadImage.Size = new System.Drawing.Size(488, 340);
+            this.pbLoadImage.Size = new System.Drawing.Size(488, 412);
             this.pbLoadImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pbLoadImage.TabIndex = 14;
             this.pbLoadImage.TabStop = false;
@@ -341,7 +341,7 @@
             // 
             // rtbImpressions
             // 
-            this.rtbImpressions.Location = new System.Drawing.Point(8, 121);
+            this.rtbImpressions.Location = new System.Drawing.Point(8, 77);
             this.rtbImpressions.Name = "rtbImpressions";
             this.rtbImpressions.Size = new System.Drawing.Size(578, 270);
             this.rtbImpressions.TabIndex = 15;
