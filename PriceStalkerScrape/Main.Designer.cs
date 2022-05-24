@@ -35,7 +35,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.pbLoadImage = new System.Windows.Forms.PictureBox();
+            this.pieChart1 = new LiveCharts.WinForms.PieChart();
+            this.rtbImpressions = new System.Windows.Forms.RichTextBox();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
@@ -54,11 +55,9 @@
             this.btnLoad = new System.Windows.Forms.Button();
             this.txtLink = new System.Windows.Forms.TextBox();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.rtbImpressions = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLoadImage)).BeginInit();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage4.SuspendLayout();
@@ -100,7 +99,7 @@
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.ReadOnly = true;
-            this.txtDescription.Size = new System.Drawing.Size(578, 131);
+            this.txtDescription.Size = new System.Drawing.Size(754, 131);
             this.txtDescription.TabIndex = 12;
             // 
             // panel1
@@ -111,7 +110,7 @@
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(0, 128);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1090, 532);
+            this.panel1.Size = new System.Drawing.Size(1272, 535);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
@@ -127,13 +126,13 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1090, 529);
+            this.tabControl1.Size = new System.Drawing.Size(1272, 532);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.pieChart1);
             this.tabPage1.Controls.Add(this.rtbImpressions);
-            this.tabPage1.Controls.Add(this.pbLoadImage);
             this.tabPage1.Controls.Add(this.materialFlatButton1);
             this.tabPage1.Controls.Add(this.lblProductRating);
             this.tabPage1.Controls.Add(this.lblProductTitle);
@@ -143,24 +142,31 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1082, 492);
+            this.tabPage1.Size = new System.Drawing.Size(1264, 495);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // pbLoadImage
+            // pieChart1
             // 
-            this.pbLoadImage.Location = new System.Drawing.Point(592, 77);
-            this.pbLoadImage.Name = "pbLoadImage";
-            this.pbLoadImage.Size = new System.Drawing.Size(488, 412);
-            this.pbLoadImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbLoadImage.TabIndex = 14;
-            this.pbLoadImage.TabStop = false;
+            this.pieChart1.Location = new System.Drawing.Point(768, 94);
+            this.pieChart1.Name = "pieChart1";
+            this.pieChart1.Size = new System.Drawing.Size(488, 390);
+            this.pieChart1.TabIndex = 17;
+            this.pieChart1.Text = "pieChart1";
+            // 
+            // rtbImpressions
+            // 
+            this.rtbImpressions.Location = new System.Drawing.Point(8, 77);
+            this.rtbImpressions.Name = "rtbImpressions";
+            this.rtbImpressions.Size = new System.Drawing.Size(754, 270);
+            this.rtbImpressions.TabIndex = 15;
+            this.rtbImpressions.Text = "";
             // 
             // materialFlatButton1
             // 
             this.materialFlatButton1.Depth = 0;
-            this.materialFlatButton1.Location = new System.Drawing.Point(922, 6);
+            this.materialFlatButton1.Location = new System.Drawing.Point(1093, 3);
             this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton1.Name = "materialFlatButton1";
             this.materialFlatButton1.Primary = true;
@@ -176,7 +182,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1088, 492);
+            this.tabPage2.Size = new System.Drawing.Size(1264, 495);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Products";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -189,7 +195,7 @@
             this.dgvProducts.Name = "dgvProducts";
             this.dgvProducts.ReadOnly = true;
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProducts.Size = new System.Drawing.Size(1082, 486);
+            this.dgvProducts.Size = new System.Drawing.Size(1258, 489);
             this.dgvProducts.TabIndex = 0;
             this.dgvProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellDoubleClick);
             // 
@@ -199,7 +205,7 @@
             this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1088, 492);
+            this.tabPage4.Size = new System.Drawing.Size(1264, 495);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Orders";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -210,7 +216,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 61);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1088, 431);
+            this.panel3.Size = new System.Drawing.Size(1264, 434);
             this.panel3.TabIndex = 3;
             // 
             // dgvOrders
@@ -221,7 +227,7 @@
             this.dgvOrders.Name = "dgvOrders";
             this.dgvOrders.ReadOnly = true;
             this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOrders.Size = new System.Drawing.Size(1088, 431);
+            this.dgvOrders.Size = new System.Drawing.Size(1264, 434);
             this.dgvOrders.TabIndex = 1;
             // 
             // panel2
@@ -230,7 +236,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1088, 61);
+            this.panel2.Size = new System.Drawing.Size(1264, 61);
             this.panel2.TabIndex = 2;
             // 
             // button2
@@ -250,7 +256,7 @@
             this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1082, 492);
+            this.tabPage3.Size = new System.Drawing.Size(1264, 495);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -259,17 +265,16 @@
             // 
             this.panel5.Controls.Add(this.elementHost1);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(0, 97);
+            this.panel5.Location = new System.Drawing.Point(0, 94);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1082, 395);
+            this.panel5.Size = new System.Drawing.Size(1264, 401);
             this.panel5.TabIndex = 6;
             // 
             // elementHost1
             // 
-            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.elementHost1.Location = new System.Drawing.Point(0, 0);
+            this.elementHost1.Location = new System.Drawing.Point(0, 3);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(1082, 395);
+            this.elementHost1.Size = new System.Drawing.Size(665, 392);
             this.elementHost1.TabIndex = 3;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.cartesianChart1;
@@ -282,7 +287,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1082, 97);
+            this.panel4.Size = new System.Drawing.Size(1264, 94);
             this.panel4.TabIndex = 5;
             // 
             // cbProducts
@@ -299,11 +304,11 @@
             // 
             this.materialRaisedButton2.Depth = 0;
             this.materialRaisedButton2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(955, 0);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(1137, 0);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(127, 97);
+            this.materialRaisedButton2.Size = new System.Drawing.Size(127, 94);
             this.materialRaisedButton2.TabIndex = 4;
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
@@ -339,19 +344,11 @@
             this.materialRaisedButton1.UseVisualStyleBackColor = true;
             this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
             // 
-            // rtbImpressions
-            // 
-            this.rtbImpressions.Location = new System.Drawing.Point(8, 77);
-            this.rtbImpressions.Name = "rtbImpressions";
-            this.rtbImpressions.Size = new System.Drawing.Size(578, 270);
-            this.rtbImpressions.TabIndex = 15;
-            this.rtbImpressions.Text = "";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1090, 660);
+            this.ClientSize = new System.Drawing.Size(1272, 663);
             this.Controls.Add(this.materialRaisedButton1);
             this.Controls.Add(this.txtLink);
             this.Controls.Add(this.panel1);
@@ -365,7 +362,6 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pbLoadImage)).EndInit();
             this.tabPage2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage4.ResumeLayout(false);
@@ -406,8 +402,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.PictureBox pbLoadImage;
         private System.Windows.Forms.RichTextBox rtbImpressions;
+        private LiveCharts.WinForms.PieChart pieChart1;
     }
 }
 

@@ -24,6 +24,7 @@ using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Application = System.Windows.Forms.Application;
+using Brushes = System.Windows.Media.Brushes;
 using Color = System.Windows.Media.Color;
 
 namespace PriceStalkerScrape
@@ -35,6 +36,7 @@ namespace PriceStalkerScrape
             InitializeComponent();
             LoadData();
             FillComboBox();
+            
         }
         private void Initialize(string title, string price, string rating, string summary)
         {
@@ -163,7 +165,7 @@ namespace PriceStalkerScrape
         }
         private void SetImpression()
         {
-            var url = "https://www.skroutz.gr/s/24996052/AOC-C27G2AE-VA-Curved-Gaming-Monitor-27-FHD-1920x1080-165Hz-%CE%BC%CE%B5-%CF%87%CF%81%CF%8C%CE%BD%CE%BF-%CE%B1%CF%80%CF%8C%CE%BA%CF%81%CE%B9%CF%83%CE%B7%CF%82-4ms-GTG.html?from=comparison_table";
+            var url = txtLink.Text;
             var web = new HtmlWeb();
             var doc = web.Load(url);
 
@@ -193,7 +195,12 @@ namespace PriceStalkerScrape
                     Console.WriteLine("cons " + c.Key.ToString());
                 }
             }
-            int total = prosImpressions.Count() + soso.Count() + cons.Count();
+            int? safepros = prosImpressions.Count() <= 0 ? 0 : prosImpressions.Count();
+            int? safesoso = soso.Count() <= 0 ? 0 : soso.Count(); ;
+
+            int? safecons = cons.Count() <=0 ? 0 : cons.Count();
+            
+            int? total = safepros - safesoso - safecons;
             
             
             //var commons = prosImpressions.Intersect(soso);
@@ -219,6 +226,28 @@ namespace PriceStalkerScrape
             rtbImpressions.Text += "-" + joincons.ToString() + "\n";
             rtbImpressions.Text += "\n";
             rtbImpressions.Text += "+-"+ common;
+
+            var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
+            var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
+            var countNegatives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]")?.ToList();
+            List<int> ListLengths = new List<int>();
+            ListLengths.Add(countPositives.Count());
+            ListLengths.Add(countSoso.Count());
+            ListLengths.Add(countNegatives.Count());
+            List<string> Labels = new List<string>();
+            if(safepros.Value > 0)
+            {
+                Labels.Add("Θετικά");
+            }
+            if (safesoso.Value > 0)
+            {
+                Labels.Add("Ετσι και έτσι");
+            }
+            if(safecons.Value > 0)
+            {
+                Labels.Add("Αρνητικά");
+            }
+            FillStatsChart(ListLengths,Labels);
         }
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
@@ -228,6 +257,7 @@ namespace PriceStalkerScrape
                 {
                     ScrapeSkroutz();
                     SetImpression();
+                    
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
@@ -238,6 +268,26 @@ namespace PriceStalkerScrape
             {
                 System.Windows.MessageBox.Show(ex.Message);
             }
+        }
+        public void FillStatsChart(List<int> lst, List<string> Labels)
+        {
+            Func<ChartPoint, string> labelPoint = chartPoint =>
+            string.Format("{0} ({1:P})", chartPoint.Y, chartPoint.Participation);
+            List<int> array = lst;
+            SeriesCollection series = new SeriesCollection();
+            for(int i = 0; i < array.Count; i++)
+            {
+                series.Add(new PieSeries
+                {
+                    Title = Labels[i].ToString(),
+                    Values = new ChartValues<double> { array[i] },
+                    PushOut = 15,
+                    DataLabels = true,
+                    LabelPoint = labelPoint,
+                });
+            }
+            pieChart1.Series = series;
+            pieChart1.LegendLocation = LegendLocation.Bottom;
         }
         private void ScrapeBestPrice()
         {
@@ -267,7 +317,7 @@ namespace PriceStalkerScrape
                 }
                 if (picture != null)
                 {
-                    pbLoadImage.Load("https:" + picture);
+                    //pbLoadImage.Load("https:" + picture);
                 }
                 if (string.IsNullOrEmpty(rating))
                 {
@@ -309,7 +359,7 @@ namespace PriceStalkerScrape
             }
             if (picture != null)
             {
-                pbLoadImage.Load("https:" + picture.ToString());
+               // pbLoadImage.Load("https:" + picture.ToString());
             }
             if (title != null && price != null)
             {
