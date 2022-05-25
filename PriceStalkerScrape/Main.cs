@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -24,6 +25,7 @@ using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
 using Application = System.Windows.Forms.Application;
+using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using Color = System.Windows.Media.Color;
 
@@ -36,7 +38,6 @@ namespace PriceStalkerScrape
             InitializeComponent();
             LoadData();
             FillComboBox();
-            
         }
         private void Initialize(string title, string price, string rating, string summary)
         {
@@ -275,15 +276,21 @@ namespace PriceStalkerScrape
             string.Format("{0} ({1:P})", chartPoint.Y, chartPoint.Participation);
             List<int> array = lst;
             SeriesCollection series = new SeriesCollection();
-            for(int i = 0; i < array.Count; i++)
+            Brush[] brushes = new Brush[] {
+                  Brushes.ForestGreen,
+                  Brushes.Gold,
+                  Brushes.DarkRed,
+             };
+            for (int i = 0; i < array.Count; i++)
             {
                 series.Add(new PieSeries
                 {
                     Title = Labels[i].ToString(),
+                    Foreground = Brushes.Black,
                     Values = new ChartValues<double> { array[i] },
-                    PushOut = 15,
                     DataLabels = true,
                     LabelPoint = labelPoint,
+                    Fill= brushes[i]
                 });
             }
             pieChart1.Series = series;

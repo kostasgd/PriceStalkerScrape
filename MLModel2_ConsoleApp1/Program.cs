@@ -12,19 +12,12 @@ namespace MLModel2_ConsoleApp1
             // Create single instance of sample data from first line of dataset for model input
             MLModel2.ModelInput sampleData = new MLModel2.ModelInput()
             {
-                Col1 = @"πολύ καλό",
+                Col1 = @"δεν μου αρεσε",
             };
 
             // Make a single prediction on the sample data and print results
             var predictionResult = MLModel2.Predict(sampleData);
-
-            Console.WriteLine("Using model to make single prediction -- Comparing actual Col0 with predicted Col0 from sample data...\n\n");
-
-
             Console.WriteLine($"Col0: {@"Αποτέλεσμα"}");
-            Console.WriteLine($"Col1: {@"κακό δεν το συνιστώ"}");
-
-
             Console.WriteLine($"\n\nPredicted Col0: {predictionResult.PredictedLabel}\n\n");
             Console.WriteLine("=============== End of process, hit any key to finish ===============");
             Console.ReadKey();

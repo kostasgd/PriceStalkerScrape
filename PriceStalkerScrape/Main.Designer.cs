@@ -352,6 +352,7 @@
             this.Controls.Add(this.materialRaisedButton1);
             this.Controls.Add(this.txtLink);
             this.Controls.Add(this.panel1);
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.Sizable = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
