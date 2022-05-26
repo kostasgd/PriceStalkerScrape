@@ -276,11 +276,27 @@ namespace PriceStalkerScrape
             string.Format("{0} ({1:P})", chartPoint.Y, chartPoint.Participation);
             List<int> array = lst;
             SeriesCollection series = new SeriesCollection();
-            Brush[] brushes = new Brush[] {
-                  Brushes.ForestGreen,
-                  Brushes.Gold,
-                  Brushes.DarkRed,
-             };
+            List<Brush> listBrush = new List<Brush>();
+            foreach(var lbl in Labels)
+            {
+                if (lbl == "Θετικά")
+                {
+                    listBrush.Add(Brushes.ForestGreen);
+                }
+                if(lbl == "Ετσι και έτσι")
+                {
+                    listBrush.Add(Brushes.Gold);
+                }
+                if(lbl == "Αρνητικά")
+                {
+                    listBrush.Add(Brushes.DarkRed);
+                }
+            }
+            //Brush[] brushes = new Brush[] {
+            //      Brushes.ForestGreen,
+            //      Brushes.Gold,
+            //      Brushes.DarkRed,
+            // };
             for (int i = 0; i < array.Count; i++)
             {
                 series.Add(new PieSeries
@@ -290,7 +306,7 @@ namespace PriceStalkerScrape
                     Values = new ChartValues<double> { array[i] },
                     DataLabels = true,
                     LabelPoint = labelPoint,
-                    Fill= brushes[i]
+                    Fill= listBrush[i]
                 });
             }
             pieChart1.Series = series;
@@ -427,7 +443,7 @@ namespace PriceStalkerScrape
             //System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
         }
 
-        private async void materialRaisedButton2_Click(object sender, EventArgs e)
+        private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
             //εδω θα υλοποιηθεί η λειτουργία ελέγχου για αλλαγή τιμών προιόντων
             using(var context = new Data.StalkerEntities())
@@ -460,18 +476,30 @@ namespace PriceStalkerScrape
                     {
                         compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
                     }
-                    
+
                     //if (compPrice != joinprice.Price)
                     //{
-                        await CheckPrices(link.Title,testlink, compPrice,(float) joinprice.Price);
-                        Data.tblProducts updProduct = context.tblProducts.Where(x=>x.Id == link.Id).FirstOrDefault();
-                        updProduct.Id = link.Id;
-                        updProduct.Price = compPrice;
-                        context.SaveChanges();
+                    var t = Task.Run(() =>
+                    {
+                        CheckPrices(link.Title, testlink, compPrice, (float)joinprice.Price);
+                    });
+                    //t.Wait();
+                    Data.tblProducts updProduct = context.tblProducts.Where(x=>x.Id == link.Id).FirstOrDefault();
+                    updProduct.Id = link.Id;
+                    updProduct.Price = compPrice;
+                    context.SaveChanges();
                     //}
                 }
                 //'btnLoad.Invoke(new Action(() => btnLoad.Enabled = true));
-                materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
+                if (materialRaisedButton2.IsHandleCreated)
+                {
+                    materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
+                }
+                else
+                {
+                    materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
+                }
+
             }
         }
         private Task CheckPrices(string title , int pid , float newprice,float oldprice)
@@ -502,7 +530,7 @@ namespace PriceStalkerScrape
                     }
                 }
             });
-
+            //task1.Wait();
             return task1;
         }
         private System.Drawing.Point _mouseLoc;

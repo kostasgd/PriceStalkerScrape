@@ -149,9 +149,9 @@
             // 
             // pieChart1
             // 
-            this.pieChart1.Location = new System.Drawing.Point(768, 94);
+            this.pieChart1.Location = new System.Drawing.Point(768, 77);
             this.pieChart1.Name = "pieChart1";
-            this.pieChart1.Size = new System.Drawing.Size(488, 390);
+            this.pieChart1.Size = new System.Drawing.Size(488, 315);
             this.pieChart1.TabIndex = 17;
             this.pieChart1.Text = "pieChart1";
             // 
@@ -303,12 +303,12 @@
             // materialRaisedButton2
             // 
             this.materialRaisedButton2.Depth = 0;
-            this.materialRaisedButton2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(1137, 0);
+            this.materialRaisedButton2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.materialRaisedButton2.Location = new System.Drawing.Point(926, 30);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(127, 94);
+            this.materialRaisedButton2.Size = new System.Drawing.Size(103, 37);
             this.materialRaisedButton2.TabIndex = 4;
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
@@ -316,9 +316,9 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(818, 0);
+            this.btnLoad.Location = new System.Drawing.Point(806, 30);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(137, 97);
+            this.btnLoad.Size = new System.Drawing.Size(103, 37);
             this.btnLoad.TabIndex = 0;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
