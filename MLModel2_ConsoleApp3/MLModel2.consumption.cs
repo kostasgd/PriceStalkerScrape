@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
-namespace PriceStalkerScrape
+namespace MLModel2_ConsoleApp3
 {
     public partial class MLModel2
     {
@@ -15,11 +15,11 @@ namespace PriceStalkerScrape
         #region model input class
         public class ModelInput
         {
-            [ColumnName(@"Μικρόφωνο")]
-            public string Μικρόφωνο { get; set; }
+            [ColumnName(@"col0")]
+            public string Col0 { get; set; }
 
-            [ColumnName(@"negative")]
-            public string Negative { get; set; }
+            [ColumnName(@"col1")]
+            public string Col1 { get; set; }
 
         }
 
@@ -31,11 +31,11 @@ namespace PriceStalkerScrape
         #region model output class
         public class ModelOutput
         {
-            [ColumnName(@"Μικρόφωνο")]
-            public float[] Μικρόφωνο { get; set; }
+            [ColumnName(@"col0")]
+            public float[] Col0 { get; set; }
 
-            [ColumnName(@"negative")]
-            public uint Negative { get; set; }
+            [ColumnName(@"col1")]
+            public uint Col1 { get; set; }
 
             [ColumnName(@"Features")]
             public float[] Features { get; set; }

@@ -15,11 +15,14 @@ namespace PriceStalkerScrape
         #region model input class
         public class ModelInput
         {
-            [ColumnName(@"col0")]
-            public string Col0 { get; set; }
+            [ColumnName(@"id")]
+            public float Id { get; set; }
 
-            [ColumnName(@"col1")]
-            public string Col1 { get; set; }
+            [ColumnName(@"chr")]
+            public string Chr { get; set; }
+
+            [ColumnName(@"rating")]
+            public string Rating { get; set; }
 
         }
 
@@ -31,11 +34,14 @@ namespace PriceStalkerScrape
         #region model output class
         public class ModelOutput
         {
-            [ColumnName(@"col0")]
-            public uint Col0 { get; set; }
+            [ColumnName(@"id")]
+            public float Id { get; set; }
 
-            [ColumnName(@"col1")]
-            public float[] Col1 { get; set; }
+            [ColumnName(@"chr")]
+            public float[] Chr { get; set; }
+
+            [ColumnName(@"rating")]
+            public uint Rating { get; set; }
 
             [ColumnName(@"Features")]
             public float[] Features { get; set; }

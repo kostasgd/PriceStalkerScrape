@@ -35,10 +35,15 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.pieChart1 = new LiveCharts.WinForms.PieChart();
+            this.txtLink = new System.Windows.Forms.TextBox();
             this.rtbImpressions = new System.Windows.Forms.RichTextBox();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.cartesianChart2 = new LiveCharts.WinForms.CartesianChart();
+            this.panel7 = new System.Windows.Forms.Panel();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -53,12 +58,13 @@
             this.cbProducts = new System.Windows.Forms.ComboBox();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.txtLink = new System.Windows.Forms.TextBox();
-            this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -72,7 +78,7 @@
             // lblProductTitle
             // 
             this.lblProductTitle.AutoSize = true;
-            this.lblProductTitle.Location = new System.Drawing.Point(34, 10);
+            this.lblProductTitle.Location = new System.Drawing.Point(18, 46);
             this.lblProductTitle.Name = "lblProductTitle";
             this.lblProductTitle.Size = new System.Drawing.Size(0, 20);
             this.lblProductTitle.TabIndex = 9;
@@ -80,7 +86,7 @@
             // lblProductPrice
             // 
             this.lblProductPrice.AutoSize = true;
-            this.lblProductPrice.Location = new System.Drawing.Point(34, 43);
+            this.lblProductPrice.Location = new System.Drawing.Point(18, 79);
             this.lblProductPrice.Name = "lblProductPrice";
             this.lblProductPrice.Size = new System.Drawing.Size(0, 20);
             this.lblProductPrice.TabIndex = 10;
@@ -88,7 +94,7 @@
             // lblProductRating
             // 
             this.lblProductRating.AutoSize = true;
-            this.lblProductRating.Location = new System.Drawing.Point(116, 43);
+            this.lblProductRating.Location = new System.Drawing.Point(100, 79);
             this.lblProductRating.Name = "lblProductRating";
             this.lblProductRating.Size = new System.Drawing.Size(0, 20);
             this.lblProductRating.TabIndex = 11;
@@ -99,7 +105,7 @@
             this.txtDescription.Multiline = true;
             this.txtDescription.Name = "txtDescription";
             this.txtDescription.ReadOnly = true;
-            this.txtDescription.Size = new System.Drawing.Size(754, 131);
+            this.txtDescription.Size = new System.Drawing.Size(817, 196);
             this.txtDescription.TabIndex = 12;
             // 
             // panel1
@@ -108,9 +114,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.tabControl1);
-            this.panel1.Location = new System.Drawing.Point(0, 128);
+            this.panel1.Location = new System.Drawing.Point(0, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1272, 535);
+            this.panel1.Size = new System.Drawing.Size(1375, 597);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
@@ -126,12 +132,15 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1272, 532);
+            this.tabControl1.Size = new System.Drawing.Size(1375, 594);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.materialRaisedButton3);
+            this.tabPage1.Controls.Add(this.materialRaisedButton1);
             this.tabPage1.Controls.Add(this.pieChart1);
+            this.tabPage1.Controls.Add(this.txtLink);
             this.tabPage1.Controls.Add(this.rtbImpressions);
             this.tabPage1.Controls.Add(this.materialFlatButton1);
             this.tabPage1.Controls.Add(this.lblProductRating);
@@ -142,35 +151,55 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1264, 495);
+            this.tabPage1.Size = new System.Drawing.Size(1367, 557);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // materialRaisedButton1
+            // 
+            this.materialRaisedButton1.Depth = 0;
+            this.materialRaisedButton1.Location = new System.Drawing.Point(8, 7);
+            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton1.Name = "materialRaisedButton1";
+            this.materialRaisedButton1.Primary = true;
+            this.materialRaisedButton1.Size = new System.Drawing.Size(108, 32);
+            this.materialRaisedButton1.TabIndex = 16;
+            this.materialRaisedButton1.Text = "Scrape";
+            this.materialRaisedButton1.UseVisualStyleBackColor = true;
+            this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
+            // 
             // pieChart1
             // 
-            this.pieChart1.Location = new System.Drawing.Point(768, 77);
+            this.pieChart1.Location = new System.Drawing.Point(850, 113);
             this.pieChart1.Name = "pieChart1";
-            this.pieChart1.Size = new System.Drawing.Size(488, 315);
+            this.pieChart1.Size = new System.Drawing.Size(509, 425);
             this.pieChart1.TabIndex = 17;
             this.pieChart1.Text = "pieChart1";
             // 
+            // txtLink
+            // 
+            this.txtLink.Location = new System.Drawing.Point(122, 7);
+            this.txtLink.Name = "txtLink";
+            this.txtLink.Size = new System.Drawing.Size(921, 26);
+            this.txtLink.TabIndex = 14;
+            // 
             // rtbImpressions
             // 
-            this.rtbImpressions.Location = new System.Drawing.Point(8, 77);
+            this.rtbImpressions.Location = new System.Drawing.Point(8, 113);
             this.rtbImpressions.Name = "rtbImpressions";
-            this.rtbImpressions.Size = new System.Drawing.Size(754, 270);
+            this.rtbImpressions.Size = new System.Drawing.Size(817, 234);
             this.rtbImpressions.TabIndex = 15;
             this.rtbImpressions.Text = "";
             // 
             // materialFlatButton1
             // 
             this.materialFlatButton1.Depth = 0;
-            this.materialFlatButton1.Location = new System.Drawing.Point(1093, 3);
+            this.materialFlatButton1.Location = new System.Drawing.Point(1197, 6);
             this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton1.Name = "materialFlatButton1";
             this.materialFlatButton1.Primary = true;
-            this.materialFlatButton1.Size = new System.Drawing.Size(163, 57);
+            this.materialFlatButton1.Size = new System.Drawing.Size(162, 33);
             this.materialFlatButton1.TabIndex = 13;
             this.materialFlatButton1.Text = "Import To Database";
             this.materialFlatButton1.UseVisualStyleBackColor = true;
@@ -178,25 +207,54 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.dgvProducts);
+            this.tabPage2.Controls.Add(this.panel6);
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1264, 495);
+            this.tabPage2.Size = new System.Drawing.Size(1367, 557);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Products";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.cartesianChart2);
+            this.panel6.Controls.Add(this.panel7);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(3, 3);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(1361, 551);
+            this.panel6.TabIndex = 1;
+            // 
+            // cartesianChart2
+            // 
+            this.cartesianChart2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.cartesianChart2.Location = new System.Drawing.Point(871, 0);
+            this.cartesianChart2.Name = "cartesianChart2";
+            this.cartesianChart2.Size = new System.Drawing.Size(490, 551);
+            this.cartesianChart2.TabIndex = 3;
+            this.cartesianChart2.Text = "cartesianChart2";
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.dgvProducts);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Left;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(871, 551);
+            this.panel7.TabIndex = 1;
             // 
             // dgvProducts
             // 
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProducts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvProducts.Location = new System.Drawing.Point(3, 3);
+            this.dgvProducts.Location = new System.Drawing.Point(0, 0);
             this.dgvProducts.Name = "dgvProducts";
             this.dgvProducts.ReadOnly = true;
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProducts.Size = new System.Drawing.Size(1258, 489);
+            this.dgvProducts.Size = new System.Drawing.Size(871, 551);
             this.dgvProducts.TabIndex = 0;
+            this.dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
             this.dgvProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellDoubleClick);
             // 
             // tabPage4
@@ -205,7 +263,7 @@
             this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1264, 495);
+            this.tabPage4.Size = new System.Drawing.Size(1367, 557);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Orders";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -216,7 +274,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 61);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1264, 434);
+            this.panel3.Size = new System.Drawing.Size(1367, 496);
             this.panel3.TabIndex = 3;
             // 
             // dgvOrders
@@ -227,7 +285,7 @@
             this.dgvOrders.Name = "dgvOrders";
             this.dgvOrders.ReadOnly = true;
             this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOrders.Size = new System.Drawing.Size(1264, 434);
+            this.dgvOrders.Size = new System.Drawing.Size(1367, 496);
             this.dgvOrders.TabIndex = 1;
             // 
             // panel2
@@ -236,7 +294,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1264, 61);
+            this.panel2.Size = new System.Drawing.Size(1367, 61);
             this.panel2.TabIndex = 2;
             // 
             // button2
@@ -256,7 +314,7 @@
             this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1264, 495);
+            this.tabPage3.Size = new System.Drawing.Size(1367, 557);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -267,14 +325,14 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(0, 94);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1264, 401);
+            this.panel5.Size = new System.Drawing.Size(1367, 463);
             this.panel5.TabIndex = 6;
             // 
             // elementHost1
             // 
             this.elementHost1.Location = new System.Drawing.Point(0, 3);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(665, 392);
+            this.elementHost1.Size = new System.Drawing.Size(694, 457);
             this.elementHost1.TabIndex = 3;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.cartesianChart1;
@@ -287,7 +345,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1264, 94);
+            this.panel4.Size = new System.Drawing.Size(1367, 94);
             this.panel4.TabIndex = 5;
             // 
             // cbProducts
@@ -304,11 +362,11 @@
             // 
             this.materialRaisedButton2.Depth = 0;
             this.materialRaisedButton2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(926, 30);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(931, 28);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(103, 37);
+            this.materialRaisedButton2.Size = new System.Drawing.Size(164, 37);
             this.materialRaisedButton2.TabIndex = 4;
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
@@ -316,7 +374,7 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(806, 30);
+            this.btnLoad.Location = new System.Drawing.Point(801, 30);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(103, 37);
             this.btnLoad.TabIndex = 0;
@@ -324,33 +382,23 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.button1_Click);
             // 
-            // txtLink
+            // materialRaisedButton3
             // 
-            this.txtLink.Location = new System.Drawing.Point(126, 77);
-            this.txtLink.Name = "txtLink";
-            this.txtLink.Size = new System.Drawing.Size(958, 20);
-            this.txtLink.TabIndex = 14;
-            // 
-            // materialRaisedButton1
-            // 
-            this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(12, 77);
-            this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton1.Name = "materialRaisedButton1";
-            this.materialRaisedButton1.Primary = true;
-            this.materialRaisedButton1.Size = new System.Drawing.Size(108, 32);
-            this.materialRaisedButton1.TabIndex = 16;
-            this.materialRaisedButton1.Text = "Scrape";
-            this.materialRaisedButton1.UseVisualStyleBackColor = true;
-            this.materialRaisedButton1.Click += new System.EventHandler(this.materialRaisedButton1_Click);
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(1197, 46);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(162, 33);
+            this.materialRaisedButton3.TabIndex = 18;
+            this.materialRaisedButton3.Text = "Export csv for ML";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1272, 663);
-            this.Controls.Add(this.materialRaisedButton1);
-            this.Controls.Add(this.txtLink);
+            this.ClientSize = new System.Drawing.Size(1375, 663);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.Name = "Main";
@@ -364,6 +412,8 @@
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            this.panel7.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
@@ -373,7 +423,6 @@
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -405,6 +454,10 @@
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.RichTextBox rtbImpressions;
         private LiveCharts.WinForms.PieChart pieChart1;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.Panel panel7;
+        private LiveCharts.WinForms.CartesianChart cartesianChart2;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
     }
 }
 

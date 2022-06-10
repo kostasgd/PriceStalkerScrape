@@ -157,7 +157,7 @@
       <Version>6.4.4</Version>
     </PackageReference>
     <PackageReference Include="HtmlAgilityPack">
-      <Version>1.11.42</Version>
+      <Version>1.11.43</Version>
     </PackageReference>
     <PackageReference Include="LiveCharts">
       <Version>0.9.7</Version>
@@ -171,8 +171,17 @@
     <PackageReference Include="Microsoft.ML">
       <Version>1.7.1</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.ML.FastTree">
+      <Version>1.7.1</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications">
       <Version>7.1.2</Version>
+    </PackageReference>
+    <PackageReference Include="Selenium.WebDriver">
+      <Version>4.1.1</Version>
+    </PackageReference>
+    <PackageReference Include="Selenium.WebDriver.ChromeDriver">
+      <Version>102.0.5005.6100</Version>
     </PackageReference>
     <PackageReference Include="System.Runtime.WindowsRuntime.UI.Xaml">
       <Version>4.6.0</Version>
