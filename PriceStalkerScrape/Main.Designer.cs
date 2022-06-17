@@ -35,6 +35,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.pieChart1 = new LiveCharts.WinForms.PieChart();
             this.txtLink = new System.Windows.Forms.TextBox();
@@ -55,10 +56,9 @@
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.cbProducts = new System.Windows.Forms.ComboBox();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.dgvProductsForCheck = new System.Windows.Forms.DataGridView();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -73,6 +73,7 @@
             this.tabPage3.SuspendLayout();
             this.panel5.SuspendLayout();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -116,7 +117,7 @@
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(0, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1375, 597);
+            this.panel1.Size = new System.Drawing.Size(1441, 614);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
@@ -132,7 +133,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1375, 594);
+            this.tabControl1.Size = new System.Drawing.Size(1441, 611);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
@@ -155,6 +156,18 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // materialRaisedButton3
+            // 
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(1197, 46);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(162, 33);
+            this.materialRaisedButton3.TabIndex = 18;
+            this.materialRaisedButton3.Text = "Export csv for ML";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
             // 
             // materialRaisedButton1
             // 
@@ -314,55 +327,46 @@
             this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1367, 557);
+            this.tabPage3.Size = new System.Drawing.Size(1433, 574);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.dgvProductsForCheck);
             this.panel5.Controls.Add(this.elementHost1);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(0, 94);
+            this.panel5.Location = new System.Drawing.Point(0, 66);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1367, 463);
+            this.panel5.Size = new System.Drawing.Size(1433, 508);
             this.panel5.TabIndex = 6;
             // 
             // elementHost1
             // 
-            this.elementHost1.Location = new System.Drawing.Point(0, 3);
+            this.elementHost1.Dock = System.Windows.Forms.DockStyle.Right;
+            this.elementHost1.Location = new System.Drawing.Point(701, 0);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(694, 457);
+            this.elementHost1.Size = new System.Drawing.Size(732, 508);
             this.elementHost1.TabIndex = 3;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.cartesianChart1;
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.cbProducts);
             this.panel4.Controls.Add(this.materialRaisedButton2);
             this.panel4.Controls.Add(this.btnLoad);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1367, 94);
+            this.panel4.Size = new System.Drawing.Size(1433, 66);
             this.panel4.TabIndex = 5;
-            // 
-            // cbProducts
-            // 
-            this.cbProducts.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbProducts.FormattingEnabled = true;
-            this.cbProducts.Location = new System.Drawing.Point(8, 33);
-            this.cbProducts.Name = "cbProducts";
-            this.cbProducts.Size = new System.Drawing.Size(762, 32);
-            this.cbProducts.TabIndex = 2;
-            this.cbProducts.SelectedIndexChanged += new System.EventHandler(this.cbProducts_SelectedIndexChanged);
             // 
             // materialRaisedButton2
             // 
             this.materialRaisedButton2.Depth = 0;
             this.materialRaisedButton2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(931, 28);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(1261, 13);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
@@ -374,7 +378,7 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(801, 30);
+            this.btnLoad.Location = new System.Drawing.Point(21, 13);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(103, 37);
             this.btnLoad.TabIndex = 0;
@@ -382,23 +386,24 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.button1_Click);
             // 
-            // materialRaisedButton3
+            // dgvProductsForCheck
             // 
-            this.materialRaisedButton3.Depth = 0;
-            this.materialRaisedButton3.Location = new System.Drawing.Point(1197, 46);
-            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton3.Name = "materialRaisedButton3";
-            this.materialRaisedButton3.Primary = true;
-            this.materialRaisedButton3.Size = new System.Drawing.Size(162, 33);
-            this.materialRaisedButton3.TabIndex = 18;
-            this.materialRaisedButton3.Text = "Export csv for ML";
-            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            this.dgvProductsForCheck.AllowUserToAddRows = false;
+            this.dgvProductsForCheck.AllowUserToDeleteRows = false;
+            this.dgvProductsForCheck.AllowUserToOrderColumns = true;
+            this.dgvProductsForCheck.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProductsForCheck.Dock = System.Windows.Forms.DockStyle.Left;
+            this.dgvProductsForCheck.Location = new System.Drawing.Point(0, 0);
+            this.dgvProductsForCheck.Name = "dgvProductsForCheck";
+            this.dgvProductsForCheck.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvProductsForCheck.Size = new System.Drawing.Size(695, 508);
+            this.dgvProductsForCheck.TabIndex = 4;
             // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1375, 663);
+            this.ClientSize = new System.Drawing.Size(1441, 680);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;
             this.Name = "Main";
@@ -422,6 +427,7 @@
             this.tabPage3.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -441,7 +447,6 @@
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.Button btnLoad;
-        private System.Windows.Forms.ComboBox cbProducts;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private LiveCharts.Wpf.CartesianChart cartesianChart1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
@@ -458,6 +463,7 @@
         private System.Windows.Forms.Panel panel7;
         private LiveCharts.WinForms.CartesianChart cartesianChart2;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
+        private System.Windows.Forms.DataGridView dgvProductsForCheck;
     }
 }
 

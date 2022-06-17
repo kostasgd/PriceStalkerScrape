@@ -42,21 +42,17 @@ namespace PriceStalkerScrape
         {
             InitializeComponent();
             LoadData();
-            FillComboBox();
+            FillDatagridStats();
         }
         #region "Initialize&load"
-        public void FillComboBox()
+        public void FillDatagridStats()
         {
-            cbProducts.Items.Clear();
-            cbProducts.DisplayMember = "Text";
-            cbProducts.ValueMember = "Value";
             using (var context = new Data.StalkerEntities())
             {
                 var data = context.tblProducts.ToList();
-                foreach (var item in data)
-                {
-                    cbProducts.Items.Add(new ComboboxItem() { Text = item.Title.ToString(), Value = item.Id });
-                }
+                dgvProductsForCheck.DataSource = data.Select(x=>new { x.Id,x.Title }).ToList();
+                dgvProductsForCheck.Columns[0].Width = 80;
+                dgvProductsForCheck.Columns[1].Width = 550;
             }
         }
         private void Main_Load_1(object sender, EventArgs e)
@@ -166,7 +162,7 @@ namespace PriceStalkerScrape
         {
             InsertIntoDb();
             LoadData();
-            FillComboBox();
+            FillDatagridStats();
         }
 
         private void dgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -188,7 +184,7 @@ namespace PriceStalkerScrape
             var url = txtLink.Text;
             var web = new HtmlWeb();
             var doc = web.Load(url);
-            
+            rtbImpressions.Text = "";
             List<string> listpros = new List<string>();
             List<string> listsoso = new List<string>();
             List<string> listcons = new List<string>();
@@ -296,22 +292,22 @@ namespace PriceStalkerScrape
         }
         private void WriteToCsv(List<string> pros,List<string> cons)
         {
-            string filePath = @"output.csv";
-            using (StreamWriter writer = new StreamWriter(new FileStream(filePath,FileMode.Create, FileAccess.Write),Encoding.Unicode))
-            {
-                foreach(var p in pros)
-                {
-                    var split = p.ToString().Split(',');
-                    var line = string.Format("{0},{1}", split[0], split[1]);
-                    writer.WriteLine(line);
-                }
-                foreach (var c in cons)
-                {
-                    var split = c.ToString().Split(',');
-                    var line = string.Format("{0},{1}", split[0], split[1]);
-                    writer.WriteLine(line);
-                }
-            }
+            //string filePath = @"output.csv";
+            //using (StreamWriter writer = new StreamWriter(new FileStream(filePath,FileMode.Create, FileAccess.Write),Encoding.Unicode))
+            //{
+            //    foreach(var p in pros)
+            //    {
+            //        var split = p.ToString().Split(',');
+            //        var line = string.Format("{0},{1}", split[0], split[1]);
+            //        writer.WriteLine(line);
+            //    }
+            //    foreach (var c in cons)
+            //    {
+            //        var split = c.ToString().Split(',');
+            //        var line = string.Format("{0},{1}", split[0], split[1]);
+            //        writer.WriteLine(line);
+            //    }
+            //}
         }
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
@@ -321,7 +317,6 @@ namespace PriceStalkerScrape
                 {
                     ScrapeSkroutz();
                     SetImpression();
-                    
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
@@ -452,9 +447,9 @@ namespace PriceStalkerScrape
        
         private void button1_Click(object sender, EventArgs e)
         {
-            if (cbProducts.SelectedIndex >= 0)
+            if (dgvProductsForCheck.SelectedRows.Count >0)
             {
-                int id = Int32.Parse((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
+                int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
                 cartesianChart1.Series.Clear();
                 using (var context = new Data.StalkerEntities())
                 {
@@ -480,16 +475,13 @@ namespace PriceStalkerScrape
                     }
                 }
             }
-            
         }
-
         private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
         {
             //ComboBoxItem selectedCar = (ComboBoxItem)cbProducts.SelectedItem;
             //int selecteVal = Convert.ToInt32(selectedCar.Content);
             //System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
         }
-
         private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
             GetPriceHistoryInfo();
@@ -523,7 +515,7 @@ namespace PriceStalkerScrape
                     {
                         compPrice = (float)Math.Round(float.Parse(newskroutzprice.ToString()), 2);
                     }
-                    else
+                    else if(bestpprice!=null)
                     {
                         compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
                     }
