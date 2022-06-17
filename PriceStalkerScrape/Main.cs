@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -683,21 +684,28 @@ namespace PriceStalkerScrape
 
             driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
             Thread.Sleep(1500);
-            //WebElement form = (WebElement)driver.FindElement(By.XPath("//form[contains(@class,'search-bar-input-wrapper')]]"));
+            WebElement form = (WebElement)driver.FindElement(By.ClassName("search-bar-input-wrapper"));
 
-            driver.FindElement(By.Id("q")).SendKeys(lblProductTitle.Text);
-            //form.Submit();
+            form.FindElement(By.Id("search-bar-input")).SendKeys(lblProductTitle.Text);
+            form.Submit();
 
-            var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).ToList();
-            foreach (var r in searchResults)
-            {
-                Console.WriteLine(r.Text);
-            }
+            var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).FirstOrDefault();
+            Console.WriteLine(searchResults.Text);
             Thread.Sleep(500);
-            var resultsPrices = driver.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
+            var resultsPrices = driver.FindElements(By.XPath("//a[contains(@class,'js-sku-link')]")).FirstOrDefault();
+            Console.WriteLine($"Result { resultsPrices.Text}");
             if (resultsPrices != null)
             {
                 lblCompare.Text = resultsPrices.Text;
+            }
+            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
+
+            string skroutzPrice = "";
+            if (re.IsMatch(searchResults.Text))
+            {
+                MatchCollection matchedAuthors = re.Matches(searchResults.Text);
+                lblCompare.Text = matchedAuthors[0].Value.ToString();
+                Console.WriteLine("Price : true");
             }
             driver.Close();
         }

@@ -382,12 +382,13 @@
             // materialRaisedButton2
             // 
             this.materialRaisedButton2.Depth = 0;
+            this.materialRaisedButton2.Dock = System.Windows.Forms.DockStyle.Right;
             this.materialRaisedButton2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(1261, 13);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(1269, 0);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
-            this.materialRaisedButton2.Size = new System.Drawing.Size(164, 37);
+            this.materialRaisedButton2.Size = new System.Drawing.Size(164, 66);
             this.materialRaisedButton2.TabIndex = 4;
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
@@ -395,9 +396,10 @@
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(21, 13);
+            this.btnLoad.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnLoad.Location = new System.Drawing.Point(0, 0);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(103, 37);
+            this.btnLoad.Size = new System.Drawing.Size(164, 66);
             this.btnLoad.TabIndex = 0;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
