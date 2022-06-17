@@ -50,7 +50,7 @@ namespace PriceStalkerScrape
             using (var context = new Data.StalkerEntities())
             {
                 var data = context.tblProducts.ToList();
-                dgvProductsForCheck.DataSource = data.Select(x=>new { x.Id,x.Title }).ToList();
+                dgvProductsForCheck.DataSource = data.Select(x => new { x.Id, x.Title }).ToList();
                 dgvProductsForCheck.Columns[0].Width = 80;
                 dgvProductsForCheck.Columns[1].Width = 550;
             }
@@ -73,11 +73,11 @@ namespace PriceStalkerScrape
         {
             var stalkerEntities = new Data.StalkerEntities();
             //stalkerEntities.Configuration.ProxyCreationEnabled = false;
-            var ProductQuery =from t in stalkerEntities.tblProducts
-                        select new { t.Id, t.Title, t.Price, t.Rating,t.Link,t.Description };
+            var ProductQuery = from t in stalkerEntities.tblProducts
+                               select new { t.Id, t.Title, t.Price, t.Rating, t.Link, t.Description };
             dgvProducts.DataSource = ProductQuery.ToList();
             var OrderQuery = from x in stalkerEntities.Orders
-                               select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
+                             select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
             dgvOrders.DataSource = OrderQuery.ToList();
         }
         #endregion
@@ -142,12 +142,12 @@ namespace PriceStalkerScrape
                     }
                     throw;
                 }
-            }  
+            }
         }
         #endregion
         private bool Check()
         {
-            if(lblProductPrice.Text.Length>0 && lblProductPrice.Text.Length>0&& lblProductRating.Text.Length > 0)
+            if (lblProductPrice.Text.Length > 0 && lblProductPrice.Text.Length > 0 && lblProductRating.Text.Length > 0)
             {
                 return true;
             }
@@ -155,7 +155,7 @@ namespace PriceStalkerScrape
         }
         private void materialFlatButton1_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void materialFlatButton1_Click_1(object sender, EventArgs e)
@@ -198,9 +198,9 @@ namespace PriceStalkerScrape
               .Where(g => g.Count() > 1)
               .ToDictionary(x => x.Key, y => y.Count());
             List<string> testpro = new List<string>();
-            foreach(var qfp in queryForPros)
+            foreach (var qfp in queryForPros)
             {
-                for(int i = 0; i < qfp.Value; i++)
+                for (int i = 0; i < qfp.Value; i++)
                 {
                     Console.WriteLine(qfp.Key + ",positive");
                     testpro.Add(qfp.Key.ToString() + ",positive");
@@ -222,7 +222,7 @@ namespace PriceStalkerScrape
                     Console.WriteLine("cons " + c.Key.ToString());
                 }
             }
-            var queryForCons = cons.GroupBy(x => x.InnerText)
+            var queryForCons = cons?.GroupBy(x => x.InnerText)?
               .Where(g => g.Count() > 1)
               .ToDictionary(x => x.Key, y => y.Count());
             List<string> testcons = new List<string>();
@@ -234,38 +234,38 @@ namespace PriceStalkerScrape
                     testcons.Add(qfp.Key.ToString() + ",negative");
                 }
             }
-           
+
             int? safepros = prosImpressions.Count() <= 0 ? 0 : prosImpressions.Count();
             int? safesoso = soso.Count() <= 0 ? 0 : soso.Count(); ;
 
-            int? safecons = cons.Count() <=0 ? 0 : cons.Count();
-            
+            int? safecons = cons.Count() <= 0 ? 0 : cons.Count();
+
             int? total = safepros - safesoso - safecons;
-            
-            
+
+
             //var commons = prosImpressions.Intersect(soso);
             List<string> commons = prosImpressions.Select(s1 => s1.InnerText).ToList().Intersect(soso.Select(s2 => s2.InnerText).ToList()).ToList();
             foreach (var com in commons)
             {
-                Console.WriteLine("Commons "+com.ToString());
+                Console.WriteLine("Commons " + com.ToString());
             }
 
             var joinpros = String.Join(",", listpros.ToArray());
             var joinsoso = String.Join(",", listsoso.ToArray());
             var joincons = String.Join(",", listcons.ToArray());
             string common = "";
-            foreach(var k in commons)
+            foreach (var k in commons)
             {
-                common += k+",";
+                common += k + ",";
             }
-            common = common.Remove(common.Length-1);
-            rtbImpressions.Text += "+" + joinpros.ToString() +"\n";
+            common = common.Remove(common.Length - 1);
+            rtbImpressions.Text += "+" + joinpros.ToString() + "\n";
             rtbImpressions.Text += "\n";
             rtbImpressions.Text += "^" + joinsoso.ToString() + "\n";
             rtbImpressions.Text += "\n";
             rtbImpressions.Text += "-" + joincons.ToString() + "\n";
             rtbImpressions.Text += "\n";
-            rtbImpressions.Text += "+-"+ common;
+            rtbImpressions.Text += "+-" + common;
 
             var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
             var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
@@ -275,7 +275,7 @@ namespace PriceStalkerScrape
             ListLengths.Add(countSoso.Count());
             ListLengths.Add(countNegatives.Count());
             List<string> Labels = new List<string>();
-            if(safepros.Value > 0)
+            if (safepros.Value > 0)
             {
                 Labels.Add("Θετικά");
             }
@@ -283,14 +283,14 @@ namespace PriceStalkerScrape
             {
                 Labels.Add("Ετσι και έτσι");
             }
-            if(safecons.Value > 0)
+            if (safecons.Value > 0)
             {
                 Labels.Add("Αρνητικά");
             }
             WriteToCsv(testpro, testcons);
-            FillStatsChart(ListLengths,Labels);
+            FillStatsChart(ListLengths, Labels);
         }
-        private void WriteToCsv(List<string> pros,List<string> cons)
+        private void WriteToCsv(List<string> pros, List<string> cons)
         {
             //string filePath = @"output.csv";
             //using (StreamWriter writer = new StreamWriter(new FileStream(filePath,FileMode.Create, FileAccess.Write),Encoding.Unicode))
@@ -335,17 +335,17 @@ namespace PriceStalkerScrape
             List<int> array = lst;
             SeriesCollection series = new SeriesCollection();
             List<Brush> listBrush = new List<Brush>();
-            foreach(var lbl in Labels)
+            foreach (var lbl in Labels)
             {
                 if (lbl == "Θετικά")
                 {
                     listBrush.Add(Brushes.ForestGreen);
                 }
-                if(lbl == "Ετσι και έτσι")
+                if (lbl == "Ετσι και έτσι")
                 {
                     listBrush.Add(Brushes.Gold);
                 }
-                if(lbl == "Αρνητικά")
+                if (lbl == "Αρνητικά")
                 {
                     listBrush.Add(Brushes.DarkRed);
                 }
@@ -359,7 +359,7 @@ namespace PriceStalkerScrape
                     Values = new ChartValues<double> { array[i] },
                     DataLabels = true,
                     LabelPoint = labelPoint,
-                    Fill= listBrush[i]
+                    Fill = listBrush[i]
                 });
             }
             pieChart1.Series = series;
@@ -436,7 +436,7 @@ namespace PriceStalkerScrape
             }
             if (picture != null)
             {
-               // pbLoadImage.Load("https:" + picture.ToString());
+                // pbLoadImage.Load("https:" + picture.ToString());
             }
             if (title != null && price != null)
             {
@@ -444,10 +444,10 @@ namespace PriceStalkerScrape
             }
         }
         #endregion
-       
+
         private void button1_Click(object sender, EventArgs e)
         {
-            if (dgvProductsForCheck.SelectedRows.Count >0)
+            if (dgvProductsForCheck.SelectedRows.Count > 0)
             {
                 int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
                 cartesianChart1.Series.Clear();
@@ -515,7 +515,7 @@ namespace PriceStalkerScrape
                     {
                         compPrice = (float)Math.Round(float.Parse(newskroutzprice.ToString()), 2);
                     }
-                    else if(bestpprice!=null)
+                    else if (bestpprice != null)
                     {
                         compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
                     }
@@ -542,7 +542,7 @@ namespace PriceStalkerScrape
 
             }
         }
-        private async Task<Task> CheckPrices(string title , int pid , float newprice,float oldprice)
+        private async Task<Task> CheckPrices(string title, int pid, float newprice, float oldprice)
         {
             Task task1 = Task.Run(() =>
             {
@@ -570,12 +570,12 @@ namespace PriceStalkerScrape
                     }
                 }
             });
-            
+
             return task1;
         }
         private System.Drawing.Point _mouseLoc;
         private void Main_MouseDown(object sender, MouseEventArgs e)
-        { 
+        {
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -612,7 +612,7 @@ namespace PriceStalkerScrape
                 //    }
                 //    var chars = browser.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']")).ToList();
                 //}
-                
+
                 SeriesCollection series = new SeriesCollection();
                 //foreach (var c in characteristics)
                 //{
@@ -625,7 +625,84 @@ namespace PriceStalkerScrape
                 //cartesianChart2.Series = series;
             }
         }
+
+        private void btnCompare_Click(object sender, EventArgs e)
+        {
+            ComparePrices();
+        }
+
+        private void ComparePrices()
+        {
+            if (lblProductTitle.Text != null)
+            {
+                if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
+                {
+                    ComparePriceWithSkroutzPrice();
+                }
+                else if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
+                {
+                    ComparePriceWithBestPrice();
+                }
+            }
+        }
+        private void ComparePriceWithBestPrice()
+        {
+            var chromeOptions = new ChromeOptions();
+            chromeOptions.AddArguments("headless");
+            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            chromeDriverService.HideCommandPromptWindow = true;
+            ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
+
+            driver.Navigate().GoToUrl(@"https://www.bestprice.gr/");
+            Thread.Sleep(500);
+            WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
+
+            form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
+            form.Submit();
+
+            var searchResults = driver.FindElements(By.ClassName("page-products__products")).ToList();
+            foreach (var r in searchResults)
+            {
+                Console.WriteLine(r.Text);
+            }
+            Thread.Sleep(500);
+            var resultsPrices = driver.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
+            if (resultsPrices != null)
+            {
+                lblCompare.Text = resultsPrices.Text;
+            }
+            driver.Close();
+        }
+        private void ComparePriceWithSkroutzPrice()
+        {
+            var chromeOptions = new ChromeOptions();
+            //chromeOptions.AddArguments("headless");
+            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            chromeDriverService.HideCommandPromptWindow = true;
+            ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
+
+            driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
+            Thread.Sleep(1500);
+            //WebElement form = (WebElement)driver.FindElement(By.XPath("//form[contains(@class,'search-bar-input-wrapper')]]"));
+
+            driver.FindElement(By.Id("q")).SendKeys(lblProductTitle.Text);
+            //form.Submit();
+
+            var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).ToList();
+            foreach (var r in searchResults)
+            {
+                Console.WriteLine(r.Text);
+            }
+            Thread.Sleep(500);
+            var resultsPrices = driver.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
+            if (resultsPrices != null)
+            {
+                lblCompare.Text = resultsPrices.Text;
+            }
+            driver.Close();
+        }
     }
+    
     public class ComboboxItem
     {
         public string Text { get; set; }
