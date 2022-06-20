@@ -154,10 +154,6 @@ namespace PriceStalkerScrape
             }
             return false;
         }
-        private void materialFlatButton1_Click(object sender, EventArgs e)
-        {
-
-        }
 
         private void materialFlatButton1_Click_1(object sender, EventArgs e)
         {
@@ -190,11 +186,15 @@ namespace PriceStalkerScrape
             List<string> listsoso = new List<string>();
             List<string> listcons = new List<string>();
             var prosImpressions = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]/li")?.ToList();
-            foreach (var pros in prosImpressions.GroupBy(x => x.InnerText))
+            if (prosImpressions != null)
             {
-                listpros.Add(pros.Key.ToString());
-                Console.WriteLine("pros " + pros.Key.ToString());
+                foreach (var pros in prosImpressions.GroupBy(x => x.InnerText))
+                {
+                    listpros.Add(pros.Key.ToString());
+                    Console.WriteLine("pros " + pros.Key.ToString());
+                }
             }
+           
             var queryForPros = prosImpressions.GroupBy(x => x.InnerText)
               .Where(g => g.Count() > 1)
               .ToDictionary(x => x.Key, y => y.Count());
@@ -208,12 +208,15 @@ namespace PriceStalkerScrape
                 }
             }
             var soso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]/li")?.ToList();
-            foreach (var so in soso.GroupBy(x => x.InnerText))
+            if (soso != null)
             {
-                listsoso.Add(so.Key.ToString());
-                Console.WriteLine("soso " + so.Key.ToString());
+                foreach (var so in soso.GroupBy(x => x.InnerText))
+                {
+                    listsoso.Add(so.Key.ToString());
+                    Console.WriteLine("soso " + so.Key.ToString());
+                }
             }
-
+           
             var cons = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]/li")?.ToList();
             if (cons != null)
             {
@@ -227,22 +230,22 @@ namespace PriceStalkerScrape
               .Where(g => g.Count() > 1)
               .ToDictionary(x => x.Key, y => y.Count());
             List<string> testcons = new List<string>();
-            foreach (var qfp in queryForCons)
+            if (queryForCons != null)
             {
-                for (int i = 0; i < qfp.Value; i++)
+                foreach (var qfp in queryForCons)
                 {
-                    Console.WriteLine(qfp.Key + ",positive");
-                    testcons.Add(qfp.Key.ToString() + ",negative");
+                    for (int i = 0; i < qfp.Value; i++)
+                    {
+                        Console.WriteLine(qfp.Key + ",positive");
+                        testcons.Add(qfp.Key.ToString() + ",negative");
+                    }
                 }
             }
-
-            int? safepros = prosImpressions.Count() <= 0 ? 0 : prosImpressions.Count();
-            int? safesoso = soso.Count() <= 0 ? 0 : soso.Count(); ;
-
-            int? safecons = cons.Count() <= 0 ? 0 : cons.Count();
-
+            
+            int? safepros = prosImpressions == null  ? 0 : prosImpressions.Count();
+            int? safesoso = soso == null  ? 0 : soso.Count(); 
+            int? safecons = cons == null ? 0 : cons.Count();
             int? total = safepros - safesoso - safecons;
-
 
             //var commons = prosImpressions.Intersect(soso);
             List<string> commons = prosImpressions.Select(s1 => s1.InnerText).ToList().Intersect(soso.Select(s2 => s2.InnerText).ToList()).ToList();
@@ -272,9 +275,18 @@ namespace PriceStalkerScrape
             var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
             var countNegatives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]")?.ToList();
             List<int> ListLengths = new List<int>();
-            ListLengths.Add(countPositives.Count());
-            ListLengths.Add(countSoso.Count());
-            ListLengths.Add(countNegatives.Count());
+            if(safepros.Value!=0 )
+            {
+                ListLengths.Add((int)safepros);
+            }
+            if(safesoso.Value != 0 )
+            {
+                ListLengths.Add((int)safesoso);
+            }
+            if(safecons.Value!=0 )
+            {
+                ListLengths.Add((int)safecons);
+            }
             List<string> Labels = new List<string>();
             if (safepros.Value > 0)
             {
@@ -288,9 +300,10 @@ namespace PriceStalkerScrape
             {
                 Labels.Add("Αρνητικά");
             }
-            WriteToCsv(testpro, testcons);
+            //WriteToCsv(testpro, testcons);
             FillStatsChart(ListLengths, Labels);
         }
+
         private void WriteToCsv(List<string> pros, List<string> cons)
         {
             //string filePath = @"output.csv";
@@ -341,12 +354,11 @@ namespace PriceStalkerScrape
                 if (lbl == "Θετικά")
                 {
                     listBrush.Add(Brushes.ForestGreen);
-                }
-                if (lbl == "Ετσι και έτσι")
+                }else if(lbl == "Ετσι και έτσι")
                 {
                     listBrush.Add(Brushes.Gold);
                 }
-                if (lbl == "Αρνητικά")
+                else 
                 {
                     listBrush.Add(Brushes.DarkRed);
                 }
@@ -477,12 +489,6 @@ namespace PriceStalkerScrape
                 }
             }
         }
-        private void cbProducts_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            //ComboBoxItem selectedCar = (ComboBoxItem)cbProducts.SelectedItem;
-            //int selecteVal = Convert.ToInt32(selectedCar.Content);
-            //System.Windows.Forms.MessageBox.Show((cbProducts.SelectedItem as ComboboxItem).Value.ToString());
-        }
         private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
             GetPriceHistoryInfo();
@@ -571,14 +577,8 @@ namespace PriceStalkerScrape
                     }
                 }
             });
-
             return task1;
         }
-        private System.Drawing.Point _mouseLoc;
-        private void Main_MouseDown(object sender, MouseEventArgs e)
-        {
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             Order order = new Order();
@@ -710,7 +710,6 @@ namespace PriceStalkerScrape
             driver.Close();
         }
     }
-    
     public class ComboboxItem
     {
         public string Text { get; set; }

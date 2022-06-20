@@ -35,7 +35,8 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.lblCompare = new System.Windows.Forms.Label();
+            this.btnCompare = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.pieChart1 = new LiveCharts.WinForms.PieChart();
             this.txtLink = new System.Windows.Forms.TextBox();
@@ -59,8 +60,6 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new System.Windows.Forms.Button();
-            this.btnCompare = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.lblCompare = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -142,7 +141,6 @@
             // 
             this.tabPage1.Controls.Add(this.lblCompare);
             this.tabPage1.Controls.Add(this.btnCompare);
-            this.tabPage1.Controls.Add(this.materialRaisedButton3);
             this.tabPage1.Controls.Add(this.materialRaisedButton1);
             this.tabPage1.Controls.Add(this.pieChart1);
             this.tabPage1.Controls.Add(this.txtLink);
@@ -161,17 +159,26 @@
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // materialRaisedButton3
+            // lblCompare
             // 
-            this.materialRaisedButton3.Depth = 0;
-            this.materialRaisedButton3.Location = new System.Drawing.Point(1252, 7);
-            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton3.Name = "materialRaisedButton3";
-            this.materialRaisedButton3.Primary = true;
-            this.materialRaisedButton3.Size = new System.Drawing.Size(162, 33);
-            this.materialRaisedButton3.TabIndex = 18;
-            this.materialRaisedButton3.Text = "Export csv for ML";
-            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            this.lblCompare.AutoSize = true;
+            this.lblCompare.Location = new System.Drawing.Point(1057, 46);
+            this.lblCompare.Name = "lblCompare";
+            this.lblCompare.Size = new System.Drawing.Size(0, 20);
+            this.lblCompare.TabIndex = 20;
+            // 
+            // btnCompare
+            // 
+            this.btnCompare.Depth = 0;
+            this.btnCompare.Location = new System.Drawing.Point(1049, 4);
+            this.btnCompare.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnCompare.Name = "btnCompare";
+            this.btnCompare.Primary = true;
+            this.btnCompare.Size = new System.Drawing.Size(173, 33);
+            this.btnCompare.TabIndex = 19;
+            this.btnCompare.Text = "Compared Price";
+            this.btnCompare.UseVisualStyleBackColor = true;
+            this.btnCompare.Click += new System.EventHandler(this.btnCompare_Click);
             // 
             // materialRaisedButton1
             // 
@@ -190,7 +197,7 @@
             // 
             this.pieChart1.Location = new System.Drawing.Point(885, 113);
             this.pieChart1.Name = "pieChart1";
-            this.pieChart1.Size = new System.Drawing.Size(540, 425);
+            this.pieChart1.Size = new System.Drawing.Size(540, 445);
             this.pieChart1.TabIndex = 17;
             this.pieChart1.Text = "pieChart1";
             // 
@@ -212,11 +219,11 @@
             // materialFlatButton1
             // 
             this.materialFlatButton1.Depth = 0;
-            this.materialFlatButton1.Location = new System.Drawing.Point(1066, 7);
+            this.materialFlatButton1.Location = new System.Drawing.Point(1240, 4);
             this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton1.Name = "materialFlatButton1";
             this.materialFlatButton1.Primary = true;
-            this.materialFlatButton1.Size = new System.Drawing.Size(162, 33);
+            this.materialFlatButton1.Size = new System.Drawing.Size(187, 33);
             this.materialFlatButton1.TabIndex = 13;
             this.materialFlatButton1.Text = "Import To Database";
             this.materialFlatButton1.UseVisualStyleBackColor = true;
@@ -405,27 +412,6 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.button1_Click);
             // 
-            // btnCompare
-            // 
-            this.btnCompare.Depth = 0;
-            this.btnCompare.Location = new System.Drawing.Point(1066, 57);
-            this.btnCompare.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnCompare.Name = "btnCompare";
-            this.btnCompare.Primary = true;
-            this.btnCompare.Size = new System.Drawing.Size(137, 33);
-            this.btnCompare.TabIndex = 19;
-            this.btnCompare.Text = "Compared Price";
-            this.btnCompare.UseVisualStyleBackColor = true;
-            this.btnCompare.Click += new System.EventHandler(this.btnCompare_Click);
-            // 
-            // lblCompare
-            // 
-            this.lblCompare.AutoSize = true;
-            this.lblCompare.Location = new System.Drawing.Point(1220, 62);
-            this.lblCompare.Name = "lblCompare";
-            this.lblCompare.Size = new System.Drawing.Size(0, 20);
-            this.lblCompare.TabIndex = 20;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -438,7 +424,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Main_Load_1);
-            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Main_MouseDown);
             this.panel1.ResumeLayout(false);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
@@ -489,7 +474,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel7;
         private LiveCharts.WinForms.CartesianChart cartesianChart2;
-        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
         private System.Windows.Forms.DataGridView dgvProductsForCheck;
         private MaterialSkin.Controls.MaterialRaisedButton btnCompare;
         private System.Windows.Forms.Label lblCompare;
