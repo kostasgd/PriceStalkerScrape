@@ -28,12 +28,9 @@ namespace PriceStalkerScrape
         public static IEstimator<ITransformer> BuildPipeline(MLContext mlContext)
         {
             // Data process configuration with pipeline data transformations
-            var pipeline = mlContext.Transforms.Text.FeaturizeText(inputColumnName:@"col1",outputColumnName:@"col1")      
-                                    .Append(mlContext.Transforms.Concatenate(@"Features", new []{@"col1"}))      
-                                    .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:@"col0",inputColumnName:@"col0"))      
-                                    .Append(mlContext.Transforms.NormalizeMinMax(@"Features", @"Features"))      
-                                    .Append(mlContext.MulticlassClassification.Trainers.SdcaMaximumEntropy(new SdcaMaximumEntropyMulticlassTrainer.Options(){L1Regularization=1F,L2Regularization=0.1F,LabelColumnName=@"col0",FeatureColumnName=@"Features"}))      
-                                    .Append(mlContext.Transforms.Conversion.MapKeyToValue(outputColumnName:@"PredictedLabel",inputColumnName:@"PredictedLabel"));
+            var pipeline = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:@"movieId",inputColumnName:@"movieId")      
+                                    .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName:@"userId",inputColumnName:@"userId"))      
+                                    .Append(mlContext.Recommendation().Trainers.MatrixFactorization(new MatrixFactorizationTrainer.Options(){LabelColumnName=@"rating",MatrixColumnIndexColumnName=@"userId",MatrixRowIndexColumnName=@"movieId",ApproximationRank=19,LearningRate=1,NumberOfIterations=127,Quiet=true}));
 
             return pipeline;
         }

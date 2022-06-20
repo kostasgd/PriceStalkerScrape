@@ -15,11 +15,14 @@ namespace PriceStalkerScrape
         #region model input class
         public class ModelInput
         {
-            [ColumnName(@"col0")]
-            public string Col0 { get; set; }
+            [ColumnName(@"userId")]
+            public float UserId { get; set; }
 
-            [ColumnName(@"col1")]
-            public string Col1 { get; set; }
+            [ColumnName(@"movieId")]
+            public float MovieId { get; set; }
+
+            [ColumnName(@"rating")]
+            public float Rating { get; set; }
 
         }
 
@@ -31,20 +34,17 @@ namespace PriceStalkerScrape
         #region model output class
         public class ModelOutput
         {
-            [ColumnName(@"col0")]
-            public uint Col0 { get; set; }
+            [ColumnName(@"userId")]
+            public uint UserId { get; set; }
 
-            [ColumnName(@"col1")]
-            public float[] Col1 { get; set; }
+            [ColumnName(@"movieId")]
+            public uint MovieId { get; set; }
 
-            [ColumnName(@"Features")]
-            public float[] Features { get; set; }
-
-            [ColumnName(@"PredictedLabel")]
-            public string PredictedLabel { get; set; }
+            [ColumnName(@"rating")]
+            public float Rating { get; set; }
 
             [ColumnName(@"Score")]
-            public float[] Score { get; set; }
+            public float Score { get; set; }
 
         }
 

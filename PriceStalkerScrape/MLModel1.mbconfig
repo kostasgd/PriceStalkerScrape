@@ -1,26 +1,34 @@
 ﻿{
-  "TrainingTime": 15,
-  "Scenario": "Classification",
+  "TrainingTime": 25,
+  "Scenario": "Recommendation",
   "DataSource": {
     "Type": "TabularFile",
     "Version": 1,
-    "FilePath": "C:\\Users\\User14\\Documents\\Αρχείο για δοκιμή.csv",
-    "Delimiter": ";",
+    "FilePath": "C:\\Users\\User14\\Documents\\Book1.csv",
+    "Delimiter": ",",
     "DecimalMarker": ".",
-    "HasHeader": false,
+    "HasHeader": true,
     "ColumnProperties": [
       {
-        "ColumnName": "col0",
-        "ColumnPurpose": "Label",
-        "ColumnDataFormat": "String",
+        "ColumnName": "userId",
+        "ColumnPurpose": "User",
+        "ColumnDataFormat": "Single",
         "IsCategorical": false,
         "Type": "Column",
         "Version": 1
       },
       {
-        "ColumnName": "col1",
-        "ColumnPurpose": "Feature",
-        "ColumnDataFormat": "String",
+        "ColumnName": "movieId",
+        "ColumnPurpose": "Item",
+        "ColumnDataFormat": "Single",
+        "IsCategorical": false,
+        "Type": "Column",
+        "Version": 1
+      },
+      {
+        "ColumnName": "rating",
+        "ColumnPurpose": "Label",
+        "ColumnDataFormat": "Single",
         "IsCategorical": false,
         "Type": "Column",
         "Version": 1
@@ -38,70 +46,66 @@
       {
         "Version": 0,
         "Type": "Trial",
-        "TrainerName": "SdcaMaximumEntropyMulti",
-        "Score": 0.4,
-        "RuntimeInSeconds": 2.4639999866485596
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.0,
+        "RuntimeInSeconds": 3.9089999198913574
       },
       {
         "Version": 0,
         "Type": "Trial",
-        "TrainerName": "FastTreeOva",
-        "Score": 0.4,
-        "RuntimeInSeconds": 8.2910003662109375
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.0,
+        "RuntimeInSeconds": 12.151000022888184
       },
       {
         "Version": 0,
         "Type": "Trial",
-        "TrainerName": "FastForestOva",
-        "Score": 0.2,
-        "RuntimeInSeconds": 8.1549997329711914
+        "TrainerName": "MatrixFactorization",
+        "Score": "NaN",
+        "RuntimeInSeconds": 1.1729999780654907
+      },
+      {
+        "Version": 0,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": 0.0,
+        "RuntimeInSeconds": 4.24399995803833
+      },
+      {
+        "Version": 0,
+        "Type": "Trial",
+        "TrainerName": "MatrixFactorization",
+        "Score": "NaN",
+        "RuntimeInSeconds": 3.3880000114440918
       }
     ],
     "Pipeline": {
       "parameter": {
         "0": {
-          "InputColumnName": "col1",
-          "OutputColumnName": "col1"
+          "OutputColumnName": "movieId",
+          "InputColumnName": "movieId"
         },
         "1": {
-          "InputColumnNames": [
-            "col1"
-          ],
-          "OutputColumnName": "Features"
+          "OutputColumnName": "userId",
+          "InputColumnName": "userId"
         },
         "2": {
-          "OutputColumnName": "col0",
-          "InputColumnName": "col0"
-        },
-        "3": {
-          "OutputColumnNames": [
-            "Features"
-          ],
-          "InputColumnNames": [
-            "Features"
-          ]
-        },
-        "4": {
-          "L1Regularization": 1.0,
-          "L2Regularization": 0.1,
-          "LabelColumnName": "col0",
-          "FeatureColumnName": "Features"
-        },
-        "5": {
-          "OutputColumnName": "PredictedLabel",
-          "InputColumnName": "PredictedLabel"
+          "LabelColumnName": "rating",
+          "MatrixColumnIndexColumnName": "userId",
+          "MatrixRowIndexColumnName": "movieId",
+          "ApproximationRank": 19,
+          "LearningRate": 1.0,
+          "NumberOfIterations": 127,
+          "Quiet": true
         }
       },
       "estimators": [
-        "FeaturizeText",
-        "Concatenate",
         "MapValueToKey",
-        "NormalizeMinMax",
-        "SdcaMaximumEntropyMulti",
-        "MapKeyToValue"
+        "MapValueToKey",
+        "MatrixFactorization"
       ]
     },
-    "MetricName": "MicroAccuracy"
+    "MetricName": "RSquared"
   },
   "Type": "TrainingConfig",
   "Version": 2

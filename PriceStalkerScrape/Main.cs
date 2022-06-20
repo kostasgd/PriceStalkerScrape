@@ -80,6 +80,8 @@ namespace PriceStalkerScrape
             var OrderQuery = from x in stalkerEntities.Orders
                              select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
             dgvOrders.DataSource = OrderQuery.ToList();
+            dgvOrders.Update();
+            dgvOrders.Refresh();
         }
         #endregion
         #region "Insert"
@@ -583,6 +585,12 @@ namespace PriceStalkerScrape
         {
             Order order = new Order();
             order.ShowDialog();
+            order.FormClosed += Order_FormClosed; 
+        }
+
+        private void Order_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            LoadData();
         }
         [STAThread]
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e)

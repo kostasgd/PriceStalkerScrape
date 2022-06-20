@@ -21,15 +21,15 @@ namespace PriceStalkerScrape
         }
         private void SelectIndexes()
         {
-            if(cbProduct.Items.Count > 0)
-                cbProduct.SelectedIndex = 0;
+            //if(cbProduct.Items.Count > 0)
+            //    cbProduct.SelectedIndex = 0;
 
             if (cbCustomer.Items.Count > 0)
                 cbCustomer.SelectedIndex = 0;
             
             if(cbCustomer.Items.Count > 0 & cbProduct.Items.Count > 0)
             {
-                Calculate();
+                //Calculate();
             } 
         }
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -67,7 +67,7 @@ namespace PriceStalkerScrape
 
         private void button2_Click(object sender, EventArgs e)
         {
-            this.Dispose();
+            this.Close();
         }
         private void Calculate()
         {
@@ -109,13 +109,25 @@ namespace PriceStalkerScrape
                     ProductId = product.Id,
                     Address = txtAddress.Text,
                     Qty = Int32.Parse(nudQty.Value.ToString()),
-                    TotalPrice = float.Parse(lblTotalPrice.Text.Replace("€",""))
+                    TotalPrice = float.Parse(lblTotalPrice.Text.Replace("€","")),
+                    Rating = Int32.Parse(txtRating.Value.ToString())
                 };
                 context.Orders.Add(order);
                 context.SaveChanges();
                 MessageBox.Show("Record saved successfully!","Success!",MessageBoxButtons.OK,MessageBoxIcon.Information);
                 ClearFields();
             }
+        }
+
+        private void cbProduct_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            Calculate();
+            nudQty.Value =1;
+        }
+
+        private void Order_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
