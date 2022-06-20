@@ -24,6 +24,9 @@ namespace PriceStalkerScrape
             [ColumnName(@"rating")]
             public float Rating { get; set; }
 
+            [ColumnName(@"timestamp")]
+            public float Timestamp { get; set; }
+
         }
 
         #endregion
@@ -42,6 +45,9 @@ namespace PriceStalkerScrape
 
             [ColumnName(@"rating")]
             public float Rating { get; set; }
+
+            [ColumnName(@"timestamp")]
+            public float Timestamp { get; set; }
 
             [ColumnName(@"Score")]
             public float Score { get; set; }

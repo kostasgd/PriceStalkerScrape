@@ -385,9 +385,8 @@ namespace PriceStalkerScrape
         {
             try
             {
-                var url = txtLink.Text;
                 var web = new HtmlWeb();
-                var doc = web.Load(url);
+                var doc = web.Load(txtLink.Text);
                 var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
                 var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
                 string price = prices?.FirstOrDefault().InnerText.ToString();
@@ -395,7 +394,6 @@ namespace PriceStalkerScrape
                 var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;                                                                                   //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
                 var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
                 string description = "";
-                Console.WriteLine("Title :" + title + " Price :" + price + " Rating :" + rating);
                 foreach (var j in summary)
                 {
                     Console.WriteLine(j.InnerText);
@@ -422,14 +420,13 @@ namespace PriceStalkerScrape
             }
             catch (System.NullReferenceException ex)
             {
-                Console.Write(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
         private void ScrapeSkroutz()
         {
-            var url = txtLink.Text;
             var web = new HtmlWeb();
-            var doc = web.Load(url);
+            var doc = web.Load(txtLink.Text);
             var title = doc?.DocumentNode?.SelectSingleNode("//h1[@class='page-title']")?.InnerText;
             var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
             string price = prices?.FirstOrDefault().InnerText.ToString();
@@ -640,6 +637,8 @@ namespace PriceStalkerScrape
             ComparePrices();
         }
 
+
+        #region "Price Comparators"
         private void ComparePrices()
         {
             if (lblProductTitle.Text != null)
@@ -717,6 +716,7 @@ namespace PriceStalkerScrape
             }
             driver.Close();
         }
+        #endregion
     }
     public class ComboboxItem
     {
