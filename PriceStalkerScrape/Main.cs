@@ -63,6 +63,22 @@ namespace PriceStalkerScrape
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
         }
+        public void RemoveOldPrices()
+        {
+            using (var context = new Data.StalkerEntities())
+            {
+                var data = context.PriceHistory.ToList();
+                foreach(var d in data)
+                {
+                    if ((uint)d.Date.Subtract(DateTime.Now.Date).TotalDays >54)
+                    {
+                        var deletedRecord = context.PriceHistory.FirstOrDefault(x=>x.Id == d.Id);
+                        context.PriceHistory.Remove(deletedRecord);
+                        context.SaveChanges();
+                    }
+                }
+            }
+        }
         private void Initialize(string title, string price, string rating, string summary)
         {
             lblProductPrice.Text = price;
@@ -490,6 +506,7 @@ namespace PriceStalkerScrape
         }
         private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
+            RemoveOldPrices();
             GetPriceHistoryInfo();
         }
         public void GetPriceHistoryInfo()
@@ -548,7 +565,7 @@ namespace PriceStalkerScrape
 
             }
         }
-        private async Task<Task> CheckPrices(string title, int pid, float newprice, float oldprice)
+        private Task CheckPrices(string title, int pid, float newprice, float oldprice)
         {
             Task task1 = Task.Run(() =>
             {
