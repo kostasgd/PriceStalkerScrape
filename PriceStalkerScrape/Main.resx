@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="txtLink.Text" xml:space="preserve">
+    <value>https://www.skroutz.gr/s/25229849/AOC-C27G2U-VA-Curved-Monitor-27-FHD-1920x1080-165Hz-%CE%BC%CE%B5-%CF%87%CF%81%CF%8C%CE%BD%CE%BF-%CE%B1%CF%80%CF%8C%CE%BA%CF%81%CE%B9%CF%83%CE%B7%CF%82-4ms-GTG.html#specs</value>
+  </data>
 </root>

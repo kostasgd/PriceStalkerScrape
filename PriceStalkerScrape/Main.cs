@@ -44,6 +44,7 @@ namespace PriceStalkerScrape
             InitializeComponent();
             LoadData();
             FillDatagridStats();
+            txtLink.Focus();
         }
         #region "Initialize&load"
         public void FillDatagridStats()
@@ -353,6 +354,15 @@ namespace PriceStalkerScrape
                     Labels.Add("Αρνητικά");
                 }
                 //WriteToCsv(testpro, testcons);
+                var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
+                var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
+                string price = prices.Text.ToString();
+                var rating = wait.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text; //actual-rating 
+                var summary = wait.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]"))).Text;
+                if (title != null && price != null)
+                {
+                    Initialize(title.Text.ToString(), price.ToString(), rating.ToString(), summary);
+                }
                 FillStatsChart(ListLengths, Labels);
                 browser.Close();
             }
@@ -384,7 +394,7 @@ namespace PriceStalkerScrape
             {
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
-                    ScrapeSkroutz();
+                    //ScrapeSkroutz();
                     SetImpression();
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
@@ -440,37 +450,68 @@ namespace PriceStalkerScrape
             {
                 var web = new HtmlWeb();
                 var doc = web.Load(txtLink.Text);
-                var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
-                var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
-                string price = prices?.FirstOrDefault().InnerText.ToString();
-                var rating = doc?.DocumentNode?.SelectSingleNode("//span[contains(@class,'Header__StarRating')]")?.InnerText; //actual-rating 
-                var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;                                                                                   
+                //var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
+                //var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
+                //string price = prices?.FirstOrDefault().InnerText.ToString();
+                //var rating = doc?.DocumentNode?.SelectSingleNode("//span[contains(@class,'Header__StarRating')]")?.InnerText; //actual-rating 
+                //var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;                                                                                   
                 //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
-                var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
+                //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
                 string description = "";
-                foreach (var j in summary)
+                using (var browser = new ChromeDriver())
                 {
-                    Console.WriteLine(j.InnerText);
-                }
-                if (summary != null)
-                {
-                    foreach (var s in summary)
+                    // add your code here
+                    //var characteristics = doc.DocumentNode.SelectNodes("//span[@class='slug']").ToList();
+                    browser.Url = txtLink.Text;
+                    var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                    Thread.Sleep(1000);
+                    var title = wait.Until(x => x.FindElement(By.XPath("//div[@class='hgroup']/h1")));
+                    var prices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
+                    string price = prices.Text.ToString();
+                    var rating = wait.Until(x => x.FindElement(By.XPath("//span[contains(@class,'Header__StarRating')]"))).Text; //actual-rating 
+                    var summary = wait.Until(x => x.FindElements(By.XPath("//div[contains(@class,'simple-description')]/ul/li"))).ToList();
+                    string s = "";
+                    if (summary != null)
                     {
-                        description += s.InnerText + "\n";
+                        for (int i = 0; i < summary.Count; i++)
+                        {
+                            s += summary[i].Text + "\n";
+                        }
+                    }
+                    else
+                    {
+                        s = "Χωρίς περιγραφή";
+                    }
+                   
+                    if (title != null && price != null)
+                    {
+                        Initialize(title.Text.ToString(), price.ToString(), rating.ToString(), s);
                     }
                 }
-                if (picture != null)
-                {
-                    //pbLoadImage.Load("https:" + picture);
-                }
-                if (string.IsNullOrEmpty(rating))
-                {
-                    rating = "0";
-                }
-                if (title != null && price != null)
-                {
-                    Initialize(title, price.ToString(), rating.ToString(), description);
-                }
+
+                //foreach (var j in summary)
+                //{
+                //    Console.WriteLine(j.InnerText);
+                //}
+                //if (summary != null)
+                //{
+                //    foreach (var s in summary)
+                //    {
+                //        description += s.InnerText + "\n";
+                //    }
+                //}
+                //if (picture != null)
+                //{
+                //    //pbLoadImage.Load("https:" + picture);
+                //}
+                //if (string.IsNullOrEmpty(rating))
+                //{
+                //    rating = "0";
+                //}
+                //if (title != null && price != null)
+                //{
+                //    Initialize(title, price.ToString(), rating.ToString(), description);
+                //}
             }
             catch (System.NullReferenceException ex)
             {
@@ -502,7 +543,7 @@ namespace PriceStalkerScrape
                 browser.Url = txtLink.Text;
                 var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
                 var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
-                var prices = wait.Until(x => x.FindElements(By.XPath("//h1[@class='page-title']"))).FirstOrDefault();
+                var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
                 string price = prices.Text.ToString();
                 var rating = wait.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text; //actual-rating 
                 var summary = wait.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]"))).Text;

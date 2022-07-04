@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.lblProductTitle = new System.Windows.Forms.Label();
             this.lblProductPrice = new System.Windows.Forms.Label();
             this.lblProductRating = new System.Windows.Forms.Label();
@@ -207,6 +208,7 @@
             this.txtLink.Name = "txtLink";
             this.txtLink.Size = new System.Drawing.Size(921, 26);
             this.txtLink.TabIndex = 14;
+            this.txtLink.Text = resources.GetString("txtLink.Text");
             // 
             // rtbImpressions
             // 
