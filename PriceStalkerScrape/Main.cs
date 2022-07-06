@@ -848,19 +848,27 @@ namespace PriceStalkerScrape
                 Console.WriteLine(r.Text);
             }
             Thread.Sleep(250);
-            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
+            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
 
             string skroutzPrice = "";
             
-            var resultsPrices = driver.FindElements(By.ClassName("prices__price")).FirstOrDefault();
-            String val = resultsPrices.GetAttribute("innerText");
-            if (re.IsMatch(val))
+            var resultsPrices = driver?.FindElements(By.ClassName("prices__price"))?.FirstOrDefault();
+            string s = resultsPrices.Text.ToString();
+            if (resultsPrices != null)
             {
-                MatchCollection matchedAuthors = re.Matches(resultsPrices.Text);
-                lblCompare.Text = matchedAuthors[0].Value.ToString();
-                Console.WriteLine("Price : true");
+                if (re.IsMatch(s))
+                {
+                    MatchCollection matchedAuthors = re.Matches(resultsPrices.Text);
+                    lblCompare.Text = matchedAuthors[0].Value.ToString();
+                    Console.WriteLine("Price : true");
+                }
             }
-            lblCompare.Text = val;
+            else
+            {
+                lblCompare.Text = "Cannot be found...";
+            }
+            
+            //lblCompare.Text = val;
             driver.Close();
         }
         private void ComparePriceWithSkroutzPrice()
