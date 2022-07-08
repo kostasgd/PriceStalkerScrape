@@ -61,6 +61,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -76,6 +77,7 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).BeginInit();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -140,6 +142,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.lblCompare);
             this.tabPage1.Controls.Add(this.btnCompare);
             this.tabPage1.Controls.Add(this.materialRaisedButton1);
@@ -414,6 +417,15 @@
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler(this.button1_Click);
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Location = new System.Drawing.Point(886, 113);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(539, 428);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox1.TabIndex = 21;
+            this.pictureBox1.TabStop = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -442,6 +454,7 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).EndInit();
             this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -479,6 +492,7 @@
         private System.Windows.Forms.DataGridView dgvProductsForCheck;
         private MaterialSkin.Controls.MaterialRaisedButton btnCompare;
         private System.Windows.Forms.Label lblCompare;
+        private System.Windows.Forms.PictureBox pictureBox1;
     }
 }
 

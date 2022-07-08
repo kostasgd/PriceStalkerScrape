@@ -397,10 +397,14 @@ namespace PriceStalkerScrape
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
                     //ScrapeSkroutz();
+                    pictureBox1.Visible = false;
+                    cartesianChart1.Visibility = Visibility.Visible;
                     SetImpression();
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
+                    cartesianChart1.Visibility = Visibility.Hidden;
+                    pictureBox1.Visible = true;
                     ScrapeBestPrice();
                 }
             }
@@ -460,6 +464,23 @@ namespace PriceStalkerScrape
                 //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
                 var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
                 string description = "";
+                WebClient wc = new WebClient();
+                
+                if (picture != null)
+                {
+                    if (!picture.Contains(".webp"))
+                    {
+                        string prefix = "";
+                        if (!picture.StartsWith("https:"))
+                        {
+                            prefix = "https:";
+                        }
+                        byte[] bytes = wc.DownloadData(prefix+picture);
+                        MemoryStream ms = new MemoryStream(bytes);
+                        System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                        pictureBox1.Image = img;
+                    }
+                }
                 if(summary.Count>0)
                 {
                     foreach(var s in summary)
@@ -819,10 +840,12 @@ namespace PriceStalkerScrape
             {
                 if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
+                    
                     ComparePriceWithSkroutzPrice();
                 }
                 else if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
+                   
                     ComparePriceWithBestPrice();
                 }
             }
