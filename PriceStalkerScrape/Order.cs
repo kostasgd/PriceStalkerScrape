@@ -21,16 +21,8 @@ namespace PriceStalkerScrape
         }
         private void SelectIndexes()
         {
-            //if(cbProduct.Items.Count > 0)
-            //    cbProduct.SelectedIndex = 0;
-
             if (cbCustomer.Items.Count > 0)
                 cbCustomer.SelectedIndex = 0;
-            
-            if(cbCustomer.Items.Count > 0 & cbProduct.Items.Count > 0)
-            {
-                //Calculate();
-            } 
         }
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {

@@ -834,77 +834,108 @@ namespace PriceStalkerScrape
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
             ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
-
             driver.Navigate().GoToUrl(@"https://www.bestprice.gr/");
-            Thread.Sleep(250);
-            WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
-
-            form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
-            form.Submit();
-
-            var searchResults = driver.FindElements(By.ClassName("page-products__products")).ToList();
-            foreach (var r in searchResults)
+            try
             {
-                Console.WriteLine(r.Text);
-            }
-            Thread.Sleep(250);
-            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
+                Thread.Sleep(250);
+                WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
 
-            string skroutzPrice = "";
-            
-            var resultsPrices = driver?.FindElements(By.ClassName("prices__price"))?.FirstOrDefault();
-            string s = resultsPrices.Text.ToString();
-            if (resultsPrices != null)
-            {
-                if (re.IsMatch(s))
+                form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
+                form.Submit();
+                
+                var searchResults = driver.FindElements(By.ClassName("page-products__products")).ToList();
+                foreach (var r in searchResults)
                 {
-                    MatchCollection matchedAuthors = re.Matches(resultsPrices.Text);
-                    lblCompare.Text = matchedAuthors[0].Value.ToString();
-                    Console.WriteLine("Price : true");
+                    Console.WriteLine(r.Text);
+                }
+                Thread.Sleep(250);
+                Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
+
+                string skroutzPrice = "";
+
+                var resultsPrices = driver?.FindElements(By.ClassName("prices__price"))?.FirstOrDefault();
+                string s = resultsPrices.Text.ToString();
+                if (resultsPrices != null)
+                {
+                    if (re.IsMatch(s))
+                    {
+                        MatchCollection matchedAuthors = re.Matches(resultsPrices.Text);
+                        lblCompare.Text = matchedAuthors[0].Value.ToString();
+                        Console.WriteLine("Price : true");
+                    }
+                }
+                else
+                {
+                    lblCompare.Text = "Cannot be found...";
                 }
             }
-            else
+            catch (Exception ex)
             {
-                lblCompare.Text = "Cannot be found...";
+                MessageBox.Show(ex.Message);
             }
-            
-            //lblCompare.Text = val;
-            driver.Close();
+            finally
+            {
+                driver.Close();
+            }
         }
         private void ComparePriceWithSkroutzPrice()
         {
+
             var chromeOptions = new ChromeOptions();
-            //chromeOptions.AddArguments("headless");
+            chromeOptions.AddArgument("--start-minimized");
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
+
             ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
-
-            driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
-            Thread.Sleep(1500);
-            WebElement form = (WebElement)driver.FindElement(By.ClassName("search-bar-input-wrapper"));
-
-            form.FindElement(By.Id("search-bar-input")).SendKeys(lblProductTitle.Text);
-            form.Submit();
-
-            var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).FirstOrDefault();
-            Console.WriteLine(searchResults.Text);
-            Thread.Sleep(500);
-            var resultsPrices = driver.FindElements(By.XPath("//a[contains(@class,'js-sku-link')]")).FirstOrDefault();
-            Console.WriteLine($"Result { resultsPrices.Text}");
-            if (resultsPrices != null)
+            try 
             {
-                lblCompare.Text = resultsPrices.Text;
-            }
-            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
+                driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
+                Thread.Sleep(1500);
+                WebElement form = (WebElement)driver.FindElement(By.ClassName("search-bar-input-wrapper"));
 
-            string skroutzPrice = "";
-            if (re.IsMatch(searchResults.Text))
-            {
-                MatchCollection matchedAuthors = re.Matches(searchResults.Text);
-                lblCompare.Text = matchedAuthors[0].Value.ToString();
-                Console.WriteLine("Price : true");
+                form.FindElement(By.Id("search-bar-input")).SendKeys(lblProductTitle.Text);
+                form.Submit();
+
+                var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).FirstOrDefault();
+                Console.WriteLine(searchResults.Text);
+                //Thread.Sleep(500);
+                //var resultsPrices = driver.FindElements(By.ClassName("js-sku-link sku-link")).FirstOrDefault();
+                IList<IWebElement> elements = driver.FindElements(By.XPath("//a[starts-with(@data-e2e-testid, 'sku-price-link')]"));
+
+                Console.WriteLine($"Result { elements.FirstOrDefault().Text}");
+                //if (resultsPrices != null)
+                //{
+                //    lblCompare.Text = resultsPrices.Text;
+                //}
+                Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
+                
+                string val = elements.FirstOrDefault().Text;
+                string numberOnly = Regex.Replace(val, "[^0-9.,€]", "");
+                if (elements != null)
+                {
+                    if (re.IsMatch(numberOnly))
+                    {
+                        MatchCollection matchedAuthors = re.Matches(numberOnly);
+                        lblCompare.Text = matchedAuthors[0].Value.ToString();
+                        Console.WriteLine("Price : true");
+                    }
+                }
+                else
+                {
+                    lblCompare.Text = "Δεν βρέθηκε...";
+                }
+
+                
+
             }
-            driver.Close();
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                driver.Close();
+            }     
         }
         #endregion
 
