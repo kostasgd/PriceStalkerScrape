@@ -75,7 +75,7 @@ namespace PriceStalkerScrape
                     {
                         var deletedRecord = context.PriceHistory.FirstOrDefault(x=>x.Id == d.Id);
                         context.PriceHistory.Remove(deletedRecord);
-                        context.SaveChanges();
+                        //context.SaveChanges();
                     }
                 }
             }
@@ -650,38 +650,44 @@ namespace PriceStalkerScrape
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (dgvProductsForCheck.SelectedRows.Count > 0)
+            try
             {
-                int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
-                cartesianChart1.Series.Clear();
-                using (var context = new Data.StalkerEntities())
+                if (dgvProductsForCheck.SelectedRows.Count > 0)
                 {
-                    var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
-                    int counter = 0;
-                    LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                    foreach (var item in data)
+                    int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
+                    cartesianChart1.Series.Clear();
+                    using (var context = new Data.StalkerEntities())
                     {
-                        double[] ys2 = { item.Price };
-                        columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                        var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                        int counter = 0;
+                        LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
+                        foreach (var item in data)
                         {
-                            Title = item.Date.ToString(),
-                            DataLabels = true,
-                            ColumnPadding = 15,
-                            VerticalAlignment = VerticalAlignment.Bottom,
-                            Margin = new Thickness(10, 10, 10, 10),
-                            Values = new LiveCharts.ChartValues<double>(ys2),
-                        };
-                        cartesianChart1.LegendLocation = LegendLocation.Right;
-                        cartesianChart1.FontStretch = new FontStretch();
-                        cartesianChart1.Series.Add(columnSeries[counter]);
-                        counter++;
+                            double[] ys2 = { item.Price };
+                            columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                            {
+                                Title = item.Date.ToString(),
+                                DataLabels = true,
+                                ColumnPadding = 15,
+                                VerticalAlignment = VerticalAlignment.Bottom,
+                                Margin = new Thickness(10, 10, 10, 10),
+                                Values = new LiveCharts.ChartValues<double>(ys2),
+                            };
+                            cartesianChart1.LegendLocation = LegendLocation.Right;
+                            cartesianChart1.FontStretch = new FontStretch();
+                            cartesianChart1.Series.Add(columnSeries[counter]);
+                            counter++;
+                        }
                     }
                 }
+            }catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
         private void materialRaisedButton2_Click(object sender, EventArgs e)
         {
-            RemoveOldPrices();
+            //RemoveOldPrices();
             GetPriceHistoryInfo();
         }
         public void GetPriceHistoryInfo()
@@ -692,44 +698,50 @@ namespace PriceStalkerScrape
                 var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id, i.Price, i.Rating, i.Title }).ToList();
                 //btnLoad.Invoke(new Action(() => btnLoad.Enabled = false));
                 materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
-
-                foreach (var link in data)
+                var chromeOptions = new ChromeOptions();
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+                using (var browser = new ChromeDriver(chromeDriverService,chromeOptions))
                 {
-                    Application.DoEvents();
-                    var url = link.Link;
-                    var web = new HtmlWeb();
-                    var doc = web.Load(url);
-                    var skroutzprices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
-                    var bestpprices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
-                    string bestpprice = bestpprices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
-                    var test = link.Price.ToString();
-                    string newskroutzprice = skroutzprices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
-
-                    var testlink = link.Id;
-                    float saveprice = (float)Math.Round(float.Parse(link.Price.ToString()), 2);
-                    
-                    var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x => x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
-                    if (joinprice != null)
+                    foreach (var link in data)
                     {
-                        float compPrice = 0;
-                        if (newskroutzprice != null)
-                        {
-                            compPrice = (float)Math.Round(float.Parse(newskroutzprice.ToString()), 2);
-                        }
-                        else if (bestpprice != null)
-                        {
-                            compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
-                        }
+                        browser.Url = link.Link;
+                        var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                        var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
+                        Application.DoEvents();
+                        //var url = link.Link;
+                        //var web = new HtmlWeb();
+                        //var doc = web.Load(url);
+                        //var skroutzprices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
+                        //var bestpprices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
+                        var bestpprices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
+                        string bestpprice = bestpprices?.Text.ToString().Replace("€", "");
+                        //var test = link.Price.ToString();
+                        //string newskroutzprice = skroutzprices?.FirstOrDefault().InnerText.ToString().Replace("€", "");
+                        string newskroutzprice = prices?.Text.ToString().Replace("€", "");
+                        var testlink = link.Id;
+                        float saveprice = (float)Math.Round(float.Parse(link.Price.ToString()), 2);
 
-                        var t = Task.Run(async () =>
+                        var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x => x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
+                        if (joinprice != null)
                         {
-                            await CheckPrices(link.Title, testlink, compPrice, (float)joinprice.Price);
-                        });
+                            float compPrice = 0;
+                            if (newskroutzprice != null)
+                            {
+                                compPrice = (float)Math.Round(float.Parse(newskroutzprice.ToString()), 2);
+                            }
+                            else if (bestpprices != null)
+                            {
+                                compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
+                            }
 
-                        Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
-                        updProduct.Id = link.Id;
-                        updProduct.Price = compPrice;
-                        context.SaveChanges();
+                            CheckPrices(link.Title, testlink, compPrice, (float)joinprice.Price);
+
+                            Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
+                            updProduct.Id = link.Id;
+                            updProduct.Price = compPrice;
+                            context.SaveChanges();
+                        }
                     }
                 }
                 //'btnLoad.Invoke(new Action(() => btnLoad.Enabled = true));
@@ -741,38 +753,33 @@ namespace PriceStalkerScrape
                 {
                     materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
                 }
-
             }
         }
-        private Task CheckPrices(string title, int pid, float newprice, float oldprice)
+        private void CheckPrices(string title, int pid, float newprice, float oldprice)
         {
-            Task task1 = Task.Run(() =>
+            if (newprice != oldprice)
             {
-                if (newprice != oldprice)
+                float deservedDifference = Math.Abs( newprice - oldprice);
+                if (deservedDifference >= 4)
                 {
-                    float deservedDifference = newprice - oldprice;
-                    if (deservedDifference >= 4)
+                    using (var context = new Data.StalkerEntities())
                     {
-                        using (var context = new Data.StalkerEntities())
+                        Data.PriceHistory priceHistory = new Data.PriceHistory()
                         {
-                            Data.PriceHistory priceHistory = new Data.PriceHistory()
-                            {
-                                PId = pid,
-                                Price = Math.Round(newprice, 2),
-                                Date = DateTime.Now
-                            };
-                            context.PriceHistory.Add(priceHistory);
-                            context.SaveChanges();
-                            new ToastContentBuilder()
-                            .AddArgument("action", "viewConversation")
-                                    .AddArgument("conversationId", 123)
-                                    .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
-                                    .Show();
-                        }
+                            PId = pid,
+                            Price = Math.Round(newprice, 2),
+                            Date = DateTime.Now
+                        };
+                        context.PriceHistory.Add(priceHistory);
+                        context.SaveChanges();
+                        new ToastContentBuilder()
+                        .AddArgument("action", "viewConversation")
+                                .AddArgument("conversationId", 123)
+                                .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
+                                .Show();
                     }
                 }
-            });
-            return task1;
+            }
         }
         private void button2_Click(object sender, EventArgs e)
         {
