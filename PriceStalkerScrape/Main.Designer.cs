@@ -45,7 +45,6 @@
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
-            this.cartesianChart2 = new LiveCharts.WinForms.CartesianChart();
             this.panel7 = new System.Windows.Forms.Panel();
             this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
@@ -247,22 +246,12 @@
             // 
             // panel6
             // 
-            this.panel6.Controls.Add(this.cartesianChart2);
             this.panel6.Controls.Add(this.panel7);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel6.Location = new System.Drawing.Point(3, 3);
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(1427, 568);
             this.panel6.TabIndex = 1;
-            // 
-            // cartesianChart2
-            // 
-            this.cartesianChart2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cartesianChart2.Location = new System.Drawing.Point(871, 0);
-            this.cartesianChart2.Name = "cartesianChart2";
-            this.cartesianChart2.Size = new System.Drawing.Size(556, 568);
-            this.cartesianChart2.TabIndex = 3;
-            this.cartesianChart2.Text = "cartesianChart2";
             // 
             // panel7
             // 
@@ -488,7 +477,6 @@
         private LiveCharts.WinForms.PieChart pieChart1;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel7;
-        private LiveCharts.WinForms.CartesianChart cartesianChart2;
         private System.Windows.Forms.DataGridView dgvProductsForCheck;
         private MaterialSkin.Controls.MaterialRaisedButton btnCompare;
         private System.Windows.Forms.Label lblCompare;
