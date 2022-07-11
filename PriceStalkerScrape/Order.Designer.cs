@@ -41,10 +41,7 @@ namespace PriceStalkerScrape
             this.nudQty = new System.Windows.Forms.NumericUpDown();
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.txtRating = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtRating)).BeginInit();
             this.SuspendLayout();
             // 
             // cbCustomer
@@ -69,7 +66,7 @@ namespace PriceStalkerScrape
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(180, 142);
+            this.label1.Location = new System.Drawing.Point(99, 142);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(46, 13);
             this.label1.TabIndex = 3;
@@ -106,7 +103,7 @@ namespace PriceStalkerScrape
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(294, 142);
+            this.label4.Location = new System.Drawing.Point(213, 142);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(58, 13);
             this.label4.TabIndex = 7;
@@ -115,7 +112,7 @@ namespace PriceStalkerScrape
             // lblTotalPrice
             // 
             this.lblTotalPrice.AutoSize = true;
-            this.lblTotalPrice.Location = new System.Drawing.Point(308, 166);
+            this.lblTotalPrice.Location = new System.Drawing.Point(227, 166);
             this.lblTotalPrice.Name = "lblTotalPrice";
             this.lblTotalPrice.Size = new System.Drawing.Size(0, 13);
             this.lblTotalPrice.TabIndex = 8;
@@ -132,7 +129,7 @@ namespace PriceStalkerScrape
             // 
             // nudQty
             // 
-            this.nudQty.Location = new System.Drawing.Point(183, 164);
+            this.nudQty.Location = new System.Drawing.Point(102, 164);
             this.nudQty.Minimum = new decimal(new int[] {
             1,
             0,
@@ -165,39 +162,11 @@ namespace PriceStalkerScrape
             this.label5.TabIndex = 12;
             this.label5.Text = "Address";
             // 
-            // txtRating
-            // 
-            this.txtRating.Location = new System.Drawing.Point(85, 164);
-            this.txtRating.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.txtRating.Name = "txtRating";
-            this.txtRating.Size = new System.Drawing.Size(43, 20);
-            this.txtRating.TabIndex = 13;
-            this.txtRating.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(82, 142);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(38, 13);
-            this.label6.TabIndex = 14;
-            this.label6.Text = "Rating";
-            // 
             // Order
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(377, 348);
-            this.Controls.Add(this.label6);
-            this.Controls.Add(this.txtRating);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtAddress);
             this.Controls.Add(this.nudQty);
@@ -218,7 +187,6 @@ namespace PriceStalkerScrape
             this.Text = "Order";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Order_FormClosed);
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.txtRating)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -238,7 +206,5 @@ namespace PriceStalkerScrape
         private System.Windows.Forms.NumericUpDown nudQty;
         private System.Windows.Forms.TextBox txtAddress;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown txtRating;
-        private System.Windows.Forms.Label label6;
     }
 }

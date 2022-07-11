@@ -101,8 +101,7 @@ namespace PriceStalkerScrape
                     ProductId = product.Id,
                     Address = txtAddress.Text,
                     Qty = Int32.Parse(nudQty.Value.ToString()),
-                    TotalPrice = float.Parse(lblTotalPrice.Text.Replace("€","")),
-                    Rating = Int32.Parse(txtRating.Value.ToString())
+                    TotalPrice = float.Parse(lblTotalPrice.Text.Replace("€",""))
                 };
                 context.Orders.Add(order);
                 context.SaveChanges();

@@ -23,7 +23,6 @@
           <Property Name="Address" Type="nvarchar" MaxLength="350" />
           <Property Name="Qty" Type="int" Nullable="false" />
           <Property Name="TotalPrice" Type="float" Nullable="false" />
-          <Property Name="Rating" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="PriceHistory">
           <Key>
@@ -129,7 +128,6 @@
           <NavigationProperty Name="tblProducts" Relationship="StalkerModel.FK_Orders_tblProducts" FromRole="Orders" ToRole="tblProducts" />
           <Property Name="Qty" Type="Int32" Nullable="false" />
           <Property Name="TotalPrice" Type="Double" Nullable="false" />
-          <Property Name="Rating" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Orders_Customer">
           <End Type="StalkerModel.Customer" Role="Customer" Multiplicity="1" />
@@ -195,7 +193,6 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="StalkerModel.Orders">
               <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="Rating" ColumnName="Rating" />
                 <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
                 <ScalarProperty Name="Qty" ColumnName="Qty" />
                 <ScalarProperty Name="Address" ColumnName="Address" />

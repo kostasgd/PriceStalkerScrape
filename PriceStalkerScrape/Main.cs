@@ -203,13 +203,7 @@ namespace PriceStalkerScrape
             List<string> listsoso = new List<string>();
             List<string> listcons = new List<string>();
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments(new List<string>()
-            {
-                //"--silent-launch",
-                //    "--no-startup-window",
-                //    "no-sandbox",
-                //    "headless",
-            });
+            chromeOptions.AddArguments(new List<string>());
 
             chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 1);
             chromeOptions.AddUserProfilePreference("profile.cookie_controls_mode", 1);
@@ -336,7 +330,6 @@ namespace PriceStalkerScrape
                 {
                     Labels.Add("Αρνητικά");
                 }
-                //WriteToCsv(testpro, testcons);
                 var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
                 var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
                 string price = prices.Text.ToString();
@@ -349,7 +342,6 @@ namespace PriceStalkerScrape
                 FillStatsChart(ListLengths, Labels);
                 browser.Close();
             }
-            //var myElement = doc?.DocumentNode?.SelectNodes("//*[contains(@class,'pros')]/li")?.ToList();
         }
         private void materialRaisedButton1_Click(object sender, EventArgs e)
         {
@@ -680,7 +672,6 @@ namespace PriceStalkerScrape
                         }
                     }
                 }
-                //'btnLoad.Invoke(new Action(() => btnLoad.Enabled = true));
                 if (materialRaisedButton2.IsHandleCreated)
                 {
                     materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
@@ -748,7 +739,6 @@ namespace PriceStalkerScrape
         private void ComparePriceWithBestPrice()
         {
             var chromeOptions = new ChromeOptions();
-            //chromeOptions.AddArguments("headless");
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
             ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
@@ -765,8 +755,6 @@ namespace PriceStalkerScrape
 
                 Thread.Sleep(250);
                 Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
-
-                string skroutzPrice = "";
 
                 var resultsPrices = driver?.FindElements(By.ClassName("prices__price"))?.FirstOrDefault();
                 string s = resultsPrices.Text.ToString();
@@ -813,10 +801,6 @@ namespace PriceStalkerScrape
                 //Thread.Sleep(500);
                 //var resultsPrices = driver.FindElements(By.ClassName("js-sku-link sku-link")).FirstOrDefault();
                 IList<IWebElement> elements = driver.FindElements(By.XPath("//a[starts-with(@data-e2e-testid, 'sku-price-link')]"));
-                //if (resultsPrices != null)
-                //{
-                //    lblCompare.Text = resultsPrices.Text;
-                //}
                 Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
                 
                 string val = elements.FirstOrDefault().Text;
