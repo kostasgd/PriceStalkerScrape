@@ -180,7 +180,7 @@
             // btnCompare
             // 
             this.btnCompare.Depth = 0;
-            this.btnCompare.Location = new System.Drawing.Point(1049, 4);
+            this.btnCompare.Location = new System.Drawing.Point(1049, 6);
             this.btnCompare.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Primary = true;
@@ -230,7 +230,7 @@
             // materialFlatButton1
             // 
             this.materialFlatButton1.Depth = 0;
-            this.materialFlatButton1.Location = new System.Drawing.Point(1240, 4);
+            this.materialFlatButton1.Location = new System.Drawing.Point(1238, 6);
             this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton1.Name = "materialFlatButton1";
             this.materialFlatButton1.Primary = true;
