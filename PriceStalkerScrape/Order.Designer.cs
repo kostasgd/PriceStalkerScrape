@@ -34,13 +34,13 @@ namespace PriceStalkerScrape
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.lblTotalPrice = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
             this.nudQty = new System.Windows.Forms.NumericUpDown();
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.button2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.button1 = new MaterialSkin.Controls.MaterialRaisedButton();
             ((System.ComponentModel.ISupportInitialize)(this.nudQty)).BeginInit();
             this.SuspendLayout();
             // 
@@ -90,16 +90,6 @@ namespace PriceStalkerScrape
             this.label3.TabIndex = 5;
             this.label3.Text = "Customer";
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(290, 302);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "Save";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
-            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -116,16 +106,6 @@ namespace PriceStalkerScrape
             this.lblTotalPrice.Name = "lblTotalPrice";
             this.lblTotalPrice.Size = new System.Drawing.Size(0, 13);
             this.lblTotalPrice.TabIndex = 8;
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(17, 302);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "Close";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // nudQty
             // 
@@ -162,18 +142,44 @@ namespace PriceStalkerScrape
             this.label5.TabIndex = 12;
             this.label5.Text = "Address";
             // 
+            // button2
+            // 
+            this.button2.Depth = 0;
+            this.button2.Location = new System.Drawing.Point(33, 296);
+            this.button2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.button2.Name = "button2";
+            this.button2.Primary = true;
+            this.button2.Size = new System.Drawing.Size(112, 35);
+            this.button2.TabIndex = 13;
+            this.button2.Text = "Close";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
+            // button1
+            // 
+            this.button1.Depth = 0;
+            this.button1.Location = new System.Drawing.Point(240, 296);
+            this.button1.MouseState = MaterialSkin.MouseState.HOVER;
+            this.button1.Name = "button1";
+            this.button1.Primary = true;
+            this.button1.Size = new System.Drawing.Size(112, 35);
+            this.button1.TabIndex = 14;
+            this.button1.Text = "Close";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            // 
             // Order
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(377, 348);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtAddress);
             this.Controls.Add(this.nudQty);
-            this.Controls.Add(this.button2);
             this.Controls.Add(this.lblTotalPrice);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -199,12 +205,12 @@ namespace PriceStalkerScrape
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label lblTotalPrice;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.NumericUpDown nudQty;
         private System.Windows.Forms.TextBox txtAddress;
         private System.Windows.Forms.Label label5;
+        private MaterialSkin.Controls.MaterialRaisedButton button2;
+        private MaterialSkin.Controls.MaterialRaisedButton button1;
     }
 }

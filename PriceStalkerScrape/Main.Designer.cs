@@ -45,11 +45,12 @@
             this.rtbImpressions = new System.Windows.Forms.RichTextBox();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.dgvProducts = new System.Windows.Forms.DataGridView();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.button2 = new System.Windows.Forms.Button();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
             this.dgvProductsForCheck = new System.Windows.Forms.DataGridView();
@@ -57,14 +58,15 @@
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel4 = new System.Windows.Forms.Panel();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.btnLoad = new System.Windows.Forms.Button();
-            this.dgvProducts = new System.Windows.Forms.DataGridView();
-            this.panel6 = new System.Windows.Forms.Panel();
+            this.button2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage2.SuspendLayout();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
             this.tabPage4.SuspendLayout();
             this.panel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).BeginInit();
@@ -73,8 +75,6 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).BeginInit();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).BeginInit();
-            this.panel6.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -251,6 +251,27 @@
             this.tabPage2.Text = "Products";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // panel6
+            // 
+            this.panel6.Controls.Add(this.dgvProducts);
+            this.panel6.Location = new System.Drawing.Point(3, 6);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(1424, 565);
+            this.panel6.TabIndex = 1;
+            // 
+            // dgvProducts
+            // 
+            this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProducts.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dgvProducts.Location = new System.Drawing.Point(0, 0);
+            this.dgvProducts.Name = "dgvProducts";
+            this.dgvProducts.ReadOnly = true;
+            this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvProducts.Size = new System.Drawing.Size(1424, 565);
+            this.dgvProducts.TabIndex = 0;
+            this.dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
+            this.dgvProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellDoubleClick);
+            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.panel3);
@@ -290,17 +311,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1433, 66);
             this.panel2.TabIndex = 2;
-            // 
-            // button2
-            // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button2.Location = new System.Drawing.Point(0, 0);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(140, 66);
-            this.button2.TabIndex = 0;
-            this.button2.Text = "New Order";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // tabPage3
             // 
@@ -348,8 +358,8 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.materialRaisedButton2);
             this.panel4.Controls.Add(this.btnLoad);
+            this.panel4.Controls.Add(this.materialRaisedButton2);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
@@ -371,37 +381,33 @@
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
+            // button2
+            // 
+            this.button2.Depth = 0;
+            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Location = new System.Drawing.Point(0, 0);
+            this.button2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.button2.Name = "button2";
+            this.button2.Primary = true;
+            this.button2.Size = new System.Drawing.Size(164, 66);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "New Order";
+            this.button2.UseVisualStyleBackColor = true;
+            // 
             // btnLoad
             // 
+            this.btnLoad.Depth = 0;
             this.btnLoad.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnLoad.Location = new System.Drawing.Point(0, 0);
+            this.btnLoad.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(140, 66);
-            this.btnLoad.TabIndex = 0;
-            this.btnLoad.Text = "Load";
+            this.btnLoad.Primary = true;
+            this.btnLoad.Size = new System.Drawing.Size(164, 66);
+            this.btnLoad.TabIndex = 5;
+            this.btnLoad.Text = "Load Graph";
             this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.button1_Click);
-            // 
-            // dgvProducts
-            // 
-            this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvProducts.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvProducts.Location = new System.Drawing.Point(0, 0);
-            this.dgvProducts.Name = "dgvProducts";
-            this.dgvProducts.ReadOnly = true;
-            this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProducts.Size = new System.Drawing.Size(1424, 565);
-            this.dgvProducts.TabIndex = 0;
-            this.dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
-            this.dgvProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellDoubleClick);
-            // 
-            // panel6
-            // 
-            this.panel6.Controls.Add(this.dgvProducts);
-            this.panel6.Location = new System.Drawing.Point(3, 6);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(1424, 565);
-            this.panel6.TabIndex = 1;
             // 
             // Main
             // 
@@ -421,6 +427,8 @@
             this.tabPage1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage2.ResumeLayout(false);
+            this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
             this.tabPage4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvOrders)).EndInit();
@@ -429,8 +437,6 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).EndInit();
             this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvProducts)).EndInit();
-            this.panel6.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -448,14 +454,12 @@
         private MaterialSkin.Controls.MaterialRaisedButton materialFlatButton1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton1;
         private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Integration.ElementHost elementHost1;
         private LiveCharts.Wpf.CartesianChart cartesianChart1;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton2;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.DataGridView dgvOrders;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
@@ -467,6 +471,8 @@
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.DataGridView dgvProducts;
+        private MaterialSkin.Controls.MaterialRaisedButton button2;
+        private MaterialSkin.Controls.MaterialRaisedButton btnLoad;
     }
 }
 

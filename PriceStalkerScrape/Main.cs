@@ -741,49 +741,63 @@ namespace PriceStalkerScrape
             var chromeOptions = new ChromeOptions();
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
-            ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
-            driver.Navigate().GoToUrl(@"https://www.bestprice.gr/");
-            try
+            ChromeDriver browser = new ChromeDriver(chromeDriverService, chromeOptions);
+            using(var driver = browser)
             {
-                Thread.Sleep(250);
-                WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
-
-                form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
-                form.Submit();
-                
-                var searchResults = driver.FindElements(By.ClassName("page-products__products")).ToList();
-
-                Thread.Sleep(250);
-                Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
-
-                var resultsPrices = driver?.FindElements(By.ClassName("prices__price"))?.FirstOrDefault();
-                string s = resultsPrices.Text.ToString();
-                if (resultsPrices != null)
+                driver.Navigate().GoToUrl(@"https://www.bestprice.gr/");
+                try
                 {
-                    if (re.IsMatch(s))
+                    Thread.Sleep(250);
+                    WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
+
+                    form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
+                    form.Submit();
+
+                    Thread.Sleep(250);
+                    Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
+
+                    var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
+                    var searchTitle = driver?.FindElements(By.ClassName("product__title"));
+                    int index = 0, counter = 0;
+                    double max = 0;
+                    foreach (var t in searchTitle)
                     {
-                        MatchCollection matchedAuthors = re.Matches(resultsPrices.Text);
-                        lblCompare.Text = matchedAuthors[0].Value.ToString();
+                        if (CompareStrings(lblProductTitle.Text, t.Text.ToString()) > max)
+                        {
+                            max = CompareStrings(lblProductTitle.Text, t.Text.ToString());
+                            index = counter;
+                        }
+                        counter++;
+                    }
+                    //var searchResult = resultsPrices.ElementAt(index);
+                    //string s = searchResult.Text.ToString();
+                    var searchResult = resultsPrices.FirstOrDefault();
+                    if (resultsPrices != null)
+                    {
+                        if (re.IsMatch(searchResult.Text))
+                        {
+                            MatchCollection matchedAuthors = re.Matches(searchResult.Text);
+                            lblCompare.Text = matchedAuthors[0].Value.ToString();
+                        }
+                    }
+                    else
+                    {
+                        lblCompare.Text = "Cannot be found...";
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    lblCompare.Text = "Cannot be found...";
+                    MessageBox.Show(ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                driver.Close();
+                //finally
+                //{
+                //    driver.Close();
+                //}
             }
         }
         private void ComparePriceWithSkroutzPrice()
         {
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArgument("--start-minimized");
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
 
