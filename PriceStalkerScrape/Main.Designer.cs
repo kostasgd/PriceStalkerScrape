@@ -261,11 +261,15 @@
             // 
             // dgvProducts
             // 
+            this.dgvProducts.AllowUserToAddRows = false;
+            this.dgvProducts.AllowUserToDeleteRows = false;
             this.dgvProducts.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProducts.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvProducts.Location = new System.Drawing.Point(0, 0);
             this.dgvProducts.Name = "dgvProducts";
             this.dgvProducts.ReadOnly = true;
+            this.dgvProducts.RowTemplate.Height = 40;
+            this.dgvProducts.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProducts.Size = new System.Drawing.Size(1424, 565);
             this.dgvProducts.TabIndex = 0;
@@ -299,6 +303,8 @@
             this.dgvOrders.Location = new System.Drawing.Point(0, 0);
             this.dgvOrders.Name = "dgvOrders";
             this.dgvOrders.ReadOnly = true;
+            this.dgvOrders.RowTemplate.Height = 40;
+            this.dgvOrders.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvOrders.Size = new System.Drawing.Size(1433, 508);
             this.dgvOrders.TabIndex = 1;
@@ -357,6 +363,7 @@
             this.dgvProductsForCheck.Dock = System.Windows.Forms.DockStyle.Left;
             this.dgvProductsForCheck.Location = new System.Drawing.Point(0, 0);
             this.dgvProductsForCheck.Name = "dgvProductsForCheck";
+            this.dgvProductsForCheck.RowTemplate.Height = 40;
             this.dgvProductsForCheck.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProductsForCheck.Size = new System.Drawing.Size(695, 508);
             this.dgvProductsForCheck.TabIndex = 4;
