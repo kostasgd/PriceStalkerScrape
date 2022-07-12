@@ -51,15 +51,15 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.dgvOrders = new System.Windows.Forms.DataGridView();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.button2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.panel5 = new System.Windows.Forms.Panel();
             this.dgvProductsForCheck = new System.Windows.Forms.DataGridView();
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.button2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -312,6 +312,21 @@
             this.panel2.Size = new System.Drawing.Size(1433, 66);
             this.panel2.TabIndex = 2;
             // 
+            // button2
+            // 
+            this.button2.Depth = 0;
+            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
+            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.button2.Location = new System.Drawing.Point(0, 0);
+            this.button2.MouseState = MaterialSkin.MouseState.HOVER;
+            this.button2.Name = "button2";
+            this.button2.Primary = true;
+            this.button2.Size = new System.Drawing.Size(164, 66);
+            this.button2.TabIndex = 5;
+            this.button2.Text = "New Order";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_1);
+            // 
             // tabPage3
             // 
             this.tabPage3.Controls.Add(this.panel5);
@@ -366,6 +381,21 @@
             this.panel4.Size = new System.Drawing.Size(1433, 66);
             this.panel4.TabIndex = 5;
             // 
+            // btnLoad
+            // 
+            this.btnLoad.Depth = 0;
+            this.btnLoad.Dock = System.Windows.Forms.DockStyle.Left;
+            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnLoad.Location = new System.Drawing.Point(0, 0);
+            this.btnLoad.MouseState = MaterialSkin.MouseState.HOVER;
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Primary = true;
+            this.btnLoad.Size = new System.Drawing.Size(164, 66);
+            this.btnLoad.TabIndex = 5;
+            this.btnLoad.Text = "Load Graph";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
+            // 
             // materialRaisedButton2
             // 
             this.materialRaisedButton2.Depth = 0;
@@ -380,34 +410,6 @@
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
-            // 
-            // button2
-            // 
-            this.button2.Depth = 0;
-            this.button2.Dock = System.Windows.Forms.DockStyle.Left;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.button2.Location = new System.Drawing.Point(0, 0);
-            this.button2.MouseState = MaterialSkin.MouseState.HOVER;
-            this.button2.Name = "button2";
-            this.button2.Primary = true;
-            this.button2.Size = new System.Drawing.Size(164, 66);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "New Order";
-            this.button2.UseVisualStyleBackColor = true;
-            // 
-            // btnLoad
-            // 
-            this.btnLoad.Depth = 0;
-            this.btnLoad.Dock = System.Windows.Forms.DockStyle.Left;
-            this.btnLoad.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnLoad.Location = new System.Drawing.Point(0, 0);
-            this.btnLoad.MouseState = MaterialSkin.MouseState.HOVER;
-            this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Primary = true;
-            this.btnLoad.Size = new System.Drawing.Size(164, 66);
-            this.btnLoad.TabIndex = 5;
-            this.btnLoad.Text = "Load Graph";
-            this.btnLoad.UseVisualStyleBackColor = true;
             // 
             // Main
             // 

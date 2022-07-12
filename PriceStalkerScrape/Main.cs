@@ -45,7 +45,7 @@ namespace PriceStalkerScrape
             LoadData();
             FillDatagridStats();
         }
-        #region "Initialize&load"
+        #region "Initialize & load"
         public void FillDatagridStats()
         {
             using (var context = new Data.StalkerEntities())
@@ -281,25 +281,38 @@ namespace PriceStalkerScrape
                 int? safecons = cons == null ? 0 : cons.Count();
                 int? total = safepros - safesoso - safecons;
 
-                //var commons = prosImpressions.Intersect(soso);
-                List<string> commons = myElement.Select(s1 => s1.Text).ToList().Intersect(soso.Select(s2 => s2.Text).ToList()).ToList();
+                List<string> commons = myElement.Select(s1 => s1.Text).ToList().Union(soso.Select(s2 => s2.Text).ToList()).ToList();
 
                 var joinpros = String.Join(",", listpros.ToArray());
                 var joinsoso = String.Join(",", listsoso.ToArray());
                 var joincons = String.Join(",", listcons.ToArray());
                 string common = "";
-                foreach (var k in commons)
+                if (commons != null)
                 {
-                    common += k + ",";
+                    foreach (var k in commons)
+                    {
+                        common += k + ",";
+                    }
                 }
-                common = common.Remove(common.Length - 1);
-                rtbImpressions.Text += "+" + joinpros.ToString() + "\n";
-                rtbImpressions.Text += "\n";
-                rtbImpressions.Text += "^" + joinsoso.ToString() + "\n";
-                rtbImpressions.Text += "\n";
-                rtbImpressions.Text += "-" + joincons.ToString() + "\n";
-                rtbImpressions.Text += "\n";
-                rtbImpressions.Text += "+-" + common;
+                if (joinpros.Length > 0)
+                {
+                    rtbImpressions.Text += "+" + joinpros.ToString() + "\n";
+                    rtbImpressions.Text += "\n";
+                }
+                if (joinsoso.Length > 0)
+                {
+                    rtbImpressions.Text += "^" + joinsoso.ToString() + "\n";
+                    rtbImpressions.Text += "\n";
+                }
+                if (joincons.Length > 0)
+                {
+                    rtbImpressions.Text += "-" + joincons.ToString() + "\n";
+                    rtbImpressions.Text += "\n";
+                }
+                if (common.Length > 0)
+                {
+                    rtbImpressions.Text += "+-" + common;
+                }
 
                 var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
                 var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
@@ -339,7 +352,10 @@ namespace PriceStalkerScrape
                 {
                     Initialize(title.Text.ToString(), price.ToString(), rating.ToString(), summary);
                 }
-                FillStatsChart(ListLengths, Labels);
+                if (common.Length > 0)
+                {
+                    FillStatsChart(ListLengths, Labels);
+                }
                 browser.Close();
             }
         }
@@ -450,30 +466,6 @@ namespace PriceStalkerScrape
                 {
                     safeRate = 0;
                 }
-                //using (var browser = new ChromeDriver())
-                //{
-                    // add your code here
-                    //var characteristics = doc.DocumentNode.SelectNodes("//span[@class='slug']").ToList();
-                    //browser.Url = txtLink.Text;
-                    //var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
-                    //Thread.Sleep(1000);
-                    //var title = wait.Until(x => x.FindElement(By.XPath("//div[@class='hgroup']/h1")));
-                    //var prices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
-                    //string price = prices.Text.ToString();
-                    //var rating = wait.Until(x => x.FindElement(By.XPath("//span[contains(@class,'Header__StarRating')]"))).Text; //actual-rating 
-                    //var summary = wait.Until(x => x.FindElements(By.XPath("//div[contains(@class,'simple-description')]/ul/li"))).ToList();
-                    //string s = "";
-                    //if (summary != null)
-                    //{
-                    //    for (int i = 0; i < summary.Count; i++)
-                    //    {
-                    //        s += summary[i].Text + "\n";
-                    //    }
-                    //}
-                    //else
-                    //{
-                    //    s = "Χωρίς περιγραφή";
-                    //}
                    
                 if (title != null && price != null)
                 {
@@ -495,13 +487,7 @@ namespace PriceStalkerScrape
             //var picture = doc?.DocumentNode?.SelectSingleNode("//div[@class='image']//a//img")?.Attributes["src"].Value;
             //var rating = doc?.DocumentNode?.SelectSingleNode("//span[@itemprop='ratingValue']")?.InnerText; //actual-rating 
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments(new List<string>()
-            {
-                //"--silent-launch",
-                    //"--no-startup-window",
-                    //"no-sandbox",
-                    //"headless",
-            });
+            chromeOptions.AddArguments(new List<string>(){});
 
             using (var browser = new ChromeDriver(chromeOptions))
             {
@@ -575,44 +561,6 @@ namespace PriceStalkerScrape
         //    }
         //}
         #endregion
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (dgvProductsForCheck.SelectedRows.Count > 0)
-                {
-                    int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
-                    cartesianChart1.Series.Clear();
-                    using (var context = new Data.StalkerEntities())
-                    {
-                        var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
-                        int counter = 0;
-                        LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                        foreach (var item in data)
-                        {
-                            double[] ys2 = { item.Price };
-                            columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
-                            {
-                                Title = item.Date.ToString(),
-                                DataLabels = true,
-                                ColumnPadding = 15,
-                                VerticalAlignment = VerticalAlignment.Bottom,
-                                Margin = new Thickness(10, 10, 10, 10),
-                                Values = new LiveCharts.ChartValues<double>(ys2),
-                            };
-                            cartesianChart1.LegendLocation = LegendLocation.Right;
-                            cartesianChart1.FontStretch = new FontStretch();
-                            cartesianChart1.Series.Add(columnSeries[counter]);
-                            counter++;
-                        }
-                    }
-                }
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
         private void materialRaisedButton2_Click(object sender, EventArgs e) => GetPriceHistoryInfo();
         public void GetPriceHistoryInfo()
         {
@@ -708,12 +656,6 @@ namespace PriceStalkerScrape
                 }
             }
         }
-        private void button2_Click(object sender, EventArgs e)
-        {
-            Order order = new Order();
-            order.ShowDialog();
-            order.FormClosed += Order_FormClosed; 
-        }
 
         private void Order_FormClosed(object sender, FormClosedEventArgs e) => LoadData();
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e){ }
@@ -789,10 +731,10 @@ namespace PriceStalkerScrape
                 {
                     MessageBox.Show(ex.Message);
                 }
-                //finally
-                //{
-                //    driver.Close();
-                //}
+                finally
+                {
+                    driver.Close();
+                }
             }
         }
         private void ComparePriceWithSkroutzPrice()
@@ -900,6 +842,52 @@ namespace PriceStalkerScrape
             return pairs;
         }
         #endregion
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvProductsForCheck.SelectedRows.Count > 0)
+                {
+                    int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
+                    cartesianChart1.Series.Clear();
+                    using (var context = new Data.StalkerEntities())
+                    {
+                        var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                        int counter = 0;
+                        LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
+                        foreach (var item in data)
+                        {
+                            double[] ys2 = { item.Price };
+                            columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                            {
+                                Title = item.Date.ToString(),
+                                DataLabels = true,
+                                ColumnPadding = 15,
+                                VerticalAlignment = VerticalAlignment.Bottom,
+                                Margin = new Thickness(10, 10, 10, 10),
+                                Values = new LiveCharts.ChartValues<double>(ys2),
+                            };
+                            cartesianChart1.LegendLocation = LegendLocation.Right;
+                            cartesianChart1.FontStretch = new FontStretch();
+                            cartesianChart1.Series.Add(columnSeries[counter]);
+                            counter++;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            Order order = new Order();
+            order.ShowDialog();
+            order.FormClosed += Order_FormClosed;
+        }
     }
     public class ComboboxItem
     {
