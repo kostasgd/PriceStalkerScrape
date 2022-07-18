@@ -191,6 +191,15 @@ namespace PriceStalkerScrape
                 dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
             }
         }
+        private void InitBrowser(ChromeOptions options)
+        {
+            options.AddArgument("--window-size=1920,1080");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("--start-minimized");
+            options.AddArgument("no-sandbox");
+            options.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
+        }
         private void SetImpression()
         {
             var url = txtLink.Text;
@@ -201,8 +210,7 @@ namespace PriceStalkerScrape
             List<string> listsoso = new List<string>();
             List<string> listcons = new List<string>();
             var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments(new List<string>());
-
+            InitBrowser(chromeOptions);
             chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 1);
             chromeOptions.AddUserProfilePreference("profile.cookie_controls_mode", 1);
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
@@ -493,7 +501,8 @@ namespace PriceStalkerScrape
                 var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id, i.Price, i.Rating, i.Title }).ToList();
                 materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
                 var chromeOptions = new ChromeOptions();
-                chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
+                InitBrowser(chromeOptions);
+
                 var chromeDriverService = ChromeDriverService.CreateDefaultService();
                 chromeDriverService.HideCommandPromptWindow = true;
                 using (var browser = new ChromeDriver(chromeDriverService,chromeOptions))
@@ -502,6 +511,7 @@ namespace PriceStalkerScrape
                     {
                         browser.Url = link.Link;
                         var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                        Thread.Sleep(1500);
                         var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
                         Application.DoEvents();
                         var bestpprices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
@@ -593,6 +603,14 @@ namespace PriceStalkerScrape
             if (lblProductTitle.Text.Length >0)
             {
                 var chromeOptions = new ChromeOptions();
+                chromeOptions.AddArgument("--window-size=1920,1080");
+                chromeOptions.AddArgument("--disable-gpu");
+                chromeOptions.AddArgument("--disable-extensions");
+                chromeOptions.AddArgument("--proxy-server='direct://'");
+                chromeOptions.AddArgument("--proxy-bypass-list=*");
+                chromeOptions.AddArgument("--start-maximized");
+                chromeOptions.AddArgument("--headless");
+                chromeOptions.AddArgument("no-sandbox");
                 var chromeDriverService = ChromeDriverService.CreateDefaultService();
                 chromeDriverService.HideCommandPromptWindow = true;
                 ChromeDriver browser = new ChromeDriver(chromeDriverService, chromeOptions);
@@ -608,38 +626,79 @@ namespace PriceStalkerScrape
                         form.Submit();
 
                         Thread.Sleep(1250);
-                        Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
+                        List<IWebElement> e = new List<IWebElement>();
+                        e.AddRange(browser.FindElements(By.Id("full-price-container")));
+                        if (e.Count>0)
+                        {
+                            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
 
-                        var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
-                        var searchTitle = driver?.FindElements(By.ClassName("product__title"));//
-                        var priceOnConteiner = driver?.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
-                        int index = 0, counter = 0;
-                        double max = 0;
-                        foreach (var t in searchTitle)
-                        {
-                            if (CompareStrings(lblProductTitle.Text, t.Text.ToString()) > max)
+                            var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
+                            var searchTitle = driver?.FindElements(By.ClassName("product__title"));
+                            var priceOnConteiner = driver?.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
+                            int index = 0, counter = 0;
+                            double max = 0;
+                            foreach (var t in searchTitle)
                             {
-                                max = CompareStrings(lblProductTitle.Text, t.Text.ToString());
-                                index = counter;
-                            }
-                            counter++;
-                        }
-                        if (priceOnConteiner.Text !=string.Empty)
-                        {
-                            var searchResult = resultsPrices.FirstOrDefault();
-                            if (resultsPrices != null)
-                            {
-                                if (re.IsMatch(priceOnConteiner.Text))
+                                if (CompareStrings(lblProductTitle.Text, t.Text.ToString()) > max)
                                 {
-                                    MatchCollection matchedAuthors = re.Matches(priceOnConteiner.Text);
-                                    lblCompare.Text = matchedAuthors[0].Value.ToString();
+                                    max = CompareStrings(lblProductTitle.Text, t.Text.ToString());
+                                    index = counter;
                                 }
+                                counter++;
+                            }
+                            if (priceOnConteiner.Text != string.Empty)
+                            {
+                                var searchResult = resultsPrices.FirstOrDefault();
+                                if (resultsPrices != null)
+                                {
+                                    if (re.IsMatch(resultsPrices.FirstOrDefault().Text))
+                                    {
+                                        MatchCollection matchedAuthors = re.Matches(resultsPrices.FirstOrDefault().Text);
+                                        lblCompare.Text = matchedAuthors[0].Value.ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                lblCompare.Text = "Cannot be found...";
                             }
                         }
                         else
                         {
-                            lblCompare.Text = "Cannot be found...";
+                            Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
+
+                            var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
+                            var searchTitle = driver?.FindElements(By.ClassName("product__title"));//
+                            var priceOnConteiner = driver?.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
+                            int index = 0, counter = 0;
+                            double max = 0;
+                            foreach (var t in searchTitle)
+                            {
+                                if (CompareStrings(lblProductTitle.Text, t.Text.ToString()) > max)
+                                {
+                                    max = CompareStrings(lblProductTitle.Text, t.Text.ToString());
+                                    index = counter;
+                                }
+                                counter++;
+                            }
+                            if (priceOnConteiner.Text != string.Empty)
+                            {
+                                var searchResult = resultsPrices.FirstOrDefault();
+                                if (resultsPrices != null)
+                                {
+                                    if (re.IsMatch(priceOnConteiner.Text))
+                                    {
+                                        MatchCollection matchedAuthors = re.Matches(priceOnConteiner.Text);
+                                        lblCompare.Text = matchedAuthors[0].Value.ToString();
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                lblCompare.Text = "Cannot be found...";
+                            }
                         }
+                        
                     }
                     catch (Exception ex)
                     {
