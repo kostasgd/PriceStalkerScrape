@@ -221,6 +221,7 @@ namespace PriceStalkerScrape
                 {
                     browser.Manage().Cookies.DeleteAllCookies();
                     browser.Url = url;
+                    browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
                     var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
                     Thread.Sleep(1500);
                     var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
@@ -607,6 +608,7 @@ namespace PriceStalkerScrape
             {
                 if (lblProductTitle.Text.Length > 0)
                 {
+                    lblCompare.Invoke(new Action(() => lblCompare.Text = "Price loading.."));
                     var chromeOptions = new ChromeOptions();
                     chromeOptions.AddArgument("--disable-gpu");
                     chromeOptions.AddArgument("--disable-extensions");
@@ -623,7 +625,7 @@ namespace PriceStalkerScrape
                         {
                             Thread.Sleep(250);
                             WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
-
+                            browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
                             form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
                             form.Submit();
 
@@ -727,7 +729,7 @@ namespace PriceStalkerScrape
             {
                 driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
                 WebElement form = (WebElement)driver.FindElement(By.ClassName("search-bar-input-wrapper"));
-
+                driver.Manage().Window.Position = new System.Drawing.Point(0, -2000);
                 form.FindElement(By.Id("search-bar-input")).SendKeys(lblProductTitle.Text);
                 form.Submit();
 
