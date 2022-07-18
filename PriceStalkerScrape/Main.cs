@@ -84,12 +84,10 @@ namespace PriceStalkerScrape
             lblProductTitle.Text = title;
             lblProductRating.Text = rating;
             txtDescription.Text = summary;
-
         }
         private void LoadData()
         {
             var stalkerEntities = new Data.StalkerEntities();
-            //stalkerEntities.Configuration.ProxyCreationEnabled = false;
             var ProductQuery = from t in stalkerEntities.tblProducts
                                select new { t.Id, t.Title, t.Price, t.Rating, t.Link, t.Description };
             dgvProducts.DataSource = ProductQuery.ToList();
@@ -195,7 +193,6 @@ namespace PriceStalkerScrape
         }
         private void SetImpression()
         {
-            
             var url = txtLink.Text;
             var web = new HtmlWeb();
             var doc = web.Load(url);
@@ -342,18 +339,25 @@ namespace PriceStalkerScrape
                     {
                         Labels.Add("Αρνητικά");
                     }
-                    var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
-                    var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
-                    string price = prices.Text.ToString();
-                    var rating = wait.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text;
-                    var summary = wait.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]"))).Text;
-                    if (title != null && price != null)
+                    List<IWebElement> e = new List<IWebElement>();
+                    e.AddRange(wait.Until(x=>x.FindElements(By.XPath("//*[text()='To προϊόν δεν υπάρχει πλέον στο Skroutz']"))));
+                    //checking element count in list
+                    if (e.Count<1)
                     {
-                        Initialize(title.Text.ToString(), price.ToString(), rating.ToString(), summary);
-                    }
-                    if (common.Length > 0)
-                    {
-                        FillStatsChart(ListLengths, Labels);
+                        var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
+                        var prices = wait?.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']")))?.FirstOrDefault();
+                        //string price = string.IsNullOrEmpty( prices.Text.ToString()) ?  string.Empty : prices.Text.ToString();  
+
+                        var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']")))?.Text;
+                        var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
+                        if (title != null && prices != null)
+                        {
+                            Initialize(title.Text.ToString(), prices.Text.ToString(), rating.ToString(), summary);
+                        }
+                        if (common.Length > 0)
+                        {
+                            FillStatsChart(ListLengths, Labels);
+                        }
                     }
                     browser.Close();
                 }
@@ -396,7 +400,8 @@ namespace PriceStalkerScrape
                 if (lbl == "Θετικά")
                 {
                     listBrush.Add(Brushes.ForestGreen);
-                }else if(lbl == "Ετσι και έτσι")
+                }
+                else if(lbl == "Ετσι και έτσι")
                 {
                     listBrush.Add(Brushes.Gold);
                 }
@@ -410,7 +415,7 @@ namespace PriceStalkerScrape
                 series.Add(new PieSeries
                 {
                     Title = Labels[i].ToString(),
-                    Foreground = Brushes.Black,
+                    Foreground = Brushes.Black,                   
                     Values = new ChartValues<double> { array[i] },
                     DataLabels = true,
                     LabelPoint = labelPoint,
@@ -479,89 +484,6 @@ namespace PriceStalkerScrape
                 MessageBox.Show(ex.Message);
             }
         }
-        private void ScrapeSkroutz()
-        {
-            //var web = new HtmlWeb();
-            //var doc = web.Load(txtLink.Text);
-            //var title = doc?.DocumentNode?.SelectSingleNode("//h1[@class='page-title']")?.InnerText;
-            //var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
-            //string price = prices?.FirstOrDefault().InnerText.ToString();
-            //var picture = doc?.DocumentNode?.SelectSingleNode("//div[@class='image']//a//img")?.Attributes["src"].Value;
-            //var rating = doc?.DocumentNode?.SelectSingleNode("//span[@itemprop='ratingValue']")?.InnerText; //actual-rating 
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArguments(new List<string>(){});
-
-            using (var browser = new ChromeDriver(chromeOptions))
-            {
-                // add your code here
-                //var characteristics = doc.DocumentNode.SelectNodes("//span[@class='slug']").ToList();
-                browser.Url = txtLink.Text;
-                var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
-                var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
-                var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
-                string price = prices.Text.ToString();
-                var rating = wait.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text; //actual-rating 
-                var summary = wait.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]"))).Text;
-                if (title != null && price != null)
-                {
-                    Initialize(title.Text.ToString(), price.ToString(), rating.ToString(), summary);
-                }
-            }    
-            //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
-            //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'summary')]")?.ToList(); //summary
-            //string description = "";
-            //if (summary != null)
-            //{
-            //    foreach (var s in summary)
-            //    {
-            //        description += s.InnerText + "\n";
-            //    }
-            //}
-            //if (string.IsNullOrEmpty(rating))
-            //{
-            //    rating = "0";
-            //}
-            //if (picture != null)
-            //{
-            //    // pbLoadImage.Load("https:" + picture.ToString());
-            //}
-            //if (title != null && price != null)
-            //{
-            //    Initialize(title, price.ToString(), rating.ToString(), description);
-            //}
-        }
-        //private void ScrapeSkroutz()  ------- με htmlagilitypack
-        //{
-        //    var web = new HtmlWeb();
-        //    var doc = web.Load(txtLink.Text);
-        //    var title = doc?.DocumentNode?.SelectSingleNode("//h1[@class='page-title']")?.InnerText;
-        //    var prices = doc?.DocumentNode?.SelectNodes("//strong[@class='dominant-price']")?.ToList();
-        //    string price = prices?.FirstOrDefault().InnerText.ToString();
-        //    var picture = doc?.DocumentNode?.SelectSingleNode("//div[@class='image']//a//img")?.Attributes["src"].Value;
-        //    var rating = doc?.DocumentNode?.SelectSingleNode("//span[@itemprop='ratingValue']")?.InnerText; //actual-rating 
-        //                                                                                                    //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
-        //    var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'summary')]")?.ToList(); //summary
-        //    string description = "";
-        //    if (summary != null)
-        //    {
-        //        foreach (var s in summary)
-        //        {
-        //            description += s.InnerText + "\n";
-        //        }
-        //    }
-        //    if (string.IsNullOrEmpty(rating))
-        //    {
-        //        rating = "0";
-        //    }
-        //    if (picture != null)
-        //    {
-        //        // pbLoadImage.Load("https:" + picture.ToString());
-        //    }
-        //    if (title != null && price != null)
-        //    {
-        //        Initialize(title, price.ToString(), rating.ToString(), description);
-        //    }
-        //}
         #endregion
         private void materialRaisedButton2_Click(object sender, EventArgs e) => GetPriceHistoryInfo();
         public void GetPriceHistoryInfo()
@@ -665,60 +587,68 @@ namespace PriceStalkerScrape
                 }
             }
         }
+        //Να κανω ελεγχο για να ξερω πως να ξεχωριζει τις αναζητησεις που γινονται με λιστα προιοντων η κατευθειαν στο προφιλ του προιοντος 
         private void ComparePriceWithBestPrice()
         {
-            var chromeOptions = new ChromeOptions();
-            var chromeDriverService = ChromeDriverService.CreateDefaultService();
-            chromeDriverService.HideCommandPromptWindow = true;
-            ChromeDriver browser = new ChromeDriver(chromeDriverService, chromeOptions);
-            using(var driver = browser)
+            if (lblProductTitle.Text.Length >0)
             {
-                driver.Navigate().GoToUrl(@"https://www.bestprice.gr/");
-                try
+                var chromeOptions = new ChromeOptions();
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+                ChromeDriver browser = new ChromeDriver(chromeDriverService, chromeOptions);
+                using (var driver = browser)
                 {
-                    Thread.Sleep(250);
-                    WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
-
-                    form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
-                    form.Submit();
-
-                    Thread.Sleep(250);
-                    Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
-
-                    var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
-                    var searchTitle = driver?.FindElements(By.ClassName("product__title"));
-                    int index = 0, counter = 0;
-                    double max = 0;
-                    foreach (var t in searchTitle)
+                    driver.Navigate().GoToUrl(@"https://www.bestprice.gr/");
+                    try
                     {
-                        if (CompareStrings(lblProductTitle.Text, t.Text.ToString()) > max)
+                        Thread.Sleep(250);
+                        WebElement form = (WebElement)driver.FindElement(By.Id("search-form"));
+
+                        form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
+                        form.Submit();
+
+                        Thread.Sleep(1250);
+                        Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
+
+                        var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
+                        var searchTitle = driver?.FindElements(By.ClassName("product__title"));//
+                        var priceOnConteiner = driver?.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
+                        int index = 0, counter = 0;
+                        double max = 0;
+                        foreach (var t in searchTitle)
                         {
-                            max = CompareStrings(lblProductTitle.Text, t.Text.ToString());
-                            index = counter;
+                            if (CompareStrings(lblProductTitle.Text, t.Text.ToString()) > max)
+                            {
+                                max = CompareStrings(lblProductTitle.Text, t.Text.ToString());
+                                index = counter;
+                            }
+                            counter++;
                         }
-                        counter++;
-                    }
-                    var searchResult = resultsPrices.FirstOrDefault();
-                    if (resultsPrices != null)
-                    {
-                        if (re.IsMatch(searchResult.Text))
+                        if (priceOnConteiner.Text !=string.Empty)
                         {
-                            MatchCollection matchedAuthors = re.Matches(searchResult.Text);
-                            lblCompare.Text = matchedAuthors[0].Value.ToString();
+                            var searchResult = resultsPrices.FirstOrDefault();
+                            if (resultsPrices != null)
+                            {
+                                if (re.IsMatch(priceOnConteiner.Text))
+                                {
+                                    MatchCollection matchedAuthors = re.Matches(priceOnConteiner.Text);
+                                    lblCompare.Text = matchedAuthors[0].Value.ToString();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            lblCompare.Text = "Cannot be found...";
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        lblCompare.Text = "Cannot be found...";
+                        MessageBox.Show(ex.Message);
                     }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-                finally
-                {
-                    driver.Close();
+                    finally
+                    {
+                        driver.Close();
+                    }
                 }
             }
         }
@@ -793,7 +723,6 @@ namespace PriceStalkerScrape
             }
             return (2.0 * intersection * 100) / union; //returns in percentage //return (2.0 * intersection) / union; //returns in score from 0 to 1
         }
-        // Gets all letter pairs for each
         private static List<string> WordLetterPairs(string str)
         {
             List<string> AllPairs = new List<string>();
@@ -849,15 +778,16 @@ namespace PriceStalkerScrape
                                 Title = item.Date.ToString(),
                                 DataLabels = true,
                                 ColumnPadding = 15,
-                                VerticalAlignment = VerticalAlignment.Bottom,
+                                VerticalAlignment = VerticalAlignment.Stretch,
                                 Margin = new Thickness(10, 10, 10, 10),
-                                Values = new LiveCharts.ChartValues<double>(ys2),
+                                PointGeometry = DefaultGeometries.Circle,
+                                Values = new LiveCharts.ChartValues<double>(ys2),  
                             };
                             cartesianChart1.LegendLocation = LegendLocation.Right;
                             cartesianChart1.FontStretch = new FontStretch();
                             cartesianChart1.Series.Add(columnSeries[counter]);
                             counter++;
-                        }
+                        } 
                     }
                 }
             }

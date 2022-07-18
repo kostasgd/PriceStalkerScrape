@@ -80,7 +80,7 @@
             // lblProductTitle
             // 
             this.lblProductTitle.AutoSize = true;
-            this.lblProductTitle.Location = new System.Drawing.Point(18, 46);
+            this.lblProductTitle.Location = new System.Drawing.Point(23, 48);
             this.lblProductTitle.Name = "lblProductTitle";
             this.lblProductTitle.Size = new System.Drawing.Size(0, 20);
             this.lblProductTitle.TabIndex = 9;
@@ -88,7 +88,7 @@
             // lblProductPrice
             // 
             this.lblProductPrice.AutoSize = true;
-            this.lblProductPrice.Location = new System.Drawing.Point(18, 79);
+            this.lblProductPrice.Location = new System.Drawing.Point(379, 74);
             this.lblProductPrice.Name = "lblProductPrice";
             this.lblProductPrice.Size = new System.Drawing.Size(0, 20);
             this.lblProductPrice.TabIndex = 10;
@@ -96,7 +96,7 @@
             // lblProductRating
             // 
             this.lblProductRating.AutoSize = true;
-            this.lblProductRating.Location = new System.Drawing.Point(100, 79);
+            this.lblProductRating.Location = new System.Drawing.Point(461, 74);
             this.lblProductRating.Name = "lblProductRating";
             this.lblProductRating.Size = new System.Drawing.Size(0, 20);
             this.lblProductRating.TabIndex = 11;
@@ -365,15 +365,15 @@
             this.dgvProductsForCheck.Name = "dgvProductsForCheck";
             this.dgvProductsForCheck.RowTemplate.Height = 40;
             this.dgvProductsForCheck.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvProductsForCheck.Size = new System.Drawing.Size(695, 508);
+            this.dgvProductsForCheck.Size = new System.Drawing.Size(737, 508);
             this.dgvProductsForCheck.TabIndex = 4;
             // 
             // elementHost1
             // 
             this.elementHost1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.elementHost1.Location = new System.Drawing.Point(701, 0);
+            this.elementHost1.Location = new System.Drawing.Point(743, 0);
             this.elementHost1.Name = "elementHost1";
-            this.elementHost1.Size = new System.Drawing.Size(732, 508);
+            this.elementHost1.Size = new System.Drawing.Size(690, 508);
             this.elementHost1.TabIndex = 3;
             this.elementHost1.Text = "elementHost1";
             this.elementHost1.Child = this.cartesianChart1;
