@@ -69,11 +69,14 @@ namespace PriceStalkerScrape
                 var data = context.PriceHistory.ToList();
                 foreach(var d in data)
                 {
-                    if ((uint)d.Date.Subtract(DateTime.Now.Date).TotalDays >54)
+                    DateTime now = DateTime.Now;
+                    DateTime priceHistory = d.Date;
+                    uint totalDays = (uint)now.Subtract(priceHistory).TotalDays;
+                    if (totalDays > 54)
                     {
                         var deletedRecord = context.PriceHistory.FirstOrDefault(x=>x.Id == d.Id);
                         context.PriceHistory.Remove(deletedRecord);
-                        //context.SaveChanges();
+                        context.SaveChanges();
                     }
                 }
             }
@@ -111,7 +114,7 @@ namespace PriceStalkerScrape
 
                         if (context.tblProducts.Any(x => x.Link == txtLink.Text))
                         {
-                            System.Windows.MessageBox.Show("Something went wrong, please try again..", "Warning", MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning);
+                            System.Windows.MessageBox.Show("Record already exists or something went wrong, please try again..", "Warning", MessageBoxButton.OK, (MessageBoxImage)MessageBoxIcon.Warning);
                             return;
                         }
                         product.Link = txtLink.Text;
@@ -206,9 +209,7 @@ namespace PriceStalkerScrape
             var web = new HtmlWeb();
             var doc = web.Load(url);
             rtbImpressions.Text = "";
-            List<string> listpros = new List<string>();
-            List<string> listsoso = new List<string>();
-            List<string> listcons = new List<string>();
+            List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
             var chromeOptions = new ChromeOptions();
             InitBrowser(chromeOptions);
             chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 1);
@@ -379,6 +380,7 @@ namespace PriceStalkerScrape
         {
             try
             {
+                RemoveOldPrices();
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
                     pictureBox1.Visible = false;
@@ -505,7 +507,6 @@ namespace PriceStalkerScrape
                     materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
                     var chromeOptions = new ChromeOptions();
                     InitBrowser(chromeOptions);
-
                     var chromeDriverService = ChromeDriverService.CreateDefaultService();
                     chromeDriverService.HideCommandPromptWindow = true;
                     using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
@@ -535,9 +536,7 @@ namespace PriceStalkerScrape
                                 {
                                     compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
                                 }
-
                                 CheckPrices(link.Title, testlink, compPrice, (float)joinprice.Price);
-
                                 Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
                                 updProduct.Id = link.Id;
                                 updProduct.Price = compPrice;
@@ -576,9 +575,9 @@ namespace PriceStalkerScrape
                         context.SaveChanges();
                         new ToastContentBuilder()
                         .AddArgument("action", "viewConversation")
-                                .AddArgument("conversationId", 123)
-                                .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
-                                .Show();
+                            .AddArgument("conversationId", 123)
+                            .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
+                            .Show();
                     }
                 }
             }
@@ -593,7 +592,7 @@ namespace PriceStalkerScrape
             {
                 if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
-                    ComparePriceWithSkroutzPrice();
+                    await ComparePriceWithSkroutzPrice();
                 }
                 else if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
@@ -717,49 +716,53 @@ namespace PriceStalkerScrape
             });
             return tsk;
         }
-        private void ComparePriceWithSkroutzPrice()
+        private Task ComparePriceWithSkroutzPrice()
         {
-            var chromeOptions = new ChromeOptions();
-            chromeOptions.AddArgument("--start-minimized");
-            var chromeDriverService = ChromeDriverService.CreateDefaultService();
-            chromeDriverService.HideCommandPromptWindow = true;
-
-            ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
-            try 
+            var tsk = Task.Run(() =>
             {
-                driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
-                WebElement form = (WebElement)driver.FindElement(By.ClassName("search-bar-input-wrapper"));
-                driver.Manage().Window.Position = new System.Drawing.Point(0, -2000);
-                form.FindElement(By.Id("search-bar-input")).SendKeys(lblProductTitle.Text);
-                form.Submit();
+                var chromeOptions = new ChromeOptions();
+                chromeOptions.AddArgument("--start-minimized");
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
 
-                var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).FirstOrDefault();
-                IList<IWebElement> elements = driver.FindElements(By.XPath("//a[starts-with(@data-e2e-testid, 'sku-price-link')]"));
-                Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
-                
-                string val = elements.FirstOrDefault().Text;
-                string numberOnly = Regex.Replace(val, "[^0-9.,€]", "");
-                if (elements != null)
+                ChromeDriver driver = new ChromeDriver(chromeDriverService, chromeOptions);
+                try
                 {
-                    if (re.IsMatch(numberOnly))
+                    driver.Navigate().GoToUrl(@"https://www.skroutz.gr/");
+                    WebElement form = (WebElement)driver.FindElement(By.ClassName("search-bar-input-wrapper"));
+                    driver.Manage().Window.Position = new System.Drawing.Point(0, -2000);
+                    form.FindElement(By.Id("search-bar-input")).SendKeys(lblProductTitle.Text);
+                    form.Submit();
+
+                    var searchResults = driver.FindElements(By.XPath("//section[@class='main-content']/ol/li")).FirstOrDefault();
+                    IList<IWebElement> elements = driver.FindElements(By.XPath("//a[starts-with(@data-e2e-testid, 'sku-price-link')]"));
+                    Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
+
+                    string val = elements.FirstOrDefault().Text;
+                    string numberOnly = Regex.Replace(val, "[^0-9.,€]", "");
+                    if (elements != null)
                     {
-                        MatchCollection matchedAuthors = re.Matches(numberOnly);
-                        lblCompare.Text = matchedAuthors[0].Value.ToString();
+                        if (re.IsMatch(numberOnly))
+                        {
+                            MatchCollection matchedAuthors = re.Matches(numberOnly);
+                            lblCompare.Invoke(new Action(() => lblCompare.Text = matchedAuthors[0].Value.ToString()));
+                        }
+                    }
+                    else
+                    {
+                        lblCompare.Invoke(new Action(() => lblCompare.Text = "Cannot be found..."));
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    lblCompare.Text = "Δεν βρέθηκε...";
+                    MessageBox.Show(ex.Message);
                 }
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                driver.Close();
-            }     
+                finally
+                {
+                    driver.Close();
+                }
+            });
+            return tsk;
         }
         #endregion
 
