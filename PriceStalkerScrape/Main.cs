@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Validation;
+
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -13,6 +14,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
+using System.Windows.Media;
 using HtmlAgilityPack;
 using LiveCharts;
 using LiveCharts.Wpf;
@@ -23,10 +25,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using Application = System.Windows.Forms.Application;
-using Brush = System.Windows.Media.Brush;
-using Brushes = System.Windows.Media.Brushes;
-using Color = System.Windows.Media.Color;
-using MessageBox = System.Windows.Forms.MessageBox;
+using MessageBox = System.Windows.MessageBox;
 
 namespace PriceStalkerScrape
 {
@@ -81,12 +80,13 @@ namespace PriceStalkerScrape
                 }
             }
         }
+        [STAThread]
         private void Initialize(string title, string price, string rating, string summary)
         {
-            lblProductPrice.Text = price;
-            lblProductTitle.Text = title;
-            lblProductRating.Text = rating;
-            txtDescription.Text = summary;
+            lblProductPrice.Invoke(new Action(() => lblProductPrice.Text = price));
+            lblProductTitle.Invoke(new Action(() => lblProductTitle.Text = title));
+            lblProductRating.Invoke(new Action(() => lblProductRating.Text = rating));
+            txtDescription.Invoke(new Action(() => txtDescription.Text = summary));
         }
         private void LoadData()
         {
@@ -203,180 +203,186 @@ namespace PriceStalkerScrape
             options.AddArgument("no-sandbox");
             options.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
         }
-        private void SetImpression()
+        [STAThread]
+        private Task SetImpression()
         {
-            var url = txtLink.Text;
-            var web = new HtmlWeb();
-            var doc = web.Load(url);
-            rtbImpressions.Text = "";
-            List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
-            var chromeOptions = new ChromeOptions();
-            InitBrowser(chromeOptions);
-            chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 1);
-            chromeOptions.AddUserProfilePreference("profile.cookie_controls_mode", 1);
-            var chromeDriverService = ChromeDriverService.CreateDefaultService();
-            chromeDriverService.HideCommandPromptWindow = true;
-            try
+            var tsk = Task.Run(() =>
             {
-                using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
+                var url = txtLink.Text;
+                var web = new HtmlWeb();
+                var doc = web.Load(url);
+                rtbImpressions.Invoke(new Action(() => rtbImpressions.Text = ""));
+                List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
+                var chromeOptions = new ChromeOptions();
+                InitBrowser(chromeOptions);
+                chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 1);
+                chromeOptions.AddUserProfilePreference("profile.cookie_controls_mode", 1);
+                var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                chromeDriverService.HideCommandPromptWindow = true;
+                try
                 {
-                    browser.Manage().Cookies.DeleteAllCookies();
-                    browser.Url = url;
-                    browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
-                    var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
-                    Thread.Sleep(1500);
-                    var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
-                    btn.Click();
-                    var myElement = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'pros')]/li"))).ToList();
-                    var chars = browser.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']/li")).ToList();
-                    if (myElement != null)
+                    using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
                     {
-                        foreach (var pros in myElement.GroupBy(x => x.Text))
+                        browser.Manage().Cookies.DeleteAllCookies();
+                        browser.Url = url;
+                        browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
+                        var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                        Thread.Sleep(1500);
+                        var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
+                        btn.Click();
+                        var myElement = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'pros')]/li"))).ToList();
+                        var chars = browser.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']/li")).ToList();
+                        if (myElement != null)
                         {
-                            listpros.Add(pros.Key.ToString());
+                            foreach (var pros in myElement.GroupBy(x => x.Text))
+                            {
+                                listpros.Add(pros.Key.ToString());
+                            }
                         }
-                    }
-                    var queryForPros = myElement.GroupBy(x => x.Text)
-                      .Where(g => g.Count() > 1)
-                      .ToDictionary(x => x.Key, y => y.Count());
+                        var queryForPros = myElement.GroupBy(x => x.Text)
+                          .Where(g => g.Count() > 1)
+                          .ToDictionary(x => x.Key, y => y.Count());
 
-                    List<string> testpro = new List<string>();
-                    foreach (var qfp in queryForPros)
-                    {
-                        for (int i = 0; i < qfp.Value; i++)
-                        {
-                            testpro.Add(qfp.Key.ToString() + ",positive");
-                        }
-                    }
-                    //var soso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]/li")?.ToList();
-                    var soso = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'so-so')]/li"))).ToList();
-                    if (soso != null)
-                    {
-                        foreach (var so in soso.GroupBy(x => x.Text))
-                        {
-                            listsoso.Add(so.Key.ToString());
-                        }
-                    }
-
-                    //var cons = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]/li")?.ToList();
-                    var cons = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'cons')]/li"))).ToList();
-                    if (cons != null)
-                    {
-                        foreach (var c in cons.GroupBy(x => x.Text))
-                        {
-                            listcons.Add(c.Key.ToString());
-                        }
-                    }
-                    var queryForCons = cons?.GroupBy(x => x.Text)?
-                      .Where(g => g.Count() > 1)
-                      .ToDictionary(x => x.Key, y => y.Count());
-                    List<string> testcons = new List<string>();
-                    if (queryForCons != null)
-                    {
-                        foreach (var qfp in queryForCons)
+                        List<string> testpro = new List<string>();
+                        foreach (var qfp in queryForPros)
                         {
                             for (int i = 0; i < qfp.Value; i++)
                             {
-                                testcons.Add(qfp.Key.ToString() + ",negative");
+                                testpro.Add(qfp.Key.ToString() + ",positive");
                             }
                         }
-                    }
-
-                    int? safepros = myElement == null ? 0 : myElement.Count();
-                    int? safesoso = soso == null ? 0 : soso.Count();
-                    int? safecons = cons == null ? 0 : cons.Count();
-                    int? total = safepros - safesoso - safecons;
-
-                    List<string> commons = myElement.Select(s1 => s1.Text).ToList().Union(soso.Select(s2 => s2.Text).ToList()).ToList();
-
-                    var joinpros = String.Join(",", listpros.ToArray());
-                    var joinsoso = String.Join(",", listsoso.ToArray());
-                    var joincons = String.Join(",", listcons.ToArray());
-                    string common = "";
-                    if (commons != null)
-                    {
-                        foreach (var k in commons)
+                        //var soso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]/li")?.ToList();
+                        var soso = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'so-so')]/li"))).ToList();
+                        if (soso != null)
                         {
-                            common += k + ",";
+                            foreach (var so in soso.GroupBy(x => x.Text))
+                            {
+                                listsoso.Add(so.Key.ToString());
+                            }
                         }
-                    }
-                    if (joinpros.Length > 0)
-                    {
-                        rtbImpressions.Text += "+" + joinpros.ToString() + "\n";
-                        rtbImpressions.Text += "\n";
-                    }
-                    if (joinsoso.Length > 0)
-                    {
-                        rtbImpressions.Text += "^" + joinsoso.ToString() + "\n";
-                        rtbImpressions.Text += "\n";
-                    }
-                    if (joincons.Length > 0)
-                    {
-                        rtbImpressions.Text += "-" + joincons.ToString() + "\n";
-                        rtbImpressions.Text += "\n";
-                    }
-                    if (common.Length > 0)
-                    {
-                        rtbImpressions.Text += "+-" + common;
-                    }
 
-                    var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
-                    var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
-                    var countNegatives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]")?.ToList();
-                    List<int> ListLengths = new List<int>();
-                    if (safepros.Value != 0)
-                    {
-                        ListLengths.Add((int)safepros);
-                    }
-                    if (safesoso.Value != 0)
-                    {
-                        ListLengths.Add((int)safesoso);
-                    }
-                    if (safecons.Value != 0)
-                    {
-                        ListLengths.Add((int)safecons);
-                    }
-                    List<string> Labels = new List<string>();
-                    if (safepros.Value > 0)
-                    {
-                        Labels.Add("Θετικά");
-                    }
-                    if (safesoso.Value > 0)
-                    {
-                        Labels.Add("Ετσι και έτσι");
-                    }
-                    if (safecons.Value > 0)
-                    {
-                        Labels.Add("Αρνητικά");
-                    }
-                    List<IWebElement> e = new List<IWebElement>();
-                    e.AddRange(wait.Until(x=>x.FindElements(By.XPath("//*[text()='To προϊόν δεν υπάρχει πλέον στο Skroutz']"))));
-                    //checking element count in list
-                    if (e.Count<1)
-                    {
-                        var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
-                        var prices = wait?.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']")))?.FirstOrDefault();
-                        //string price = string.IsNullOrEmpty( prices.Text.ToString()) ?  string.Empty : prices.Text.ToString();  
-
-                        var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']")))?.Text;
-                        var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
-                        if (title != null && prices != null)
+                        //var cons = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]/li")?.ToList();
+                        var cons = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'cons')]/li"))).ToList();
+                        if (cons != null)
                         {
-                            Initialize(title.Text.ToString(), prices.Text.ToString(), rating.ToString(), summary);
+                            foreach (var c in cons.GroupBy(x => x.Text))
+                            {
+                                listcons.Add(c.Key.ToString());
+                            }
+                        }
+                        var queryForCons = cons?.GroupBy(x => x.Text)?
+                          .Where(g => g.Count() > 1)
+                          .ToDictionary(x => x.Key, y => y.Count());
+                        List<string> testcons = new List<string>();
+                        if (queryForCons != null)
+                        {
+                            foreach (var qfp in queryForCons)
+                            {
+                                for (int i = 0; i < qfp.Value; i++)
+                                {
+                                    testcons.Add(qfp.Key.ToString() + ",negative");
+                                }
+                            }
+                        }
+
+                        int? safepros = myElement == null ? 0 : myElement.Count();
+                        int? safesoso = soso == null ? 0 : soso.Count();
+                        int? safecons = cons == null ? 0 : cons.Count();
+                        int? total = safepros - safesoso - safecons;
+
+                        List<string> commons = myElement.Select(s1 => s1.Text).ToList().Union(soso.Select(s2 => s2.Text).ToList()).ToList();
+
+                        var joinpros = String.Join(",", listpros.ToArray());
+                        var joinsoso = String.Join(",", listsoso.ToArray());
+                        var joincons = String.Join(",", listcons.ToArray());
+                        string common = "";
+                        if (commons != null)
+                        {
+                            foreach (var k in commons)
+                            {
+                                common += k + ",";
+                            }
+                        }
+                        if (joinpros.Length > 0)
+                        {
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "+" + joinpros.ToString() + "\n"));
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
+                        }
+                        if (joinsoso.Length > 0)
+                        {
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "^" + joinsoso.ToString() + "\n"));
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
+                        }
+                        if (joincons.Length > 0)
+                        {
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "-" + joincons.ToString() + "\n"));
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
                         }
                         if (common.Length > 0)
                         {
-                            FillStatsChart(ListLengths, Labels);
+                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "+-" + common));
                         }
+
+                        var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
+                        var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
+                        var countNegatives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]")?.ToList();
+                        List<int> ListLengths = new List<int>();
+                        if (safepros.Value != 0)
+                        {
+                            ListLengths.Add((int)safepros);
+                        }
+                        if (safesoso.Value != 0)
+                        {
+                            ListLengths.Add((int)safesoso);
+                        }
+                        if (safecons.Value != 0)
+                        {
+                            ListLengths.Add((int)safecons);
+                        }
+                        List<string> Labels = new List<string>();
+                        if (safepros.Value > 0)
+                        {
+                            Labels.Add("Θετικά");
+                        }
+                        if (safesoso.Value > 0)
+                        {
+                            Labels.Add("Ετσι και έτσι");
+                        }
+                        if (safecons.Value > 0)
+                        {
+                            Labels.Add("Αρνητικά");
+                        }
+                        List<IWebElement> e = new List<IWebElement>();
+                        e.AddRange(wait.Until(x => x.FindElements(By.XPath("//*[text()='To προϊόν δεν υπάρχει πλέον στο Skroutz']"))));
+                        //checking element count in list
+                        if (e.Count < 1)
+                        {
+                            var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
+                            var prices = wait?.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']")))?.FirstOrDefault();
+                            //string price = string.IsNullOrEmpty( prices.Text.ToString()) ?  string.Empty : prices.Text.ToString();  
+
+                            var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']")))?.Text;
+                            var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
+                            if (title != null && prices != null)
+                            {
+                                Initialize(title.Text.ToString(), prices.Text.ToString(), rating.ToString(), summary);
+                            }
+                            if (common.Length > 0)
+                            {
+                                FillStatsChart(ListLengths, Labels);
+                            }
+                        }
+                        browser.Close();
                     }
-                    browser.Close();
                 }
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(ex.Message);
+                }
+            });
+            return tsk;
         }
-        private void materialRaisedButton1_Click(object sender, EventArgs e)
+        private async void materialRaisedButton1_Click(object sender, EventArgs e)
         {
             try
             {
@@ -385,13 +391,13 @@ namespace PriceStalkerScrape
                 {
                     pictureBox1.Visible = false;
                     cartesianChart1.Visibility = Visibility.Visible;
-                    SetImpression();
+                    await SetImpression();
                 }
                 else if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
                     cartesianChart1.Visibility = Visibility.Hidden;
                     pictureBox1.Visible = true;
-                    ScrapeBestPrice();
+                    await ScrapeBestPrice();
                 }
             }
             catch (System.NullReferenceException ex)
@@ -423,77 +429,82 @@ namespace PriceStalkerScrape
             }
             for (int i = 0; i < array.Count; i++)
             {
-                series.Add(new PieSeries
-                {
-                    Title = Labels[i].ToString(),
-                    Foreground = Brushes.Black,                   
-                    Values = new ChartValues<double> { array[i] },
-                    DataLabels = true,
-                    LabelPoint = labelPoint,
-                    Fill = listBrush[i]
-                });
+                pieChart1.Invoke(new Action(() =>
+                    series.Add(new PieSeries
+                    {
+                        Title = Labels[i].ToString(),
+                        Foreground = Brushes.Black,
+                        Values = new ChartValues<double> { array[i] },
+                        DataLabels = true,
+                        LabelPoint = labelPoint,
+                        Fill = listBrush[i]
+                    }))) ;
             }
-            pieChart1.Series = series;
-            pieChart1.LegendLocation = LegendLocation.Bottom;
+            pieChart1.Invoke(new Action(()=> pieChart1.Series = series));
+            pieChart1.Invoke(new Action(() => pieChart1.LegendLocation = LegendLocation.Bottom));
         }
         #region "Scrape"
-        private void ScrapeBestPrice()
+        private Task ScrapeBestPrice()
         {
-            try
+            var tsk = Task.Run(() =>
             {
-                var web = new HtmlWeb();
-                var doc = web.Load(txtLink.Text);
-                var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
-                var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
-                string price = prices?.FirstOrDefault().InnerText.ToString();
-                var rating = doc?.DocumentNode?.SelectSingleNode("//div[contains(@class,'sc-bczRLJ bUJLMc')]/span")?.InnerText; //actual-rating 
-                var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;
-                //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
-                var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
-                string description = "";
-                WebClient wc = new WebClient();
-                
-                if (picture != null)
+                try
                 {
-                    if (!picture.Contains(".webp"))
+                    var web = new HtmlWeb();
+                    var doc = web.Load(txtLink.Text);
+                    var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
+                    var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
+                    string price = prices?.FirstOrDefault().InnerText.ToString();
+                    var rating = doc?.DocumentNode?.SelectSingleNode("//div[contains(@class,'sc-bczRLJ bUJLMc')]/span")?.InnerText; //actual-rating 
+                    var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;
+                    //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
+                    var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
+                    string description = "";
+                    WebClient wc = new WebClient();
+
+                    if (picture != null)
                     {
-                        string prefix = "";
-                        if (!picture.StartsWith("https:"))
+                        if (!picture.Contains(".webp"))
                         {
-                            prefix = "https:";
+                            string prefix = "";
+                            if (!picture.StartsWith("https:"))
+                            {
+                                prefix = "https:";
+                            }
+                            byte[] bytes = wc.DownloadData(prefix + picture);
+                            MemoryStream ms = new MemoryStream(bytes);
+                            System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+                            pictureBox1.Invoke(new Action(()=> pictureBox1.Image = img));
                         }
-                        byte[] bytes = wc.DownloadData(prefix+picture);
-                        MemoryStream ms = new MemoryStream(bytes);
-                        System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-                        pictureBox1.Image = img;
                     }
-                }
-                if(summary.Count>0)
-                {
-                    foreach(var s in summary)
+                    if (summary.Count > 0)
                     {
-                        description += s.InnerText + "\n";
+                        foreach (var s in summary)
+                        {
+                            description += s.InnerText + "\n";
+                        }
+                    }
+                    int safeRate = 0;
+                    if (rating != null)
+                    {
+                        safeRate = Int32.Parse(rating.ToString());
+                    }
+                    else
+                    {
+                        safeRate = 0;
+                    }
+
+                    if (title != null && price != null)
+                    {
+                        Initialize(title.ToString(), price.ToString(), safeRate.ToString(), description);
                     }
                 }
-                int safeRate = 0;
-                if (rating != null)
+                catch (System.NullReferenceException ex)
                 {
-                    safeRate = Int32.Parse(rating.ToString());
+                    MessageBox.Show(ex.Message);
                 }
-                else
-                {
-                    safeRate = 0;
-                }
-                   
-                if (title != null && price != null)
-                {
-                    Initialize(title.ToString(), price.ToString(), safeRate.ToString(), description);
-                }
-            }
-            catch (System.NullReferenceException ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            });
+            return tsk;
         }
         #endregion
         private async void materialRaisedButton2_Click(object sender, EventArgs e) => await GetPriceHistoryInfo();
@@ -592,10 +603,12 @@ namespace PriceStalkerScrape
             {
                 if (txtLink.Text.StartsWith("https://www.bestprice.gr/"))
                 {
+                    pieChart1.Visible = false;
                     await ComparePriceWithSkroutzPrice();
                 }
                 else if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
+                    pieChart1.Visible = true;
                     await ComparePriceWithBestPrice();
                 }
             }
@@ -739,7 +752,8 @@ namespace PriceStalkerScrape
                     Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2} €");
 
                     string val = elements.FirstOrDefault().Text;
-                    string numberOnly = Regex.Replace(val, "[^0-9.,€]", "");
+                    //string numberOnly = Regex.Replace(val, "[^0-9.,€]", "");
+                    string numberOnly = Regex.Replace(val,"από","").Replace("απο", "");
                     if (elements != null)
                     {
                         if (re.IsMatch(numberOnly))

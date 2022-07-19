@@ -34,6 +34,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>vision %282%29.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -149,6 +152,8 @@
       <LastGenOutput>Stalker.cs</LastGenOutput>
     </Content>
     <Content Include="logo.png" />
+    <Content Include="vision %281%29.ico" />
+    <Content Include="vision %282%29.ico" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EntityFramework">
