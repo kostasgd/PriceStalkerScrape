@@ -152,7 +152,6 @@
       <LastGenOutput>Stalker.cs</LastGenOutput>
     </Content>
     <Content Include="logo.png" />
-    <Content Include="vision %281%29.ico" />
     <Content Include="vision %282%29.ico" />
   </ItemGroup>
   <ItemGroup>

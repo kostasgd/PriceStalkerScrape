@@ -1,21 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Validation;
-
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Forms;
-using System.Windows.Media;
-using HtmlAgilityPack;
+﻿using HtmlAgilityPack;
 using LiveCharts;
 using LiveCharts.Wpf;
 using MaterialSkin;
@@ -24,6 +7,19 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity.Validation;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Forms;
+using System.Windows.Media;
 using Application = System.Windows.Forms.Application;
 using MessageBox = System.Windows.MessageBox;
 
@@ -37,7 +33,9 @@ namespace PriceStalkerScrape
             LoadData();
             FillDatagridStats();
         }
+
         #region "Initialize & load"
+
         public void FillDatagridStats()
         {
             using (var context = new Data.StalkerEntities())
@@ -48,6 +46,7 @@ namespace PriceStalkerScrape
                 dgvProductsForCheck.Columns[1].Width = 550;
             }
         }
+
         private void Main_Load_1(object sender, EventArgs e)
         {
             var materialSkinManager = MaterialSkinManager.Instance;
@@ -61,25 +60,27 @@ namespace PriceStalkerScrape
             dgvProductsForCheck.Columns[1].Width = 650;
             dgvOrders.Columns[4].Width = 650;
         }
+
         public void RemoveOldPrices()
         {
             using (var context = new Data.StalkerEntities())
             {
                 var data = context.PriceHistory.ToList();
-                foreach(var d in data)
+                foreach (var d in data)
                 {
                     DateTime now = DateTime.Now;
                     DateTime priceHistory = d.Date;
                     uint totalDays = (uint)now.Subtract(priceHistory).TotalDays;
                     if (totalDays > 54)
                     {
-                        var deletedRecord = context.PriceHistory.FirstOrDefault(x=>x.Id == d.Id);
+                        var deletedRecord = context.PriceHistory.FirstOrDefault(x => x.Id == d.Id);
                         context.PriceHistory.Remove(deletedRecord);
                         context.SaveChanges();
                     }
                 }
             }
         }
+
         [STAThread]
         private void Initialize(string title, string price, string rating, string summary)
         {
@@ -88,6 +89,7 @@ namespace PriceStalkerScrape
             lblProductRating.Invoke(new Action(() => lblProductRating.Text = rating));
             txtDescription.Invoke(new Action(() => txtDescription.Text = summary));
         }
+
         private void LoadData()
         {
             var stalkerEntities = new Data.StalkerEntities();
@@ -100,8 +102,11 @@ namespace PriceStalkerScrape
             dgvOrders.Update();
             dgvOrders.Refresh();
         }
-        #endregion
+
+        #endregion "Initialize & load"
+
         #region "Insert"
+
         private void InsertIntoDb()
         {
             if (Check())
@@ -120,11 +125,11 @@ namespace PriceStalkerScrape
                         product.Link = txtLink.Text;
                         product.Title = lblProductTitle.Text;
                         string ignoreSign = lblProductPrice.Text.ToString().Replace("€", "").Trim();
-                        float price = (float)Math.Round(float.Parse(ignoreSign), 2);
-                        product.Price = price;
+                        decimal price = (decimal)Math.Round(decimal.Parse(ignoreSign), 2);
+                        product.Price = (double)price;
                         string rating = lblProductRating.Text.Replace(".", ",");
-                        float rate = (float)Math.Round(float.Parse(rating), 2);
-                        product.Rating = rate;
+                        decimal rate = (decimal)Math.Round(decimal.Parse(rating), 2);
+                        product.Rating = (double)rate;
                         product.Description = txtDescription.Text;
                         context.tblProducts.Add(product);
 
@@ -134,7 +139,7 @@ namespace PriceStalkerScrape
                         Data.PriceHistory priceHistory = new Data.PriceHistory()
                         {
                             PId = product.Id,
-                            Price = price,
+                            Price = (double)price,
                             Date = DateTime.Now
                         };
                         context.PriceHistory.Add(priceHistory);
@@ -164,7 +169,9 @@ namespace PriceStalkerScrape
                 }
             }
         }
-        #endregion
+
+        #endregion "Insert"
+
         private bool Check()
         {
             if (lblProductPrice.Text.Length > 0 && lblProductPrice.Text.Length > 0 && lblProductRating.Text.Length > 0)
@@ -194,15 +201,13 @@ namespace PriceStalkerScrape
                 dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
             }
         }
+
         private void InitBrowser(ChromeOptions options)
         {
-            options.AddArgument("--window-size=1920,1080");
-            options.AddArgument("--disable-gpu");
-            options.AddArgument("--disable-extensions");
-            options.AddArgument("--start-minimized");
-            options.AddArgument("no-sandbox");
+            options.AddArguments("--window-size=1920,1080", "--disable-gpu", "--disable-extensions", "--start-minimized", "no-sandbox");
             options.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
         }
+
         [STAThread]
         private Task SetImpression()
         {
@@ -251,7 +256,7 @@ namespace PriceStalkerScrape
                                 testpro.Add(qfp.Key.ToString() + ",positive");
                             }
                         }
-                        //var soso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]/li")?.ToList();
+
                         var soso = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'so-so')]/li"))).ToList();
                         if (soso != null)
                         {
@@ -261,7 +266,6 @@ namespace PriceStalkerScrape
                             }
                         }
 
-                        //var cons = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]/li")?.ToList();
                         var cons = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'cons')]/li"))).ToList();
                         if (cons != null)
                         {
@@ -303,25 +307,10 @@ namespace PriceStalkerScrape
                                 common += k + ",";
                             }
                         }
-                        if (joinpros.Length > 0)
-                        {
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "+" + joinpros.ToString() + "\n"));
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
-                        }
-                        if (joinsoso.Length > 0)
-                        {
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "^" + joinsoso.ToString() + "\n"));
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
-                        }
-                        if (joincons.Length > 0)
-                        {
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "-" + joincons.ToString() + "\n"));
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
-                        }
-                        if (common.Length > 0)
-                        {
-                            rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "+-" + common));
-                        }
+                        GenerateRatingText(joinpros, "+");
+                        GenerateRatingText(joinsoso, "^");
+                        GenerateRatingText(joincons, "-");
+                        GenerateRatingText(common, "+-");
 
                         var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
                         var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
@@ -357,15 +346,16 @@ namespace PriceStalkerScrape
                         //checking element count in list
                         if (e.Count < 1)
                         {
+                            Thread.Sleep(250);
                             var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
-                            var prices = wait?.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']")))?.FirstOrDefault();
-                            //string price = string.IsNullOrEmpty( prices.Text.ToString()) ?  string.Empty : prices.Text.ToString();  
+                            var prices = wait?.Until(x => x.FindElements(By.ClassName("dominant-price")))?.FirstOrDefault();
+                            var defaultprices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
 
                             var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']")))?.Text;
                             var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
                             if (title != null && prices != null)
                             {
-                                Initialize(title.Text.ToString(), prices.Text.ToString(), rating.ToString(), summary);
+                                Initialize(title.Text.ToString(), defaultprices.Text.ToString(), rating.ToString(), summary);
                             }
                             if (common.Length > 0)
                             {
@@ -381,6 +371,14 @@ namespace PriceStalkerScrape
                 }
             });
             return tsk;
+        }
+        private void GenerateRatingText(string lst , string RatingOperator)
+        {
+            if (lst.Length > 0)
+            {
+                rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += RatingOperator + lst.ToString() + "\n"));
+                rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
+            }
         }
         private async void materialRaisedButton1_Click(object sender, EventArgs e)
         {
@@ -402,9 +400,10 @@ namespace PriceStalkerScrape
             }
             catch (System.NullReferenceException ex)
             {
-                System.Windows.MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message);
             }
         }
+
         public void FillStatsChart(List<int> lst, List<string> Labels)
         {
             Func<ChartPoint, string> labelPoint = chartPoint =>
@@ -418,11 +417,11 @@ namespace PriceStalkerScrape
                 {
                     listBrush.Add(Brushes.ForestGreen);
                 }
-                else if(lbl == "Ετσι και έτσι")
+                else if (lbl == "Ετσι και έτσι")
                 {
                     listBrush.Add(Brushes.Gold);
                 }
-                else 
+                else
                 {
                     listBrush.Add(Brushes.DarkRed);
                 }
@@ -438,12 +437,14 @@ namespace PriceStalkerScrape
                         DataLabels = true,
                         LabelPoint = labelPoint,
                         Fill = listBrush[i]
-                    }))) ;
+                    })));
             }
-            pieChart1.Invoke(new Action(()=> pieChart1.Series = series));
+            pieChart1.Invoke(new Action(() => pieChart1.Series = series));
             pieChart1.Invoke(new Action(() => pieChart1.LegendLocation = LegendLocation.Bottom));
         }
+
         #region "Scrape"
+
         private Task ScrapeBestPrice()
         {
             var tsk = Task.Run(() =>
@@ -455,7 +456,7 @@ namespace PriceStalkerScrape
                     var title = doc?.DocumentNode?.SelectSingleNode("//div[@class='hgroup']/h1")?.InnerText;
                     var prices = doc?.DocumentNode?.SelectNodes("//div[@class='prices__price']/a")?.ToList();
                     string price = prices?.FirstOrDefault().InnerText.ToString();
-                    var rating = doc?.DocumentNode?.SelectSingleNode("//div[contains(@class,'sc-bczRLJ bUJLMc')]/span")?.InnerText; //actual-rating 
+                    var rating = doc?.DocumentNode?.SelectSingleNode("//div[contains(@class,'sc-bczRLJ bUJLMc')]/span")?.InnerText; //actual-rating
                     var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;
                     //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
                     var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
@@ -474,7 +475,7 @@ namespace PriceStalkerScrape
                             byte[] bytes = wc.DownloadData(prefix + picture);
                             MemoryStream ms = new MemoryStream(bytes);
                             System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-                            pictureBox1.Invoke(new Action(()=> pictureBox1.Image = img));
+                            pictureBox1.Invoke(new Action(() => pictureBox1.Image = img));
                         }
                     }
                     if (summary.Count > 0)
@@ -506,11 +507,13 @@ namespace PriceStalkerScrape
             });
             return tsk;
         }
-        #endregion
+
+        #endregion "Scrape"
+
         private async void materialRaisedButton2_Click(object sender, EventArgs e) => await GetPriceHistoryInfo();
         public Task GetPriceHistoryInfo()
         {
-            var tsk = Task.Run(() => 
+            var tsk = Task.Run(() =>
             {
                 using (var context = new Data.StalkerEntities())
                 {
@@ -533,45 +536,49 @@ namespace PriceStalkerScrape
                             string bestpprice = bestpprices?.Text.ToString().Replace("€", "");
                             string newskroutzprice = prices?.Text.ToString().Replace("€", "");
                             var testlink = link.Id;
-                            float saveprice = (float)Math.Round(float.Parse(link.Price.ToString()), 2);
+                            decimal saveprice = (decimal)Math.Round(decimal.Parse(link.Price.ToString()), 2);
 
                             var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x => x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
                             if (joinprice != null)
                             {
-                                float compPrice = 0;
+                                decimal compPrice = 0;
                                 if (newskroutzprice != null)
                                 {
-                                    compPrice = (float)Math.Round(float.Parse(newskroutzprice.ToString()), 2);
+                                    compPrice = (decimal)Math.Round(decimal.Parse(newskroutzprice.ToString()), 2);
                                 }
                                 else if (bestpprices != null)
                                 {
-                                    compPrice = (float)Math.Round(float.Parse(bestpprice.ToString()), 2);
+                                    compPrice = (decimal)Math.Round(decimal.Parse(bestpprice.ToString()), 2);
                                 }
-                                CheckPrices(link.Title, testlink, compPrice, (float)joinprice.Price);
+                                CheckPrices(link.Title, testlink, compPrice, (decimal)joinprice.Price);
                                 Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
                                 updProduct.Id = link.Id;
-                                updProduct.Price = compPrice;
+                                updProduct.Price = (double)compPrice;
                                 context.SaveChanges();
                             }
                         }
                     }
-                    if (materialRaisedButton2.IsHandleCreated)
-                    {
-                        materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
-                    }
-                    else
-                    {
-                        materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
-                    }
+                    IsButtonHandled();
                 }
             });
             return tsk;
         }
-        private void CheckPrices(string title, int pid, float newprice, float oldprice)
+        private void IsButtonHandled()
+        {
+            if (materialRaisedButton2.IsHandleCreated)
+            {
+                materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = true));
+            }
+            else
+            {
+                materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
+            }
+        }
+        private void CheckPrices(string title, int pid, decimal newprice, decimal oldprice)
         {
             if (newprice != oldprice)
             {
-                float deservedDifference = Math.Abs( newprice - oldprice);
+                float deservedDifference = (float)Math.Abs(newprice - oldprice);
                 if (deservedDifference >= 4)
                 {
                     using (var context = new Data.StalkerEntities())
@@ -579,7 +586,7 @@ namespace PriceStalkerScrape
                         Data.PriceHistory priceHistory = new Data.PriceHistory()
                         {
                             PId = pid,
-                            Price = Math.Round(newprice, 2),
+                            Price = (double)Math.Round(newprice, 2),
                             Date = DateTime.Now
                         };
                         context.PriceHistory.Add(priceHistory);
@@ -593,10 +600,13 @@ namespace PriceStalkerScrape
                 }
             }
         }
+
         private void Order_FormClosed(object sender, FormClosedEventArgs e) => LoadData();
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e){ }
         private void btnCompare_Click(object sender, EventArgs e) => ComparePrices();
+
         #region "Price Comparators"
+
         private async void ComparePrices()
         {
             if (lblProductTitle.Text != null)
@@ -613,7 +623,7 @@ namespace PriceStalkerScrape
                 }
             }
         }
-        //Να κανω ελεγχο για να ξερω πως να ξεχωριζει τις αναζητησεις που γινονται με λιστα προιοντων η κατευθειαν στο προφιλ του προιοντος 
+        //Να κανω ελεγχο για να ξερω πως να ξεχωριζει τις αναζητησεις που γινονται με λιστα προιοντων η κατευθειαν στο προφιλ του προιοντος
         private Task ComparePriceWithBestPrice()
         {
             var tsk = Task.Run(() =>
@@ -622,11 +632,9 @@ namespace PriceStalkerScrape
                 {
                     lblCompare.Invoke(new Action(() => lblCompare.Text = "Price loading.."));
                     var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArgument("--disable-gpu");
-                    chromeOptions.AddArgument("--disable-extensions");
-                    chromeOptions.AddArgument("--start-minimized");
-                    chromeOptions.AddArgument("--headless");
-                    chromeOptions.AddArgument("no-sandbox");
+                    chromeOptions.AddArguments(
+                       "--disable-gpu", "--disable-extensions", "--start-minimized", "--headless", "--no-sandbox"
+                    );
                     var chromeDriverService = ChromeDriverService.CreateDefaultService();
                     chromeDriverService.HideCommandPromptWindow = true;
                     ChromeDriver browser = new ChromeDriver(chromeDriverService, chromeOptions);
@@ -714,7 +722,6 @@ namespace PriceStalkerScrape
                                     lblCompare.Invoke(new Action(() => lblCompare.Text = "Cannot be found..."));
                                 }
                             }
-
                         }
                         catch (Exception ex)
                         {
@@ -729,6 +736,7 @@ namespace PriceStalkerScrape
             });
             return tsk;
         }
+
         private Task ComparePriceWithSkroutzPrice()
         {
             var tsk = Task.Run(() =>
@@ -753,7 +761,7 @@ namespace PriceStalkerScrape
 
                     string val = elements.FirstOrDefault().Text;
                     //string numberOnly = Regex.Replace(val, "[^0-9.,€]", "");
-                    string numberOnly = Regex.Replace(val,"από","").Replace("απο", "");
+                    string numberOnly = Regex.Replace(val, "από", "").Replace("απο", "");
                     if (elements != null)
                     {
                         if (re.IsMatch(numberOnly))
@@ -778,7 +786,8 @@ namespace PriceStalkerScrape
             });
             return tsk;
         }
-        #endregion
+
+        #endregion "Price Comparators"
 
         #region "String Comparison"
         public static double CompareStrings(string str1, string str2)
@@ -796,24 +805,21 @@ namespace PriceStalkerScrape
                     if (pairs1[i] == pairs2[j])
                     {
                         intersection++;
-                        pairs2.RemoveAt(j);//Must remove the match to prevent "AAAA" from appearing to match "AA" with 100% success
+                        pairs2.RemoveAt(j);
                         break;
                     }
                 }
             }
-            return (2.0 * intersection * 100) / union; //returns in percentage //return (2.0 * intersection) / union; //returns in score from 0 to 1
+            return (2.0 * intersection * 100) / union; 
         }
         private static List<string> WordLetterPairs(string str)
         {
             List<string> AllPairs = new List<string>();
-            // Tokenize the string and put the tokens/words into an array
             string[] Words = Regex.Split(str, @"\s");
-            // For each word
             for (int w = 0; w < Words.Length; w++)
             {
                 if (!string.IsNullOrEmpty(Words[w]))
                 {
-                    // Find the pairs of characters
                     String[] PairsInWord = LetterPairs(Words[w]);
 
                     for (int p = 0; p < PairsInWord.Length; p++)
@@ -835,46 +841,57 @@ namespace PriceStalkerScrape
             }
             return pairs;
         }
-        #endregion
 
-        private void btnLoad_Click(object sender, EventArgs e)
+        #endregion "String Comparison"
+
+        private async void btnLoad_Click(object sender, EventArgs e)
         {
-            try
+            await LoadGraph();
+        }
+        private Task LoadGraph()
+        {
+            var tsk = Task.Run(() =>
             {
-                if (dgvProductsForCheck.SelectedRows.Count > 0)
+                try
                 {
-                    int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
-                    cartesianChart1.Series.Clear();
-                    using (var context = new Data.StalkerEntities())
+                    if (dgvProductsForCheck.SelectedRows.Count > 0)
                     {
-                        var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
-                        int counter = 0;
-                        LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                        foreach (var item in data)
+                        int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
+                        dgvProductsForCheck.Invoke(new Action(()=> cartesianChart1.Series.Clear()));
+                        using (var context = new Data.StalkerEntities())
                         {
-                            double[] ys2 = { item.Price };
-                            columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                            var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                            int counter = 0;
+                            LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
+                            foreach (var item in data)
                             {
-                                Title = item.Date.ToString(),
-                                DataLabels = true,
-                                ColumnPadding = 15,
-                                VerticalAlignment = VerticalAlignment.Stretch,
-                                Margin = new Thickness(10, 10, 10, 10),
-                                PointGeometry = DefaultGeometries.Circle,
-                                Values = new LiveCharts.ChartValues<double>(ys2),  
-                            };
-                            cartesianChart1.LegendLocation = LegendLocation.Right;
-                            cartesianChart1.FontStretch = new FontStretch();
-                            cartesianChart1.Series.Add(columnSeries[counter]);
-                            counter++;
-                        } 
+                                double[] ys2 = { item.Price };
+                                dgvProductsForCheck.Invoke(new Action(() =>
+                                    columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                                    {
+                                        Title = item.Date.ToString(),
+                                        DataLabels = true,
+                                        ColumnPadding = 15,
+                                        VerticalAlignment = VerticalAlignment.Stretch,
+                                        Margin = new Thickness(10, 10, 10, 10),
+                                        PointGeometry = DefaultGeometries.Circle,
+                                        Values = new LiveCharts.ChartValues<double>(ys2),
+                                    }
+                                ));
+                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.LegendLocation = LegendLocation.Right));
+                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.FontStretch = new FontStretch()));
+                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.Series.Add(columnSeries[counter])));
+                                counter++;
+                            }
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
+            return tsk;
         }
         private void button2_Click_1(object sender, EventArgs e)
         {
