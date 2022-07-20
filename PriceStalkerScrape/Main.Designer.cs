@@ -118,7 +118,7 @@
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(0, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1441, 614);
+            this.panel1.Size = new System.Drawing.Size(1440, 614);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
@@ -134,7 +134,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1441, 611);
+            this.tabControl1.Size = new System.Drawing.Size(1440, 611);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
@@ -155,7 +155,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1433, 574);
+            this.tabPage1.Size = new System.Drawing.Size(1432, 574);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -422,7 +422,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1441, 680);
+            this.ClientSize = new System.Drawing.Size(1440, 680);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;

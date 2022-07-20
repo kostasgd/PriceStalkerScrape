@@ -52,7 +52,7 @@ namespace PriceStalkerScrape
             var materialSkinManager = MaterialSkinManager.Instance;
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
-            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey800, Primary.BlueGrey900, Primary.BlueGrey500, Accent.LightBlue200, TextShade.WHITE);
+            materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey600, Primary.BlueGrey900, Primary.BlueGrey700, Accent.Blue100, TextShade.WHITE);
             dgvProducts.Columns[0].Width = 100;
             dgvProducts.Columns[1].Width = 670;
             dgvProducts.Columns[3].Width = 140;
@@ -515,52 +515,60 @@ namespace PriceStalkerScrape
         {
             var tsk = Task.Run(() =>
             {
-                using (var context = new Data.StalkerEntities())
+                try
                 {
-                    var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id, i.Price, i.Rating, i.Title }).ToList();
-                    materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
-                    var chromeOptions = new ChromeOptions();
-                    InitBrowser(chromeOptions);
-                    var chromeDriverService = ChromeDriverService.CreateDefaultService();
-                    chromeDriverService.HideCommandPromptWindow = true;
-                    using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
+                    using (var context = new Data.StalkerEntities())
                     {
-                        foreach (var link in data)
+                        var data = context.tblProducts.ToList().Select(i => new { i.Link, i.Id, i.Price, i.Rating, i.Title }).ToList();
+                        materialRaisedButton2.Invoke(new Action(() => materialRaisedButton2.Enabled = false));
+                        var chromeOptions = new ChromeOptions();
+                        InitBrowser(chromeOptions);
+                        var chromeDriverService = ChromeDriverService.CreateDefaultService();
+                        chromeDriverService.HideCommandPromptWindow = true;
+                        using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
                         {
-                            browser.Url = link.Link;
-                            var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
-                            browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
-                            var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
-                            Application.DoEvents();
-                            var bestpprices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
-                            string bestpprice = bestpprices?.Text.ToString().Replace("€", "");
-                            string newskroutzprice = prices?.Text.ToString().Replace("€", "");
-                            var testlink = link.Id;
-                            decimal saveprice = (decimal)Math.Round(decimal.Parse(link.Price.ToString()), 2);
-
-                            var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x => x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
-                            if (joinprice != null)
+                            foreach (var link in data)
                             {
-                                decimal compPrice = 0;
-                                if (newskroutzprice != null)
+                                browser.Url = link.Link;
+                                var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                                browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
+                                //var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
+                                var prices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
+                                Application.DoEvents();
+                                var bestpprices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
+                                string bestpprice = bestpprices == null ? "" : bestpprices?.Text?.ToString().Replace("€", "");
+                                string newskroutzprice = prices == null ? "" : prices?.Text?.ToString().Replace("€", "");
+                                var testlink = link.Id;
+                                decimal? saveprice = link == null ? 0 : (decimal)Math.Round(decimal.Parse(link.Price.ToString()), 2);//int? safesoso = soso == null ? 0 : soso.Count();
+
+                                var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x => x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
+                                if (joinprice != null)
                                 {
-                                    compPrice = (decimal)Math.Round(decimal.Parse(newskroutzprice.ToString()), 2);
+                                    decimal compPrice = 0;
+                                    if (newskroutzprice != "")
+                                    {
+                                        compPrice = (decimal)Math.Round(decimal.Parse(newskroutzprice.ToString()), 2);
+                                    }
+                                    else if (bestpprice != "")
+                                    {
+                                        compPrice = (decimal)Math.Round(decimal.Parse(bestpprice.ToString()), 2);
+                                    }
+                                    CheckPrices(link.Title, testlink, compPrice, (decimal)joinprice.Price);
+                                    Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
+                                    updProduct.Id = link.Id;
+                                    updProduct.Price = (double)compPrice;
+                                    context.SaveChanges();
                                 }
-                                else if (bestpprices != null)
-                                {
-                                    compPrice = (decimal)Math.Round(decimal.Parse(bestpprice.ToString()), 2);
-                                }
-                                CheckPrices(link.Title, testlink, compPrice, (decimal)joinprice.Price);
-                                Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
-                                updProduct.Id = link.Id;
-                                updProduct.Price = (double)compPrice;
-                                context.SaveChanges();
                             }
                         }
+                        IsButtonHandled();
                     }
-                    IsButtonHandled();
                 }
-            });
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });  
             return tsk;
         }
         private void IsButtonHandled()
