@@ -300,14 +300,15 @@ namespace PriceStalkerScrape
                         var joinsoso = String.Join(",", listsoso.ToArray());
                         var joincons = String.Join(",", listcons.ToArray());
                         string common = "";
-                        if (commons != null)
+                        if (commons.Count > 0)
                         {
                             foreach (var k in commons)
                             {
                                 common += k + ",";
                             }
+                            common = common.Remove(common.Length - 1);
                         }
-                        common = common.Remove(common.Length-1);
+  
                         GenerateRatingText(joinpros, "+");
                         GenerateRatingText(joinsoso, "^");
                         GenerateRatingText(joincons, "-");
