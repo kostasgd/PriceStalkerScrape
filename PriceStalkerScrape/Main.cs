@@ -231,12 +231,12 @@ namespace PriceStalkerScrape
                         browser.Manage().Cookies.DeleteAllCookies();
                         browser.Url = url;
                         browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
-                        var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                        var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(60));
                         Thread.Sleep(1500);
                         var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
                         btn.Click();
                         var myElement = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'pros')]/li"))).ToList();
-                        var chars = browser.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']/li")).ToList();
+                        var chars = wait.Until(x=> x.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']/li"))).ToList();
                         if (myElement != null)
                         {
                             foreach (var pros in myElement.GroupBy(x => x.Text))
@@ -294,7 +294,7 @@ namespace PriceStalkerScrape
                         int? safecons = cons == null ? 0 : cons.Count();
                         int? total = safepros - safesoso - safecons;
 
-                        List<string> commons = myElement.Select(s1 => s1.Text).ToList().Union(soso.Select(s2 => s2.Text).ToList()).ToList();
+                        List<string> commons = myElement.Select(s1 => s1.Text).ToList().Intersect(soso.Select(s2 => s2.Text).ToList()).ToList();
 
                         var joinpros = String.Join(",", listpros.ToArray());
                         var joinsoso = String.Join(",", listsoso.ToArray());
@@ -307,6 +307,7 @@ namespace PriceStalkerScrape
                                 common += k + ",";
                             }
                         }
+                        common = common.Remove(common.Length-1);
                         GenerateRatingText(joinpros, "+");
                         GenerateRatingText(joinsoso, "^");
                         GenerateRatingText(joincons, "-");
@@ -316,31 +317,16 @@ namespace PriceStalkerScrape
                         var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
                         var countNegatives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]")?.ToList();
                         List<int> ListLengths = new List<int>();
-                        if (safepros.Value != 0)
-                        {
-                            ListLengths.Add((int)safepros);
-                        }
-                        if (safesoso.Value != 0)
-                        {
-                            ListLengths.Add((int)safesoso);
-                        }
-                        if (safecons.Value != 0)
-                        {
-                            ListLengths.Add((int)safecons);
-                        }
+                        
+                        InsertLengths(safepros.Value,ListLengths);
+                        InsertLengths(safesoso.Value, ListLengths);
+                        InsertLengths(safecons.Value, ListLengths);
+
                         List<string> Labels = new List<string>();
-                        if (safepros.Value > 0)
-                        {
-                            Labels.Add("Θετικά");
-                        }
-                        if (safesoso.Value > 0)
-                        {
-                            Labels.Add("Ετσι και έτσι");
-                        }
-                        if (safecons.Value > 0)
-                        {
-                            Labels.Add("Αρνητικά");
-                        }
+                        InsertLabels(safepros.Value, Labels, "Θετικά");
+                        InsertLabels(safesoso.Value, Labels, "Ετσι και έτσι");
+                        InsertLabels(safecons.Value, Labels, "Αρνητικά");
+
                         List<IWebElement> e = new List<IWebElement>();
                         e.AddRange(wait.Until(x => x.FindElements(By.XPath("//*[text()='To προϊόν δεν υπάρχει πλέον στο Skroutz']"))));
                         //checking element count in list
@@ -371,6 +357,20 @@ namespace PriceStalkerScrape
                 }
             });
             return tsk;
+        }
+        private void InsertLengths(int? size, List<int> ListLengths)
+        {
+            if (size.Value != 0)
+            {
+                ListLengths.Add((int)size);
+            }
+        }
+        private void InsertLabels(int? size, List<string> ListLabels,string value)
+        {
+            if (size.Value != 0)
+            {
+                ListLabels.Add(value);
+            }
         }
         private void GenerateRatingText(string lst , string RatingOperator)
         {
@@ -539,7 +539,7 @@ namespace PriceStalkerScrape
                                 string bestpprice = bestpprices == null ? "" : bestpprices?.Text?.ToString().Replace("€", "");
                                 string newskroutzprice = prices == null ? "" : prices?.Text?.ToString().Replace("€", "");
                                 var testlink = link.Id;
-                                decimal? saveprice = link == null ? 0 : (decimal)Math.Round(decimal.Parse(link.Price.ToString()), 2);//int? safesoso = soso == null ? 0 : soso.Count();
+                                decimal? saveprice = link == null ? 0 : (decimal)Math.Round(decimal.Parse(link.Price.ToString()), 2);
 
                                 var joinprice = context.PriceHistory.Select(i => new { i.PId, i.Price, i.Date }).Where(x => x.PId == link.Id).OrderByDescending(x => x.Date).FirstOrDefault();
                                 if (joinprice != null)
