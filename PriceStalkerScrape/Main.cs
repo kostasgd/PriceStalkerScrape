@@ -592,19 +592,22 @@ namespace PriceStalkerScrape
                 {
                     using (var context = new Data.StalkerEntities())
                     {
-                        Data.PriceHistory priceHistory = new Data.PriceHistory()
+                        if (newprice > 0)
                         {
-                            PId = pid,
-                            Price = (double)Math.Round(newprice, 2),
-                            Date = DateTime.Now
-                        };
-                        context.PriceHistory.Add(priceHistory);
-                        context.SaveChanges();
-                        new ToastContentBuilder()
-                        .AddArgument("action", "viewConversation")
-                            .AddArgument("conversationId", 123)
-                            .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
-                            .Show();
+                            Data.PriceHistory priceHistory = new Data.PriceHistory()
+                            {
+                                PId = pid,
+                                Price = (double)Math.Round(newprice, 2),
+                                Date = DateTime.Now
+                            };
+                            context.PriceHistory.Add(priceHistory);
+                            context.SaveChanges();
+                            new ToastContentBuilder()
+                            .AddArgument("action", "viewConversation")
+                                .AddArgument("conversationId", 123)
+                                .AddText(title + " price has changed from " + oldprice.ToString() + "€ to " + newprice.ToString() + "€")
+                                .Show();
+                        }
                     }
                 }
             }
