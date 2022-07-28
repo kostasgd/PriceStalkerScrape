@@ -24,10 +24,8 @@ namespace PriceStalkerScrape
             if (cbCustomer.Items.Count > 0)
                 cbCustomer.SelectedIndex = 0;
         }
-        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
-        }
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e) =>e.Handled = !char.IsDigit(e.KeyChar) && !char.IsControl(e.KeyChar);
+
         public void FillComboBoxProducts()
         {
             cbProduct.Items.Clear();
@@ -57,10 +55,7 @@ namespace PriceStalkerScrape
             }
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
+        private void button2_Click(object sender, EventArgs e) => this.Close();
         private void Calculate()
         {
             using (var context = new Data.StalkerEntities())
@@ -75,10 +70,7 @@ namespace PriceStalkerScrape
                 lblTotalPrice.Text = totalPrice + "€";
             }
         }
-        private void nudQty_ValueChanged(object sender, EventArgs e)
-        {
-            Calculate();
-        }
+        private void nudQty_ValueChanged(object sender, EventArgs e) => Calculate();
         private void ClearFields()
         {
             txtAddress.Text = "";
@@ -87,10 +79,7 @@ namespace PriceStalkerScrape
             nudQty.Value = 1;
             lblTotalPrice.Text = "";
         }
-        private void button1_Click(object sender, EventArgs e)
-        {
-            
-        }
+        private void button1_Click(object sender, EventArgs e){ }
 
         private void cbProduct_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -98,36 +87,31 @@ namespace PriceStalkerScrape
             nudQty.Value =1;
         }
 
-        private void Order_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
+        private void Order_FormClosed(object sender, FormClosedEventArgs e)=> this.Close();
+        private void button2_Click_1(object sender, EventArgs e)=> this.Close();
         private void button1_Click_1(object sender, EventArgs e)
         {
             using (var context = new Data.StalkerEntities())
             {
-                string customername = cbCustomer.SelectedItem.ToString();
-                var customer = context.Customer.Where(x => x.Name == customername).FirstOrDefault();
-                string productTitle = cbProduct.SelectedItem.ToString();
-                var product = context.tblProducts.Where(x => x.Title == productTitle).FirstOrDefault();
-                Data.Orders order = new Data.Orders()
+                if(cbProduct.SelectedIndex>=0 & cbCustomer.SelectedIndex >= 0)
                 {
-                    CustomerId = customer.Id,
-                    ProductId = product.Id,
-                    Address = txtAddress.Text,
-                    Qty = Int32.Parse(nudQty.Value.ToString()),
-                    TotalPrice = float.Parse(lblTotalPrice.Text.Replace("€", ""))
-                };
-                context.Orders.Add(order);
-                context.SaveChanges();
-                MessageBox.Show("Record saved successfully!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ClearFields();
+                    string customername = cbCustomer.SelectedItem.ToString();
+                    var customer = context.Customer.Where(x => x.Name == customername).FirstOrDefault();
+                    string productTitle = cbProduct.SelectedItem.ToString();
+                    var product = context.tblProducts.Where(x => x.Title == productTitle).FirstOrDefault();
+                    Data.Orders order = new Data.Orders()
+                    {
+                        CustomerId = customer.Id,
+                        ProductId = product.Id,
+                        Address = txtAddress.Text,
+                        Qty = Int32.Parse(nudQty.Value.ToString()),
+                        TotalPrice = float.Parse(lblTotalPrice.Text.Replace("€", ""))
+                    };
+                    context.Orders.Add(order);
+                    context.SaveChanges();
+                    MessageBox.Show("Record saved successfully!", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    ClearFields();
+                }
             }
         }
     }

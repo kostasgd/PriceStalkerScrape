@@ -204,8 +204,14 @@ namespace PriceStalkerScrape
 
         private void InitBrowser(ChromeOptions options)
         {
-            options.AddArguments("--window-size=1920,1080", "--disable-gpu", "--disable-extensions", "--start-minimized", "no-sandbox");
+            options.AddArgument("--disable-gpu");
+            options.AddArgument("log-level=3");
+            options.AddArgument("--ignore-certificate-errors");
+            options.AddArgument("window-size=1920x1080");
+            options.AddArgument("--disable-extensions");
+            options.AddArgument("no-sandbox");
             options.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
+            options.AddUserProfilePreference("profile.cookie_controls_mode", 1);
         }
 
         [STAThread]
@@ -220,8 +226,7 @@ namespace PriceStalkerScrape
                 List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
                 var chromeOptions = new ChromeOptions();
                 InitBrowser(chromeOptions);
-                chromeOptions.AddUserProfilePreference("profile.default_content_setting_values.cookies", 1);
-                chromeOptions.AddUserProfilePreference("profile.cookie_controls_mode", 1);
+                
                 var chromeDriverService = ChromeDriverService.CreateDefaultService();
                 chromeDriverService.HideCommandPromptWindow = true;
                 try
@@ -231,8 +236,8 @@ namespace PriceStalkerScrape
                         browser.Manage().Cookies.DeleteAllCookies();
                         browser.Url = url;
                         browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
-                        var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(60));
-                        Thread.Sleep(1500);
+                        var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(120));
+                        Thread.Sleep(500);
                         var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
                         btn.Click();
                         var myElement = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'pros')]/li"))).ToList();
@@ -277,6 +282,7 @@ namespace PriceStalkerScrape
                         var queryForCons = cons?.GroupBy(x => x.Text)?
                           .Where(g => g.Count() > 1)
                           .ToDictionary(x => x.Key, y => y.Count());
+
                         List<string> testcons = new List<string>();
                         if (queryForCons != null)
                         {
@@ -330,11 +336,11 @@ namespace PriceStalkerScrape
 
                         List<IWebElement> e = new List<IWebElement>();
                         e.AddRange(wait.Until(x => x.FindElements(By.XPath("//*[text()='To προϊόν δεν υπάρχει πλέον στο Skroutz']"))));
-                        //checking element count in list
+
                         if (e.Count < 1)
                         {
                             Thread.Sleep(250);
-                            var title = wait.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
+                            var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
                             var prices = wait?.Until(x => x.FindElements(By.ClassName("dominant-price")))?.FirstOrDefault();
                             var defaultprices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
 
@@ -531,9 +537,10 @@ namespace PriceStalkerScrape
                             foreach (var link in data)
                             {
                                 browser.Url = link.Link;
-                                var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(20));
+                                Thread.Sleep(1500);
+                                var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(60));
                                 browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
-                                //var prices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
+                                var mprices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
                                 var prices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
                                 Application.DoEvents();
                                 var bestpprices = wait.Until(x => x.FindElements(By.XPath("//div[@class='prices__price']/a"))).FirstOrDefault();
@@ -856,10 +863,7 @@ namespace PriceStalkerScrape
 
         #endregion "String Comparison"
 
-        private async void btnLoad_Click(object sender, EventArgs e)
-        {
-            await LoadGraph();
-        }
+        private async void btnLoad_Click(object sender, EventArgs e)=> await LoadGraph();
         private Task LoadGraph()
         {
             var tsk = Task.Run(() =>
