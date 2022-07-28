@@ -42,7 +42,7 @@
             this.materialRaisedButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.pieChart1 = new LiveCharts.WinForms.PieChart();
             this.txtLink = new System.Windows.Forms.TextBox();
-            this.rtbImpressions = new System.Windows.Forms.RichTextBox();
+            this.rtbProsImpressions = new System.Windows.Forms.RichTextBox();
             this.materialFlatButton1 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -60,6 +60,11 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.pBPros = new System.Windows.Forms.PictureBox();
+            this.pBCons = new System.Windows.Forms.PictureBox();
+            this.pbSoso = new System.Windows.Forms.PictureBox();
+            this.rtbCons = new System.Windows.Forms.RichTextBox();
+            this.rtbSoso = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -75,12 +80,15 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).BeginInit();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pBPros)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBCons)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSoso)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
             // 
             this.lblProductTitle.AutoSize = true;
-            this.lblProductTitle.Location = new System.Drawing.Point(23, 48);
+            this.lblProductTitle.Location = new System.Drawing.Point(12, 48);
             this.lblProductTitle.Name = "lblProductTitle";
             this.lblProductTitle.Size = new System.Drawing.Size(0, 20);
             this.lblProductTitle.TabIndex = 9;
@@ -88,7 +96,7 @@
             // lblProductPrice
             // 
             this.lblProductPrice.AutoSize = true;
-            this.lblProductPrice.Location = new System.Drawing.Point(379, 74);
+            this.lblProductPrice.Location = new System.Drawing.Point(956, 50);
             this.lblProductPrice.Name = "lblProductPrice";
             this.lblProductPrice.Size = new System.Drawing.Size(0, 20);
             this.lblProductPrice.TabIndex = 10;
@@ -96,7 +104,7 @@
             // lblProductRating
             // 
             this.lblProductRating.AutoSize = true;
-            this.lblProductRating.Location = new System.Drawing.Point(461, 74);
+            this.lblProductRating.Location = new System.Drawing.Point(892, 51);
             this.lblProductRating.Name = "lblProductRating";
             this.lblProductRating.Size = new System.Drawing.Size(0, 20);
             this.lblProductRating.TabIndex = 11;
@@ -139,13 +147,18 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.rtbSoso);
+            this.tabPage1.Controls.Add(this.rtbCons);
+            this.tabPage1.Controls.Add(this.pbSoso);
+            this.tabPage1.Controls.Add(this.pBCons);
+            this.tabPage1.Controls.Add(this.pBPros);
             this.tabPage1.Controls.Add(this.pictureBox1);
             this.tabPage1.Controls.Add(this.lblCompare);
             this.tabPage1.Controls.Add(this.btnCompare);
             this.tabPage1.Controls.Add(this.materialRaisedButton1);
             this.tabPage1.Controls.Add(this.pieChart1);
             this.tabPage1.Controls.Add(this.txtLink);
-            this.tabPage1.Controls.Add(this.rtbImpressions);
+            this.tabPage1.Controls.Add(this.rtbProsImpressions);
             this.tabPage1.Controls.Add(this.materialFlatButton1);
             this.tabPage1.Controls.Add(this.lblProductRating);
             this.tabPage1.Controls.Add(this.lblProductTitle);
@@ -159,6 +172,7 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
+            this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // pictureBox1
             // 
@@ -172,7 +186,7 @@
             // lblCompare
             // 
             this.lblCompare.AutoSize = true;
-            this.lblCompare.Location = new System.Drawing.Point(1057, 46);
+            this.lblCompare.Location = new System.Drawing.Point(1057, 50);
             this.lblCompare.Name = "lblCompare";
             this.lblCompare.Size = new System.Drawing.Size(0, 20);
             this.lblCompare.TabIndex = 20;
@@ -222,13 +236,13 @@
             this.txtLink.TabIndex = 14;
             this.txtLink.Text = resources.GetString("txtLink.Text");
             // 
-            // rtbImpressions
+            // rtbProsImpressions
             // 
-            this.rtbImpressions.Location = new System.Drawing.Point(8, 113);
-            this.rtbImpressions.Name = "rtbImpressions";
-            this.rtbImpressions.Size = new System.Drawing.Size(871, 234);
-            this.rtbImpressions.TabIndex = 15;
-            this.rtbImpressions.Text = "";
+            this.rtbProsImpressions.Location = new System.Drawing.Point(50, 113);
+            this.rtbProsImpressions.Name = "rtbProsImpressions";
+            this.rtbProsImpressions.Size = new System.Drawing.Size(829, 74);
+            this.rtbProsImpressions.TabIndex = 15;
+            this.rtbProsImpressions.Text = "";
             // 
             // materialFlatButton1
             // 
@@ -421,6 +435,52 @@
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
+            // pBPros
+            // 
+            this.pBPros.Image = ((System.Drawing.Image)(resources.GetObject("pBPros.Image")));
+            this.pBPros.Location = new System.Drawing.Point(3, 113);
+            this.pBPros.Name = "pBPros";
+            this.pBPros.Size = new System.Drawing.Size(41, 40);
+            this.pBPros.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pBPros.TabIndex = 22;
+            this.pBPros.TabStop = false;
+            // 
+            // pBCons
+            // 
+            this.pBCons.Image = ((System.Drawing.Image)(resources.GetObject("pBCons.Image")));
+            this.pBCons.Location = new System.Drawing.Point(3, 193);
+            this.pBCons.Name = "pBCons";
+            this.pBCons.Size = new System.Drawing.Size(41, 40);
+            this.pBCons.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pBCons.TabIndex = 23;
+            this.pBCons.TabStop = false;
+            // 
+            // pbSoso
+            // 
+            this.pbSoso.Image = ((System.Drawing.Image)(resources.GetObject("pbSoso.Image")));
+            this.pbSoso.Location = new System.Drawing.Point(6, 272);
+            this.pbSoso.Name = "pbSoso";
+            this.pbSoso.Size = new System.Drawing.Size(41, 40);
+            this.pbSoso.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbSoso.TabIndex = 24;
+            this.pbSoso.TabStop = false;
+            // 
+            // rtbCons
+            // 
+            this.rtbCons.Location = new System.Drawing.Point(50, 193);
+            this.rtbCons.Name = "rtbCons";
+            this.rtbCons.Size = new System.Drawing.Size(830, 73);
+            this.rtbCons.TabIndex = 25;
+            this.rtbCons.Text = "";
+            // 
+            // rtbSoso
+            // 
+            this.rtbSoso.Location = new System.Drawing.Point(50, 272);
+            this.rtbSoso.Name = "rtbSoso";
+            this.rtbSoso.Size = new System.Drawing.Size(830, 75);
+            this.rtbSoso.TabIndex = 26;
+            this.rtbSoso.Text = "";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -450,6 +510,9 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).EndInit();
             this.panel4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.pBPros)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBCons)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSoso)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -476,7 +539,7 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.RichTextBox rtbImpressions;
+        private System.Windows.Forms.RichTextBox rtbProsImpressions;
         private LiveCharts.WinForms.PieChart pieChart1;
         private System.Windows.Forms.DataGridView dgvProductsForCheck;
         private MaterialSkin.Controls.MaterialRaisedButton btnCompare;
@@ -486,6 +549,11 @@
         private System.Windows.Forms.DataGridView dgvProducts;
         private MaterialSkin.Controls.MaterialRaisedButton button2;
         private MaterialSkin.Controls.MaterialRaisedButton btnLoad;
+        private System.Windows.Forms.PictureBox pbSoso;
+        private System.Windows.Forms.PictureBox pBCons;
+        private System.Windows.Forms.PictureBox pBPros;
+        private System.Windows.Forms.RichTextBox rtbSoso;
+        private System.Windows.Forms.RichTextBox rtbCons;
     }
 }
 

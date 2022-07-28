@@ -7,6 +7,7 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
+
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -222,7 +223,7 @@ namespace PriceStalkerScrape
                 var url = txtLink.Text;
                 var web = new HtmlWeb();
                 var doc = web.Load(url);
-                rtbImpressions.Invoke(new Action(() => rtbImpressions.Text = ""));
+                rtbProsImpressions.Invoke(new Action(() => rtbProsImpressions.Text = ""));
                 List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
                 var chromeOptions = new ChromeOptions();
                 InitBrowser(chromeOptions);
@@ -315,10 +316,10 @@ namespace PriceStalkerScrape
                             common = common.Remove(common.Length - 1);
                         }
   
-                        GenerateRatingText(joinpros, "+");
-                        GenerateRatingText(joinsoso, "^");
-                        GenerateRatingText(joincons, "-");
-                        GenerateRatingText(common, "+-");
+                        GenerateRatingText(joinpros, "+",rtbProsImpressions);
+                        GenerateRatingText(joinsoso, "^",rtbSoso);
+                        GenerateRatingText(joincons, "-",rtbCons);
+                        //GenerateRatingText(common, "+-");
 
                         var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
                         var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
@@ -379,12 +380,12 @@ namespace PriceStalkerScrape
                 ListLabels.Add(value);
             }
         }
-        private void GenerateRatingText(string lst , string RatingOperator)
+        private void GenerateRatingText(string lst , string RatingOperator,RichTextBox rtb)
         {
             if (lst.Length > 0)
             {
-                rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += RatingOperator + lst.ToString() + "\n"));
-                rtbImpressions.Invoke(new Action(() => rtbImpressions.Text += "\n"));
+                rtb.Invoke(new Action(() => rtb.Text += RatingOperator + lst.ToString() + "\n"));
+                rtb.Invoke(new Action(() => rtb.Text += "\n"));
             }
         }
         private async void materialRaisedButton1_Click(object sender, EventArgs e)
@@ -532,12 +533,13 @@ namespace PriceStalkerScrape
                         InitBrowser(chromeOptions);
                         var chromeDriverService = ChromeDriverService.CreateDefaultService();
                         chromeDriverService.HideCommandPromptWindow = true;
+
                         using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
                         {
                             foreach (var link in data)
                             {
                                 browser.Url = link.Link;
-                                Thread.Sleep(1500);
+                                Thread.Sleep(200);
                                 var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(60));
                                 browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
                                 var mprices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
@@ -914,6 +916,11 @@ namespace PriceStalkerScrape
             Order order = new Order();
             order.ShowDialog();
             order.FormClosed += Order_FormClosed;
+        }
+
+        private void tabPage1_Click(object sender, EventArgs e)
+        {
+
         }
     }
     public class ComboboxItem
