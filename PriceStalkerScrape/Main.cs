@@ -28,15 +28,13 @@ namespace PriceStalkerScrape
 {
     public partial class Main : MaterialForm
     {
+        #region "Initialize & load"
         public Main()
         {
             InitializeComponent();
             LoadData();
             FillDatagridStats();
         }
-
-        #region "Initialize & load"
-
         public void FillDatagridStats()
         {
             using (var context = new Data.StalkerEntities())
@@ -106,7 +104,7 @@ namespace PriceStalkerScrape
 
         #endregion "Initialize & load"
 
-        #region "Insert"
+        #region "Insert & Checks"
 
         private void InsertIntoDb()
         {
@@ -170,9 +168,6 @@ namespace PriceStalkerScrape
                 }
             }
         }
-
-        #endregion "Insert"
-
         private bool Check()
         {
             if (lblProductPrice.Text.Length > 0 && lblProductPrice.Text.Length > 0 && lblProductRating.Text.Length > 0)
@@ -181,6 +176,8 @@ namespace PriceStalkerScrape
             }
             return false;
         }
+
+        #endregion "Insert"
 
         private void materialFlatButton1_Click_1(object sender, EventArgs e)
         {
@@ -205,12 +202,7 @@ namespace PriceStalkerScrape
 
         private void InitBrowser(ChromeOptions options)
         {
-            options.AddArgument("--disable-gpu");
-            options.AddArgument("log-level=3");
-            options.AddArgument("--ignore-certificate-errors");
-            options.AddArgument("window-size=1920x1080");
-            options.AddArgument("--disable-extensions");
-            options.AddArgument("no-sandbox");
+            options.AddArguments("--disable-gpu", "log-level=3", "--ignore-certificate-errors", "window-size=1920x1080", "--disable-extensions", "no-sandbox");
             options.AddUserProfilePreference("profile.default_content_setting_values.cookies", 2);
             options.AddUserProfilePreference("profile.cookie_controls_mode", 1);
         }
@@ -316,10 +308,9 @@ namespace PriceStalkerScrape
                             common = common.Remove(common.Length - 1);
                         }
   
-                        GenerateRatingText(joinpros, "+",rtbProsImpressions);
-                        GenerateRatingText(joinsoso, "^",rtbSoso);
-                        GenerateRatingText(joincons, "-",rtbCons);
-                        //GenerateRatingText(common, "+-");
+                        GenerateRatingText(joinpros,rtbProsImpressions);
+                        GenerateRatingText(joinsoso,rtbSoso);
+                        GenerateRatingText(joincons,rtbCons);
 
                         var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
                         var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
@@ -380,11 +371,11 @@ namespace PriceStalkerScrape
                 ListLabels.Add(value);
             }
         }
-        private void GenerateRatingText(string lst , string RatingOperator,RichTextBox rtb)
+        private void GenerateRatingText(string lst ,RichTextBox rtb)
         {
             if (lst.Length > 0)
             {
-                rtb.Invoke(new Action(() => rtb.Text += RatingOperator + lst.ToString() + "\n"));
+                rtb.Invoke(new Action(() => rtb.Text += lst.ToString() + "\n"));
                 rtb.Invoke(new Action(() => rtb.Text += "\n"));
             }
         }
@@ -519,6 +510,7 @@ namespace PriceStalkerScrape
         #endregion "Scrape"
 
         private async void materialRaisedButton2_Click(object sender, EventArgs e) => await GetPriceHistoryInfo();
+        #region
         public Task GetPriceHistoryInfo()
         {
             var tsk = Task.Run(() =>
@@ -578,9 +570,57 @@ namespace PriceStalkerScrape
                 {
                     MessageBox.Show(ex.Message);
                 }
-            });  
+            });
             return tsk;
         }
+
+        private Task LoadGraph()
+        {
+            var tsk = Task.Run(() =>
+            {
+                try
+                {
+                    if (dgvProductsForCheck.SelectedRows.Count > 0)
+                    {
+                        int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
+                        dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.Series.Clear()));
+                        using (var context = new Data.StalkerEntities())
+                        {
+                            var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                            int counter = 0;
+                            LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
+                            foreach (var item in data)
+                            {
+                                double[] ys2 = { item.Price };
+                                dgvProductsForCheck.Invoke(new Action(() =>
+                                    columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
+                                    {
+                                        Title = item.Date.ToString(),
+                                        DataLabels = true,
+                                        ColumnPadding = 15,
+                                        VerticalAlignment = VerticalAlignment.Stretch,
+                                        Margin = new Thickness(10, 10, 10, 10),
+                                        PointGeometry = DefaultGeometries.Circle,
+                                        Values = new LiveCharts.ChartValues<double>(ys2),
+                                    }
+                                ));
+                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.LegendLocation = LegendLocation.Right));
+                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.FontStretch = new FontStretch()));
+                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.Series.Add(columnSeries[counter])));
+                                counter++;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                }
+            });
+            return tsk;
+        }
+        #endregion
+
         private void IsButtonHandled()
         {
             if (materialRaisedButton2.IsHandleCreated)
@@ -626,7 +666,7 @@ namespace PriceStalkerScrape
         private void dgvProducts_CellClick(object sender, DataGridViewCellEventArgs e){ }
         private void btnCompare_Click(object sender, EventArgs e) => ComparePrices();
 
-        #region "Price Comparators"
+        #region "Price Compare"
 
         private async void ComparePrices()
         {
@@ -808,7 +848,7 @@ namespace PriceStalkerScrape
             return tsk;
         }
 
-        #endregion "Price Comparators"
+        #endregion "Price Compare"
 
         #region "String Comparison"
         public static double CompareStrings(string str1, string str2)
@@ -866,51 +906,7 @@ namespace PriceStalkerScrape
         #endregion "String Comparison"
 
         private async void btnLoad_Click(object sender, EventArgs e)=> await LoadGraph();
-        private Task LoadGraph()
-        {
-            var tsk = Task.Run(() =>
-            {
-                try
-                {
-                    if (dgvProductsForCheck.SelectedRows.Count > 0)
-                    {
-                        int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
-                        dgvProductsForCheck.Invoke(new Action(()=> cartesianChart1.Series.Clear()));
-                        using (var context = new Data.StalkerEntities())
-                        {
-                            var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
-                            int counter = 0;
-                            LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                            foreach (var item in data)
-                            {
-                                double[] ys2 = { item.Price };
-                                dgvProductsForCheck.Invoke(new Action(() =>
-                                    columnSeries[counter] = new LiveCharts.Wpf.ColumnSeries()
-                                    {
-                                        Title = item.Date.ToString(),
-                                        DataLabels = true,
-                                        ColumnPadding = 15,
-                                        VerticalAlignment = VerticalAlignment.Stretch,
-                                        Margin = new Thickness(10, 10, 10, 10),
-                                        PointGeometry = DefaultGeometries.Circle,
-                                        Values = new LiveCharts.ChartValues<double>(ys2),
-                                    }
-                                ));
-                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.LegendLocation = LegendLocation.Right));
-                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.FontStretch = new FontStretch()));
-                                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.Series.Add(columnSeries[counter])));
-                                counter++;
-                            }
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            });
-            return tsk;
-        }
+        
         private void button2_Click_1(object sender, EventArgs e)
         {
             Order order = new Order();

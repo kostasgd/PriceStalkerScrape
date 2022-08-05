@@ -36,6 +36,11 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.rtbSoso = new System.Windows.Forms.RichTextBox();
+            this.rtbCons = new System.Windows.Forms.RichTextBox();
+            this.pbSoso = new System.Windows.Forms.PictureBox();
+            this.pBCons = new System.Windows.Forms.PictureBox();
+            this.pBPros = new System.Windows.Forms.PictureBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lblCompare = new System.Windows.Forms.Label();
             this.btnCompare = new MaterialSkin.Controls.MaterialRaisedButton();
@@ -60,14 +65,12 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.pBPros = new System.Windows.Forms.PictureBox();
-            this.pBCons = new System.Windows.Forms.PictureBox();
-            this.pbSoso = new System.Windows.Forms.PictureBox();
-            this.rtbCons = new System.Windows.Forms.RichTextBox();
-            this.rtbSoso = new System.Windows.Forms.RichTextBox();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSoso)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBCons)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBPros)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPage2.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -80,9 +83,6 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).BeginInit();
             this.panel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pBPros)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBCons)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSoso)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -96,7 +96,7 @@
             // lblProductPrice
             // 
             this.lblProductPrice.AutoSize = true;
-            this.lblProductPrice.Location = new System.Drawing.Point(956, 50);
+            this.lblProductPrice.Location = new System.Drawing.Point(980, 50);
             this.lblProductPrice.Name = "lblProductPrice";
             this.lblProductPrice.Size = new System.Drawing.Size(0, 20);
             this.lblProductPrice.TabIndex = 10;
@@ -104,7 +104,7 @@
             // lblProductRating
             // 
             this.lblProductRating.AutoSize = true;
-            this.lblProductRating.Location = new System.Drawing.Point(892, 51);
+            this.lblProductRating.Location = new System.Drawing.Point(908, 51);
             this.lblProductRating.Name = "lblProductRating";
             this.lblProductRating.Size = new System.Drawing.Size(0, 20);
             this.lblProductRating.TabIndex = 11;
@@ -126,7 +126,7 @@
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(0, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1440, 614);
+            this.panel1.Size = new System.Drawing.Size(1380, 614);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
@@ -142,7 +142,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1440, 611);
+            this.tabControl1.Size = new System.Drawing.Size(1380, 611);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
@@ -168,17 +168,65 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1432, 574);
+            this.tabPage1.Size = new System.Drawing.Size(1372, 574);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
             this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
+            // rtbSoso
+            // 
+            this.rtbSoso.Location = new System.Drawing.Point(50, 272);
+            this.rtbSoso.Name = "rtbSoso";
+            this.rtbSoso.ReadOnly = true;
+            this.rtbSoso.Size = new System.Drawing.Size(830, 75);
+            this.rtbSoso.TabIndex = 26;
+            this.rtbSoso.Text = "";
+            // 
+            // rtbCons
+            // 
+            this.rtbCons.Location = new System.Drawing.Point(50, 193);
+            this.rtbCons.Name = "rtbCons";
+            this.rtbCons.ReadOnly = true;
+            this.rtbCons.Size = new System.Drawing.Size(830, 73);
+            this.rtbCons.TabIndex = 25;
+            this.rtbCons.Text = "";
+            // 
+            // pbSoso
+            // 
+            this.pbSoso.Image = ((System.Drawing.Image)(resources.GetObject("pbSoso.Image")));
+            this.pbSoso.Location = new System.Drawing.Point(6, 272);
+            this.pbSoso.Name = "pbSoso";
+            this.pbSoso.Size = new System.Drawing.Size(41, 40);
+            this.pbSoso.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pbSoso.TabIndex = 24;
+            this.pbSoso.TabStop = false;
+            // 
+            // pBCons
+            // 
+            this.pBCons.Image = ((System.Drawing.Image)(resources.GetObject("pBCons.Image")));
+            this.pBCons.Location = new System.Drawing.Point(3, 193);
+            this.pBCons.Name = "pBCons";
+            this.pBCons.Size = new System.Drawing.Size(41, 40);
+            this.pBCons.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pBCons.TabIndex = 23;
+            this.pBCons.TabStop = false;
+            // 
+            // pBPros
+            // 
+            this.pBPros.Image = ((System.Drawing.Image)(resources.GetObject("pBPros.Image")));
+            this.pBPros.Location = new System.Drawing.Point(3, 113);
+            this.pBPros.Name = "pBPros";
+            this.pBPros.Size = new System.Drawing.Size(41, 40);
+            this.pBPros.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pBPros.TabIndex = 22;
+            this.pBPros.TabStop = false;
+            // 
             // pictureBox1
             // 
             this.pictureBox1.Location = new System.Drawing.Point(886, 113);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(539, 428);
+            this.pictureBox1.Size = new System.Drawing.Size(462, 458);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 21;
             this.pictureBox1.TabStop = false;
@@ -186,7 +234,7 @@
             // lblCompare
             // 
             this.lblCompare.AutoSize = true;
-            this.lblCompare.Location = new System.Drawing.Point(1057, 50);
+            this.lblCompare.Location = new System.Drawing.Point(1049, 50);
             this.lblCompare.Name = "lblCompare";
             this.lblCompare.Size = new System.Drawing.Size(0, 20);
             this.lblCompare.TabIndex = 20;
@@ -197,11 +245,11 @@
             this.btnCompare.FlatAppearance.BorderColor = System.Drawing.Color.Black;
             this.btnCompare.FlatAppearance.BorderSize = 5;
             this.btnCompare.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCompare.Location = new System.Drawing.Point(1049, 6);
+            this.btnCompare.Location = new System.Drawing.Point(1044, 7);
             this.btnCompare.MouseState = MaterialSkin.MouseState.HOVER;
             this.btnCompare.Name = "btnCompare";
             this.btnCompare.Primary = true;
-            this.btnCompare.Size = new System.Drawing.Size(173, 33);
+            this.btnCompare.Size = new System.Drawing.Size(149, 33);
             this.btnCompare.TabIndex = 19;
             this.btnCompare.Text = "Compared Price";
             this.btnCompare.UseVisualStyleBackColor = true;
@@ -210,7 +258,7 @@
             // materialRaisedButton1
             // 
             this.materialRaisedButton1.Depth = 0;
-            this.materialRaisedButton1.Location = new System.Drawing.Point(8, 7);
+            this.materialRaisedButton1.Location = new System.Drawing.Point(3, 7);
             this.materialRaisedButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton1.Name = "materialRaisedButton1";
             this.materialRaisedButton1.Primary = true;
@@ -224,13 +272,13 @@
             // 
             this.pieChart1.Location = new System.Drawing.Point(885, 113);
             this.pieChart1.Name = "pieChart1";
-            this.pieChart1.Size = new System.Drawing.Size(540, 445);
+            this.pieChart1.Size = new System.Drawing.Size(478, 445);
             this.pieChart1.TabIndex = 17;
             this.pieChart1.Text = "pieChart1";
             // 
             // txtLink
             // 
-            this.txtLink.Location = new System.Drawing.Point(122, 7);
+            this.txtLink.Location = new System.Drawing.Point(117, 7);
             this.txtLink.Name = "txtLink";
             this.txtLink.Size = new System.Drawing.Size(921, 26);
             this.txtLink.TabIndex = 14;
@@ -240,6 +288,7 @@
             // 
             this.rtbProsImpressions.Location = new System.Drawing.Point(50, 113);
             this.rtbProsImpressions.Name = "rtbProsImpressions";
+            this.rtbProsImpressions.ReadOnly = true;
             this.rtbProsImpressions.Size = new System.Drawing.Size(829, 74);
             this.rtbProsImpressions.TabIndex = 15;
             this.rtbProsImpressions.Text = "";
@@ -247,11 +296,11 @@
             // materialFlatButton1
             // 
             this.materialFlatButton1.Depth = 0;
-            this.materialFlatButton1.Location = new System.Drawing.Point(1238, 6);
+            this.materialFlatButton1.Location = new System.Drawing.Point(1199, 7);
             this.materialFlatButton1.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialFlatButton1.Name = "materialFlatButton1";
             this.materialFlatButton1.Primary = true;
-            this.materialFlatButton1.Size = new System.Drawing.Size(187, 33);
+            this.materialFlatButton1.Size = new System.Drawing.Size(161, 33);
             this.materialFlatButton1.TabIndex = 13;
             this.materialFlatButton1.Text = "Import To Database";
             this.materialFlatButton1.UseVisualStyleBackColor = true;
@@ -435,57 +484,11 @@
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
-            // pBPros
-            // 
-            this.pBPros.Image = ((System.Drawing.Image)(resources.GetObject("pBPros.Image")));
-            this.pBPros.Location = new System.Drawing.Point(3, 113);
-            this.pBPros.Name = "pBPros";
-            this.pBPros.Size = new System.Drawing.Size(41, 40);
-            this.pBPros.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pBPros.TabIndex = 22;
-            this.pBPros.TabStop = false;
-            // 
-            // pBCons
-            // 
-            this.pBCons.Image = ((System.Drawing.Image)(resources.GetObject("pBCons.Image")));
-            this.pBCons.Location = new System.Drawing.Point(3, 193);
-            this.pBCons.Name = "pBCons";
-            this.pBCons.Size = new System.Drawing.Size(41, 40);
-            this.pBCons.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pBCons.TabIndex = 23;
-            this.pBCons.TabStop = false;
-            // 
-            // pbSoso
-            // 
-            this.pbSoso.Image = ((System.Drawing.Image)(resources.GetObject("pbSoso.Image")));
-            this.pbSoso.Location = new System.Drawing.Point(6, 272);
-            this.pbSoso.Name = "pbSoso";
-            this.pbSoso.Size = new System.Drawing.Size(41, 40);
-            this.pbSoso.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.pbSoso.TabIndex = 24;
-            this.pbSoso.TabStop = false;
-            // 
-            // rtbCons
-            // 
-            this.rtbCons.Location = new System.Drawing.Point(50, 193);
-            this.rtbCons.Name = "rtbCons";
-            this.rtbCons.Size = new System.Drawing.Size(830, 73);
-            this.rtbCons.TabIndex = 25;
-            this.rtbCons.Text = "";
-            // 
-            // rtbSoso
-            // 
-            this.rtbSoso.Location = new System.Drawing.Point(50, 272);
-            this.rtbSoso.Name = "rtbSoso";
-            this.rtbSoso.Size = new System.Drawing.Size(830, 75);
-            this.rtbSoso.TabIndex = 26;
-            this.rtbSoso.Text = "";
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1440, 680);
+            this.ClientSize = new System.Drawing.Size(1380, 680);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -498,6 +501,9 @@
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSoso)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBCons)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pBPros)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPage2.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
@@ -510,9 +516,6 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).EndInit();
             this.panel4.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pBPros)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pBCons)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pbSoso)).EndInit();
             this.ResumeLayout(false);
 
         }
