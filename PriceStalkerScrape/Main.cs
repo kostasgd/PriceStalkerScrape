@@ -7,9 +7,9 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
-
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.Entity.Validation;
 using System.IO;
@@ -28,6 +28,7 @@ namespace PriceStalkerScrape
 {
     public partial class Main : MaterialForm
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #region "Initialize & load"
         public Main()
         {
@@ -37,12 +38,19 @@ namespace PriceStalkerScrape
         }
         public void FillDatagridStats()
         {
-            using (var context = new Data.StalkerEntities())
+            try
             {
-                var data = context.tblProducts.ToList();
-                dgvProductsForCheck.DataSource = data.Select(x => new { x.Id, x.Title }).ToList();
-                dgvProductsForCheck.Columns[0].Width = 80;
-                dgvProductsForCheck.Columns[1].Width = 550;
+                using (var context = new Data.StalkerEntities())
+                {
+                    var data = context.tblProducts.ToList();
+                    dgvProductsForCheck.DataSource = data.Select(x => new { x.Id, x.Title }).ToList();
+                    dgvProductsForCheck.Columns[0].Width = 80;
+                    dgvProductsForCheck.Columns[1].Width = 550;
+                    Logger.Instance.WriteDebug("Debuging");
+                }
+            }catch(Exception ex)
+            {
+                Logger.Instance.WriteError("Error loading data.",ex);
             }
         }
 
@@ -62,22 +70,30 @@ namespace PriceStalkerScrape
 
         public void RemoveOldPrices()
         {
-            using (var context = new Data.StalkerEntities())
+            try
             {
-                var data = context.PriceHistory.ToList();
-                foreach (var d in data)
+                using (var context = new Data.StalkerEntities())
                 {
-                    DateTime now = DateTime.Now;
-                    DateTime priceHistory = d.Date;
-                    uint totalDays = (uint)now.Subtract(priceHistory).TotalDays;
-                    if (totalDays > 54)
+                    var data = context.PriceHistory.ToList();
+                    foreach (var d in data)
                     {
-                        var deletedRecord = context.PriceHistory.FirstOrDefault(x => x.Id == d.Id);
-                        context.PriceHistory.Remove(deletedRecord);
-                        context.SaveChanges();
+                        DateTime now = DateTime.Now;
+                        DateTime priceHistory = d.Date;
+                        uint totalDays = (uint)now.Subtract(priceHistory).TotalDays;
+                        if (totalDays > 50)
+                        {
+                            var deletedRecord = context.PriceHistory.FirstOrDefault(x => x.Id == d.Id);
+                            context.PriceHistory.Remove(deletedRecord);
+                            context.SaveChanges();
+                        }
                     }
                 }
             }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteError("Error removing old prices.", ex);
+                throw;
+            } 
         }
 
         [STAThread]
@@ -91,15 +107,22 @@ namespace PriceStalkerScrape
 
         private void LoadData()
         {
-            var stalkerEntities = new Data.StalkerEntities();
-            var ProductQuery = from t in stalkerEntities.tblProducts
-                               select new { t.Id, t.Title, t.Price, t.Rating, t.Link, t.Description };
-            dgvProducts.DataSource = ProductQuery.ToList();
-            var OrderQuery = from x in stalkerEntities.Orders
-                             select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
-            dgvOrders.DataSource = OrderQuery.ToList();
-            dgvOrders.Update();
-            dgvOrders.Refresh();
+            try
+            {
+                var stalkerEntities = new Data.StalkerEntities();
+                var ProductQuery = from t in stalkerEntities.tblProducts
+                                   select new { t.Id, t.Title, t.Price, t.Rating, t.Link, t.Description };
+                dgvProducts.DataSource = ProductQuery.ToList();
+                var OrderQuery = from x in stalkerEntities.Orders
+                                 select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
+                dgvOrders.DataSource = OrderQuery.ToList();
+                dgvOrders.Update();
+                dgvOrders.Refresh();
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.WriteError("Error loading data from entity framework.", ex);
+            }
         }
 
         #endregion "Initialize & load"
@@ -188,16 +211,23 @@ namespace PriceStalkerScrape
 
         private void dgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            DialogResult result = System.Windows.Forms.MessageBox.Show("Are you sure you wanna delete this record ?", "Delete ", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            try
             {
-                string Link = dgvProducts.SelectedRows[0].Cells["Link"].Value.ToString();
-                var stalkerEntities = new Data.StalkerEntities();
-                var selected = stalkerEntities.tblProducts.FirstOrDefault(x => x.Link == Link);
-                stalkerEntities.tblProducts.Remove(selected);
-                stalkerEntities.SaveChanges();
-                dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
+                DialogResult result = System.Windows.Forms.MessageBox.Show("Are you sure you wanna delete this record ?", "Delete ", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                {
+                    string Link = dgvProducts.SelectedRows[0].Cells["Link"].Value.ToString();
+                    var stalkerEntities = new Data.StalkerEntities();
+                    var selected = stalkerEntities.tblProducts.FirstOrDefault(x => x.Link == Link);
+                    stalkerEntities.tblProducts.Remove(selected);
+                    stalkerEntities.SaveChanges();
+                    dgvProducts.DataSource = stalkerEntities.tblProducts.ToList();
+                }
             }
+            catch(Exception ex)
+            {
+                Logger.Instance.WriteError("Error deleted data from datagridview.", ex);
+            } 
         }
 
         private void InitBrowser(ChromeOptions options)
@@ -353,6 +383,7 @@ namespace PriceStalkerScrape
                 catch (Exception ex)
                 {
                     System.Windows.MessageBox.Show(ex.Message);
+                    Logger.Instance.WriteError("Error from setimpression method.", ex);
                 }
             });
             return tsk;
@@ -400,6 +431,7 @@ namespace PriceStalkerScrape
             catch (System.NullReferenceException ex)
             {
                 MessageBox.Show(ex.Message);
+                Logger.Instance.WriteError("Error from scrape button.", ex);
             }
         }
 
@@ -502,6 +534,7 @@ namespace PriceStalkerScrape
                 catch (System.NullReferenceException ex)
                 {
                     MessageBox.Show(ex.Message);
+                    Logger.Instance.WriteError("Error from scraping bestprice proccess.", ex);
                 }
             });
             return tsk;
@@ -531,7 +564,7 @@ namespace PriceStalkerScrape
                             foreach (var link in data)
                             {
                                 browser.Url = link.Link;
-                                Thread.Sleep(200);
+                                Thread.Sleep(100);
                                 var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(60));
                                 browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
                                 var mprices = wait.Until(x => x.FindElements(By.XPath("//strong[@class='dominant-price']"))).FirstOrDefault();
@@ -569,6 +602,7 @@ namespace PriceStalkerScrape
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    Logger.Instance.WriteError("Error from checking new prices.", ex);
                 }
             });
             return tsk;
@@ -615,6 +649,7 @@ namespace PriceStalkerScrape
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    Logger.Instance.WriteError("Error from loading statistic graph.", ex);
                 }
             });
             return tsk;
@@ -787,6 +822,7 @@ namespace PriceStalkerScrape
                         catch (Exception ex)
                         {
                             MessageBox.Show(ex.Message);
+                            Logger.Instance.WriteError("Error from price compare with bestprice.", ex);
                         }
                         finally
                         {
@@ -839,6 +875,7 @@ namespace PriceStalkerScrape
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
+                    Logger.Instance.WriteError("Error from compare skroutz price.", ex);
                 }
                 finally
                 {
@@ -914,10 +951,6 @@ namespace PriceStalkerScrape
             order.FormClosed += Order_FormClosed;
         }
 
-        private void tabPage1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
     public class ComboboxItem
     {

@@ -106,6 +106,7 @@
     <Compile Include="Data\tblProducts.cs">
       <DependentUpon>Stalker.tt</DependentUpon>
     </Compile>
+    <Compile Include="Logger.cs" />
     <Compile Include="Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +188,9 @@
     </PackageReference>
     <PackageReference Include="LiveCharts.WinForms">
       <Version>0.9.7.1</Version>
+    </PackageReference>
+    <PackageReference Include="log4net">
+      <Version>2.0.15</Version>
     </PackageReference>
     <PackageReference Include="MaterialSkin">
       <Version>0.2.1</Version>
