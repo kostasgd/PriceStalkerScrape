@@ -9,7 +9,6 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.Entity.Validation;
 using System.IO;
@@ -243,8 +242,7 @@ namespace PriceStalkerScrape
             var tsk = Task.Run(() =>
             {
                 var url = txtLink.Text;
-                var web = new HtmlWeb();
-                var doc = web.Load(url);
+
                 rtbProsImpressions.Invoke(new Action(() => rtbProsImpressions.Text = ""));
                 List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
                 var chromeOptions = new ChromeOptions();
@@ -260,7 +258,7 @@ namespace PriceStalkerScrape
                         browser.Url = url;
                         browser.Manage().Window.Position = new System.Drawing.Point(0, -2000);
                         var wait = new WebDriverWait(browser, TimeSpan.FromSeconds(120));
-                        Thread.Sleep(500);
+                        Thread.Sleep(200);
                         var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
                         btn.Click();
                         var myElement = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'pros')]/li"))).ToList();
@@ -342,9 +340,6 @@ namespace PriceStalkerScrape
                         GenerateRatingText(joinsoso,rtbSoso);
                         GenerateRatingText(joincons,rtbCons);
 
-                        var countPositives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'pros')]")?.ToList();
-                        var countSoso = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'so-so')]")?.ToList();
-                        var countNegatives = doc?.DocumentNode?.SelectNodes("//ul[contains(@class,'cons')]")?.ToList();
                         List<int> ListLengths = new List<int>();
                         
                         InsertLengths(safepros.Value,ListLengths);
@@ -361,7 +356,6 @@ namespace PriceStalkerScrape
 
                         if (e.Count < 1)
                         {
-                            Thread.Sleep(250);
                             var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
                             var prices = wait?.Until(x => x.FindElements(By.ClassName("dominant-price")))?.FirstOrDefault();
                             var defaultprices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
@@ -489,11 +483,12 @@ namespace PriceStalkerScrape
                     string price = prices?.FirstOrDefault().InnerText.ToString();
                     var rating = doc?.DocumentNode?.SelectSingleNode("//div[contains(@class,'sc-bczRLJ bUJLMc')]/span")?.InnerText; //actual-rating
                     var picture = doc.DocumentNode.SelectSingleNode("//img[@itemprop='image']").Attributes["src"].Value;
-                    //var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'simple-description')]/ul/li").ToList();
                     var summary = doc?.DocumentNode?.SelectNodes("//div[contains(@class,'item-header__specs-list')]/ul/li")?.ToList(); //summary
                     string description = "";
                     WebClient wc = new WebClient();
-
+                    rtbCons.Invoke(new Action(()=>rtbCons.Clear()));
+                    rtbProsImpressions.Invoke(new Action(() =>rtbProsImpressions.Clear()));
+                    rtbSoso.Invoke(new Action(() =>rtbSoso.Clear()));
                     if (picture != null)
                     {
                         if (!picture.Contains(".webp"))
@@ -620,10 +615,10 @@ namespace PriceStalkerScrape
                         dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.Series.Clear()));
                         using (var context = new Data.StalkerEntities())
                         {
-                            var data = context.PriceHistory.Where(x => x.PId == id).OrderBy(x => x.Date).ToList();
+                            var data = context.PriceHistory.Where(x => x.PId == id).OrderByDescending(x => x.Date).ToList();
                             int counter = 0;
                             LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                            foreach (var item in data)
+                            foreach (var item in data.Take(8))
                             {
                                 double[] ys2 = { item.Price };
                                 dgvProductsForCheck.Invoke(new Action(() =>

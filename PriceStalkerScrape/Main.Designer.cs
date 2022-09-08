@@ -126,7 +126,7 @@
             this.panel1.Controls.Add(this.tabControl1);
             this.panel1.Location = new System.Drawing.Point(0, 66);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1380, 614);
+            this.panel1.Size = new System.Drawing.Size(1407, 614);
             this.panel1.TabIndex = 13;
             // 
             // tabControl1
@@ -142,7 +142,7 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 3);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1380, 611);
+            this.tabControl1.Size = new System.Drawing.Size(1407, 611);
             this.tabControl1.TabIndex = 13;
             // 
             // tabPage1
@@ -168,11 +168,10 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 33);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1372, 574);
+            this.tabPage1.Size = new System.Drawing.Size(1399, 574);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Scrap Tab";
             this.tabPage1.UseVisualStyleBackColor = true;
-            //this.tabPage1.Click += new System.EventHandler(this.tabPage1_Click);
             // 
             // rtbSoso
             // 
@@ -226,7 +225,7 @@
             // 
             this.pictureBox1.Location = new System.Drawing.Point(886, 113);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(462, 458);
+            this.pictureBox1.Size = new System.Drawing.Size(507, 458);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 21;
             this.pictureBox1.TabStop = false;
@@ -312,7 +311,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1432, 574);
+            this.tabPage2.Size = new System.Drawing.Size(1372, 574);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Products";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -339,7 +338,6 @@
             this.dgvProducts.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvProducts.Size = new System.Drawing.Size(1424, 565);
             this.dgvProducts.TabIndex = 0;
-            this.dgvProducts.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellClick);
             this.dgvProducts.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProducts_CellDoubleClick);
             // 
             // tabPage4
@@ -348,7 +346,7 @@
             this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1432, 574);
+            this.tabPage4.Size = new System.Drawing.Size(1372, 574);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Orders";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -359,7 +357,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 66);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1432, 508);
+            this.panel3.Size = new System.Drawing.Size(1372, 508);
             this.panel3.TabIndex = 3;
             // 
             // dgvOrders
@@ -372,7 +370,7 @@
             this.dgvOrders.RowTemplate.Height = 40;
             this.dgvOrders.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOrders.Size = new System.Drawing.Size(1432, 508);
+            this.dgvOrders.Size = new System.Drawing.Size(1372, 508);
             this.dgvOrders.TabIndex = 1;
             // 
             // panel2
@@ -381,7 +379,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1432, 66);
+            this.panel2.Size = new System.Drawing.Size(1372, 66);
             this.panel2.TabIndex = 2;
             // 
             // button2
@@ -405,7 +403,7 @@
             this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1432, 574);
+            this.tabPage3.Size = new System.Drawing.Size(1372, 574);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -417,7 +415,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(0, 66);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1432, 508);
+            this.panel5.Size = new System.Drawing.Size(1372, 508);
             this.panel5.TabIndex = 6;
             // 
             // dgvProductsForCheck
@@ -437,7 +435,7 @@
             // elementHost1
             // 
             this.elementHost1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.elementHost1.Location = new System.Drawing.Point(742, 0);
+            this.elementHost1.Location = new System.Drawing.Point(682, 0);
             this.elementHost1.Name = "elementHost1";
             this.elementHost1.Size = new System.Drawing.Size(690, 508);
             this.elementHost1.TabIndex = 3;
@@ -451,7 +449,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1432, 66);
+            this.panel4.Size = new System.Drawing.Size(1372, 66);
             this.panel4.TabIndex = 5;
             // 
             // btnLoad
@@ -474,7 +472,7 @@
             this.materialRaisedButton2.Depth = 0;
             this.materialRaisedButton2.Dock = System.Windows.Forms.DockStyle.Right;
             this.materialRaisedButton2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(1268, 0);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(1208, 0);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
@@ -488,7 +486,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1380, 680);
+            this.ClientSize = new System.Drawing.Size(1407, 680);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
