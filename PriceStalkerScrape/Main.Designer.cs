@@ -65,6 +65,7 @@
             this.panel4 = new System.Windows.Forms.Panel();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -311,7 +312,7 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 33);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(1372, 574);
+            this.tabPage2.Size = new System.Drawing.Size(1399, 574);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Products";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -346,7 +347,7 @@
             this.tabPage4.Controls.Add(this.panel2);
             this.tabPage4.Location = new System.Drawing.Point(4, 33);
             this.tabPage4.Name = "tabPage4";
-            this.tabPage4.Size = new System.Drawing.Size(1372, 574);
+            this.tabPage4.Size = new System.Drawing.Size(1399, 574);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Orders";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -357,7 +358,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(0, 66);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(1372, 508);
+            this.panel3.Size = new System.Drawing.Size(1399, 508);
             this.panel3.TabIndex = 3;
             // 
             // dgvOrders
@@ -370,7 +371,7 @@
             this.dgvOrders.RowTemplate.Height = 40;
             this.dgvOrders.RowTemplate.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvOrders.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvOrders.Size = new System.Drawing.Size(1372, 508);
+            this.dgvOrders.Size = new System.Drawing.Size(1399, 508);
             this.dgvOrders.TabIndex = 1;
             // 
             // panel2
@@ -379,7 +380,7 @@
             this.panel2.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel2.Location = new System.Drawing.Point(0, 0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1372, 66);
+            this.panel2.Size = new System.Drawing.Size(1399, 66);
             this.panel2.TabIndex = 2;
             // 
             // button2
@@ -403,7 +404,7 @@
             this.tabPage3.Controls.Add(this.panel4);
             this.tabPage3.Location = new System.Drawing.Point(4, 33);
             this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Size = new System.Drawing.Size(1372, 574);
+            this.tabPage3.Size = new System.Drawing.Size(1399, 574);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Dashboard";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -415,7 +416,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel5.Location = new System.Drawing.Point(0, 66);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1372, 508);
+            this.panel5.Size = new System.Drawing.Size(1399, 508);
             this.panel5.TabIndex = 6;
             // 
             // dgvProductsForCheck
@@ -435,7 +436,7 @@
             // elementHost1
             // 
             this.elementHost1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.elementHost1.Location = new System.Drawing.Point(682, 0);
+            this.elementHost1.Location = new System.Drawing.Point(709, 0);
             this.elementHost1.Name = "elementHost1";
             this.elementHost1.Size = new System.Drawing.Size(690, 508);
             this.elementHost1.TabIndex = 3;
@@ -444,12 +445,13 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.materialRaisedButton3);
             this.panel4.Controls.Add(this.btnLoad);
             this.panel4.Controls.Add(this.materialRaisedButton2);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(1372, 66);
+            this.panel4.Size = new System.Drawing.Size(1399, 66);
             this.panel4.TabIndex = 5;
             // 
             // btnLoad
@@ -472,7 +474,7 @@
             this.materialRaisedButton2.Depth = 0;
             this.materialRaisedButton2.Dock = System.Windows.Forms.DockStyle.Right;
             this.materialRaisedButton2.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.materialRaisedButton2.Location = new System.Drawing.Point(1208, 0);
+            this.materialRaisedButton2.Location = new System.Drawing.Point(1235, 0);
             this.materialRaisedButton2.MouseState = MaterialSkin.MouseState.HOVER;
             this.materialRaisedButton2.Name = "materialRaisedButton2";
             this.materialRaisedButton2.Primary = true;
@@ -481,6 +483,19 @@
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
+            // 
+            // materialRaisedButton3
+            // 
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(170, 0);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(157, 66);
+            this.materialRaisedButton3.TabIndex = 6;
+            this.materialRaisedButton3.Text = "Export to BMP";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            this.materialRaisedButton3.Click += new System.EventHandler(this.materialRaisedButton3_Click);
             // 
             // Main
             // 
@@ -555,6 +570,7 @@
         private System.Windows.Forms.PictureBox pBPros;
         private System.Windows.Forms.RichTextBox rtbSoso;
         private System.Windows.Forms.RichTextBox rtbCons;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
     }
 }
 

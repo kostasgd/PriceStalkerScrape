@@ -5,7 +5,7 @@ internal class Logger
     private static Logger mInstance;
     private Logger()
     {
-        log4net.Config.XmlConfigurator.Configure();
+        //log4net.Config.XmlConfigurator.Configure();
         mLog = log4net.LogManager.GetLogger("MainForm");
     }
     internal static Logger Instance

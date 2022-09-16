@@ -20,6 +20,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
+using System.Windows.Shapes;
 using Application = System.Windows.Forms.Application;
 using MessageBox = System.Windows.MessageBox;
 
@@ -246,7 +247,7 @@ namespace PriceStalkerScrape
                 rtbProsImpressions.Invoke(new Action(() => rtbProsImpressions.Text = ""));
                 List<string> listpros = new List<string>(), listsoso = new List<string>(), listcons = new List<string>();
                 var chromeOptions = new ChromeOptions();
-                InitBrowser(chromeOptions);
+                //InitBrowser(chromeOptions);
                 
                 var chromeDriverService = ChromeDriverService.CreateDefaultService();
                 chromeDriverService.HideCommandPromptWindow = true;
@@ -618,7 +619,7 @@ namespace PriceStalkerScrape
                             var data = context.PriceHistory.Where(x => x.PId == id).OrderByDescending(x => x.Date).ToList();
                             int counter = 0;
                             LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
-                            foreach (var item in data.Take(8))
+                            foreach (var item in data.Take(8).OrderBy(x=>x.Date))
                             {
                                 double[] ys2 = { item.Price };
                                 dgvProductsForCheck.Invoke(new Action(() =>
@@ -626,9 +627,8 @@ namespace PriceStalkerScrape
                                     {
                                         Title = item.Date.ToString(),
                                         DataLabels = true,
-                                        ColumnPadding = 15,
                                         VerticalAlignment = VerticalAlignment.Stretch,
-                                        Margin = new Thickness(10, 10, 10, 10),
+                                        Margin = new Thickness(6, 6,6, 6),
                                         PointGeometry = DefaultGeometries.Circle,
                                         Values = new LiveCharts.ChartValues<double>(ys2),
                                     }
@@ -946,6 +946,18 @@ namespace PriceStalkerScrape
             order.FormClosed += Order_FormClosed;
         }
 
+        private void materialRaisedButton3_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if(sfd.ShowDialog()== DialogResult.OK)
+            {
+                sfd.Title = "Save chart to image";
+                System.Drawing.Bitmap bmp = new System.Drawing.Bitmap((int)cartesianChart1.ActualWidth, (int)cartesianChart1.ActualHeight);
+                elementHost1.DrawToBitmap(bmp, new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height));
+                bmp.Save(System.IO.Path.GetFullPath(sfd.FileName), System.Drawing.Imaging.ImageFormat.Png);
+            }
+            
+        }
     }
     public class ComboboxItem
     {
