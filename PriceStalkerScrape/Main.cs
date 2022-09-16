@@ -4,6 +4,7 @@ using LiveCharts.Wpf;
 using MaterialSkin;
 using MaterialSkin.Controls;
 using Microsoft.Toolkit.Uwp.Notifications;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -109,6 +110,11 @@ namespace PriceStalkerScrape
         {
             try
             {
+                JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+                {
+                    DefaultValueHandling = DefaultValueHandling.Ignore,
+                    NullValueHandling = NullValueHandling.Ignore
+                };
                 var stalkerEntities = new Data.StalkerEntities();
                 var ProductQuery = from t in stalkerEntities.tblProducts
                                    select new { t.Id, t.Title, t.Price, t.Rating, t.Link, t.Description };
@@ -603,7 +609,7 @@ namespace PriceStalkerScrape
             });
             return tsk;
         }
-
+        LiveCharts.Wpf.ColumnSeries[] columnSeries;
         private Task LoadGraph()
         {
             var tsk = Task.Run(() =>
@@ -618,7 +624,7 @@ namespace PriceStalkerScrape
                         {
                             var data = context.PriceHistory.Where(x => x.PId == id).OrderByDescending(x => x.Date).ToList();
                             int counter = 0;
-                            LiveCharts.Wpf.ColumnSeries[] columnSeries = new ColumnSeries[data.Count];
+                            columnSeries = new ColumnSeries[data.Count];
                             foreach (var item in data.Take(8).OrderBy(x=>x.Date))
                             {
                                 double[] ys2 = { item.Price };
@@ -948,15 +954,40 @@ namespace PriceStalkerScrape
 
         private void materialRaisedButton3_Click(object sender, EventArgs e)
         {
+            ExportToPng();
+        }
+        private void ExportToPng()
+        {
             SaveFileDialog sfd = new SaveFileDialog();
-            if(sfd.ShowDialog()== DialogResult.OK)
+            if (sfd.ShowDialog() == DialogResult.OK)
             {
                 sfd.Title = "Save chart to image";
                 System.Drawing.Bitmap bmp = new System.Drawing.Bitmap((int)cartesianChart1.ActualWidth, (int)cartesianChart1.ActualHeight);
                 elementHost1.DrawToBitmap(bmp, new System.Drawing.Rectangle(0, 0, bmp.Width, bmp.Height));
                 bmp.Save(System.IO.Path.GetFullPath(sfd.FileName), System.Drawing.Imaging.ImageFormat.Png);
             }
-            
+        }
+
+        private void materialRaisedButton4_Click(object sender, EventArgs e)
+        {
+            if (dgvProductsForCheck.SelectedRows.Count > 0)
+            {
+                int id = Int32.Parse(dgvProductsForCheck.SelectedRows[0].Cells["Id"].Value.ToString());
+                dgvProductsForCheck.Invoke(new Action(() => cartesianChart1.Series.Clear()));
+                using (var context = new Data.StalkerEntities())
+                {
+                    var data = context.PriceHistory.Where(x => x.PId == id).OrderByDescending(x => x.Date).ToList();
+                    var jsonresult = JsonConvert.SerializeObject(data);
+                    SaveFileDialog sfd = new SaveFileDialog();
+                    sfd.DefaultExt = ".json";
+                    sfd.Title = "Save json file";
+                    sfd.InitialDirectory = "C:\\";
+                    if (sfd.ShowDialog() == DialogResult.OK)
+                    {
+                        System.IO.File.WriteAllText(System.IO.Path.GetFullPath(sfd.FileName), jsonresult);
+                    }
+                }
+            }
         }
     }
     public class ComboboxItem

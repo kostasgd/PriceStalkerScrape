@@ -63,9 +63,10 @@
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -445,6 +446,7 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.materialRaisedButton4);
             this.panel4.Controls.Add(this.materialRaisedButton3);
             this.panel4.Controls.Add(this.btnLoad);
             this.panel4.Controls.Add(this.materialRaisedButton2);
@@ -453,6 +455,19 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(1399, 66);
             this.panel4.TabIndex = 5;
+            // 
+            // materialRaisedButton3
+            // 
+            this.materialRaisedButton3.Depth = 0;
+            this.materialRaisedButton3.Location = new System.Drawing.Point(170, 0);
+            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton3.Name = "materialRaisedButton3";
+            this.materialRaisedButton3.Primary = true;
+            this.materialRaisedButton3.Size = new System.Drawing.Size(157, 66);
+            this.materialRaisedButton3.TabIndex = 6;
+            this.materialRaisedButton3.Text = "Export to BMP";
+            this.materialRaisedButton3.UseVisualStyleBackColor = true;
+            this.materialRaisedButton3.Click += new System.EventHandler(this.materialRaisedButton3_Click);
             // 
             // btnLoad
             // 
@@ -484,18 +499,18 @@
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
-            // materialRaisedButton3
+            // materialRaisedButton4
             // 
-            this.materialRaisedButton3.Depth = 0;
-            this.materialRaisedButton3.Location = new System.Drawing.Point(170, 0);
-            this.materialRaisedButton3.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton3.Name = "materialRaisedButton3";
-            this.materialRaisedButton3.Primary = true;
-            this.materialRaisedButton3.Size = new System.Drawing.Size(157, 66);
-            this.materialRaisedButton3.TabIndex = 6;
-            this.materialRaisedButton3.Text = "Export to BMP";
-            this.materialRaisedButton3.UseVisualStyleBackColor = true;
-            this.materialRaisedButton3.Click += new System.EventHandler(this.materialRaisedButton3_Click);
+            this.materialRaisedButton4.Depth = 0;
+            this.materialRaisedButton4.Location = new System.Drawing.Point(333, 0);
+            this.materialRaisedButton4.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton4.Name = "materialRaisedButton4";
+            this.materialRaisedButton4.Primary = true;
+            this.materialRaisedButton4.Size = new System.Drawing.Size(157, 66);
+            this.materialRaisedButton4.TabIndex = 7;
+            this.materialRaisedButton4.Text = "Export to json";
+            this.materialRaisedButton4.UseVisualStyleBackColor = true;
+            this.materialRaisedButton4.Click += new System.EventHandler(this.materialRaisedButton4_Click);
             // 
             // Main
             // 
@@ -571,6 +586,7 @@
         private System.Windows.Forms.RichTextBox rtbSoso;
         private System.Windows.Forms.RichTextBox rtbCons;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
+        private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton4;
     }
 }
 
