@@ -63,10 +63,10 @@
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -456,6 +456,19 @@
             this.panel4.Size = new System.Drawing.Size(1399, 66);
             this.panel4.TabIndex = 5;
             // 
+            // materialRaisedButton4
+            // 
+            this.materialRaisedButton4.Depth = 0;
+            this.materialRaisedButton4.Location = new System.Drawing.Point(333, 0);
+            this.materialRaisedButton4.MouseState = MaterialSkin.MouseState.HOVER;
+            this.materialRaisedButton4.Name = "materialRaisedButton4";
+            this.materialRaisedButton4.Primary = true;
+            this.materialRaisedButton4.Size = new System.Drawing.Size(157, 66);
+            this.materialRaisedButton4.TabIndex = 7;
+            this.materialRaisedButton4.Text = "Export to json";
+            this.materialRaisedButton4.UseVisualStyleBackColor = true;
+            this.materialRaisedButton4.Click += new System.EventHandler(this.materialRaisedButton4_Click);
+            // 
             // materialRaisedButton3
             // 
             this.materialRaisedButton3.Depth = 0;
@@ -498,19 +511,6 @@
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
-            // 
-            // materialRaisedButton4
-            // 
-            this.materialRaisedButton4.Depth = 0;
-            this.materialRaisedButton4.Location = new System.Drawing.Point(333, 0);
-            this.materialRaisedButton4.MouseState = MaterialSkin.MouseState.HOVER;
-            this.materialRaisedButton4.Name = "materialRaisedButton4";
-            this.materialRaisedButton4.Primary = true;
-            this.materialRaisedButton4.Size = new System.Drawing.Size(157, 66);
-            this.materialRaisedButton4.TabIndex = 7;
-            this.materialRaisedButton4.Text = "Export to json";
-            this.materialRaisedButton4.UseVisualStyleBackColor = true;
-            this.materialRaisedButton4.Click += new System.EventHandler(this.materialRaisedButton4_Click);
             // 
             // Main
             // 

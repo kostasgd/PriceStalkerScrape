@@ -360,18 +360,27 @@ namespace PriceStalkerScrape
 
                         List<IWebElement> e = new List<IWebElement>();
                         e.AddRange(wait.Until(x => x.FindElements(By.XPath("//*[text()='To προϊόν δεν υπάρχει πλέον στο Skroutz']"))));
-
+                        string rtg = "";
                         if (e.Count < 1)
                         {
                             var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
                             var prices = wait?.Until(x => x.FindElements(By.ClassName("dominant-price")))?.FirstOrDefault();
                             var defaultprices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
-
-                            var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']")))?.Text;
+                            List<IWebElement> elementList = new List<IWebElement>();
+                            elementList.AddRange(browser.FindElements(By.XPath("//span[@itemprop='ratingValue']")));
+                            if (elementList.Count()>0)
+                            {
+                                rtg= wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text;
+                            }
+                            else
+                            {
+                                rtg ="0";
+                            }
+                            //var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text ;
                             var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
                             if (title != null && prices != null)
                             {
-                                Initialize(title.Text.ToString(), defaultprices.Text.ToString(), rating.ToString(), summary);
+                                Initialize(title.Text.ToString(), defaultprices.Text.ToString(), rtg, summary);
                             }
                             if (common.Length > 0)
                             {
@@ -625,7 +634,7 @@ namespace PriceStalkerScrape
                             var data = context.PriceHistory.Where(x => x.PId == id).OrderByDescending(x => x.Date).ToList();
                             int counter = 0;
                             columnSeries = new ColumnSeries[data.Count];
-                            foreach (var item in data.Take(8).OrderBy(x=>x.Date))
+                            foreach (var item in data.Take(10).OrderBy(x=>x.Date))
                             {
                                 double[] ys2 = { item.Price };
                                 dgvProductsForCheck.Invoke(new Action(() =>
@@ -767,7 +776,7 @@ namespace PriceStalkerScrape
                                     }
                                     counter++;
                                 }
-                                if (priceOnConteiner.Text != string.Empty)
+                                if (priceOnConteiner.Text != string.Empty || priceOnConteiner.Text=="0")
                                 {
                                     var searchResult = resultsPrices.FirstOrDefault();
                                     if (resultsPrices != null)
