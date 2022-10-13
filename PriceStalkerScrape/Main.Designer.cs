@@ -67,6 +67,8 @@
             this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
+            this.differenceValue = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -85,6 +87,7 @@
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).BeginInit();
             this.panel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.differenceValue)).BeginInit();
             this.SuspendLayout();
             // 
             // lblProductTitle
@@ -446,6 +449,8 @@
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.label1);
+            this.panel4.Controls.Add(this.differenceValue);
             this.panel4.Controls.Add(this.materialRaisedButton4);
             this.panel4.Controls.Add(this.materialRaisedButton3);
             this.panel4.Controls.Add(this.btnLoad);
@@ -512,6 +517,27 @@
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
             // 
+            // differenceValue
+            // 
+            this.differenceValue.Location = new System.Drawing.Point(718, 19);
+            this.differenceValue.Name = "differenceValue";
+            this.differenceValue.Size = new System.Drawing.Size(45, 29);
+            this.differenceValue.TabIndex = 8;
+            this.differenceValue.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(518, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(194, 24);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Διαφορά τιμής σε  € :";
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -544,6 +570,8 @@
             this.panel5.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvProductsForCheck)).EndInit();
             this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.differenceValue)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -587,6 +615,8 @@
         private System.Windows.Forms.RichTextBox rtbCons;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton3;
         private MaterialSkin.Controls.MaterialRaisedButton materialRaisedButton4;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.NumericUpDown differenceValue;
     }
 }
 

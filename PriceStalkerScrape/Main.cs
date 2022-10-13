@@ -122,7 +122,6 @@ namespace PriceStalkerScrape
                 var OrderQuery = from x in stalkerEntities.Orders
                                  select new { x.Id, x.CustomerId, x.Customer.Name, x.ProductId, x.tblProducts.Title, x.Address };
                 dgvOrders.DataSource = OrderQuery.ToList();
-                dgvOrders.Update();
                 dgvOrders.Refresh();
             }
             catch (Exception ex)
@@ -193,7 +192,6 @@ namespace PriceStalkerScrape
                             //    ve.PropertyName, ve.ErrorMessage);
                         }
                     }
-                    throw;
                 }
             }
         }
@@ -363,29 +361,27 @@ namespace PriceStalkerScrape
                         string rtg = "";
                         if (e.Count < 1)
                         {
-                            var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']")));
+                            var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']"))).Text ?? "Title Not Found" ;
                             var prices = wait?.Until(x => x.FindElements(By.ClassName("dominant-price")))?.FirstOrDefault();
                             var defaultprices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
                             List<IWebElement> elementList = new List<IWebElement>();
                             elementList.AddRange(browser.FindElements(By.XPath("//span[@itemprop='ratingValue']")));
                             if (elementList.Count()>0)
                             {
-                                rtg= wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text;
+                                rtg = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text;
                             }
                             else
                             {
                                 rtg ="0";
                             }
                             //var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text ;
+                            //https://www.skroutz.gr/s/37875447/Adidas-Adicolor-Classics-3-Stripes-%CE%91%CE%BD%CE%B4%CF%81%CE%B9%CE%BA%CF%8C-%CE%A6%CE%BF%CF%8D%CF%84%CE%B5%CF%81-Shadow-Maroon-HK7291.html?from=timeline
                             var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
                             if (title != null && prices != null)
                             {
-                                Initialize(title.Text.ToString(), defaultprices.Text.ToString(), rtg, summary);
+                                Initialize(title.ToString(),prices.Text, rtg, summary);
                             }
-                            if (common.Length > 0)
-                            {
-                                FillStatsChart(ListLengths, Labels);
-                            }
+                            FillStatsChart(ListLengths, Labels);
                         }
                         browser.Close();
                     }
@@ -682,7 +678,7 @@ namespace PriceStalkerScrape
             if (newprice != oldprice)
             {
                 float deservedDifference = (float)Math.Abs(newprice - oldprice);
-                if (deservedDifference >= 4)
+                if (deservedDifference >= double.Parse( differenceValue.Value.ToString()))//η διαφορά της προηγούμενης τιμής με την νέα 
                 {
                     using (var context = new Data.StalkerEntities())
                     {
