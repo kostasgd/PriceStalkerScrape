@@ -596,9 +596,6 @@ namespace PriceStalkerScrape
                                         compPrice = (decimal)Math.Round(decimal.Parse(bestpprice.ToString()), 2);
                                     }
                                     CheckPrices(link.Title, testlink, compPrice, (decimal)joinprice.Price);
-                                    Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == link.Id).FirstOrDefault();
-                                    updProduct.Id = link.Id;
-                                    updProduct.Price = (double)compPrice;
                                     context.SaveChanges();
                                 }
                             }
@@ -691,7 +688,10 @@ namespace PriceStalkerScrape
                                 Date = DateTime.Now
                             };
                             context.PriceHistory.Add(priceHistory);
+                            Data.tblProducts updProduct = context.tblProducts.Where(x => x.Id == pid).FirstOrDefault();
+                            updProduct.Price = (double)Math.Round(newprice, 2);
                             context.SaveChanges();
+                            LoadData();
                             new ToastContentBuilder()
                             .AddArgument("action", "viewConversation")
                                 .AddArgument("conversationId", 123)
