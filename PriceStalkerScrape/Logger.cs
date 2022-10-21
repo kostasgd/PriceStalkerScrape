@@ -3,8 +3,10 @@ internal class Logger
 {
     private readonly log4net.ILog mLog;
     private static Logger mInstance;
+
     private Logger()
     {
+        
         //log4net.Config.XmlConfigurator.Configure();
         mLog = log4net.LogManager.GetLogger("MainForm");
     }
@@ -13,6 +15,7 @@ internal class Logger
         get
         {
             if (mInstance == null)
+                log4net.Config.XmlConfigurator.Configure();
                 mInstance = new Logger();
             return mInstance;
         }

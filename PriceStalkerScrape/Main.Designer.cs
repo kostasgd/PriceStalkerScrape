@@ -63,12 +63,12 @@
             this.elementHost1 = new System.Windows.Forms.Integration.ElementHost();
             this.cartesianChart1 = new LiveCharts.Wpf.CartesianChart();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.differenceValue = new System.Windows.Forms.NumericUpDown();
             this.materialRaisedButton4 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton3 = new MaterialSkin.Controls.MaterialRaisedButton();
             this.btnLoad = new MaterialSkin.Controls.MaterialRaisedButton();
             this.materialRaisedButton2 = new MaterialSkin.Controls.MaterialRaisedButton();
-            this.differenceValue = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -461,6 +461,27 @@
             this.panel4.Size = new System.Drawing.Size(1399, 66);
             this.panel4.TabIndex = 5;
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(518, 21);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(194, 24);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Διαφορά τιμής σε  € :";
+            // 
+            // differenceValue
+            // 
+            this.differenceValue.Location = new System.Drawing.Point(718, 19);
+            this.differenceValue.Name = "differenceValue";
+            this.differenceValue.Size = new System.Drawing.Size(45, 29);
+            this.differenceValue.TabIndex = 8;
+            this.differenceValue.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            // 
             // materialRaisedButton4
             // 
             this.materialRaisedButton4.Depth = 0;
@@ -516,27 +537,6 @@
             this.materialRaisedButton2.Text = "Check new prices";
             this.materialRaisedButton2.UseVisualStyleBackColor = true;
             this.materialRaisedButton2.Click += new System.EventHandler(this.materialRaisedButton2_Click);
-            // 
-            // differenceValue
-            // 
-            this.differenceValue.Location = new System.Drawing.Point(718, 19);
-            this.differenceValue.Name = "differenceValue";
-            this.differenceValue.Size = new System.Drawing.Size(45, 29);
-            this.differenceValue.TabIndex = 8;
-            this.differenceValue.Value = new decimal(new int[] {
-            10,
-            0,
-            0,
-            0});
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(518, 21);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(194, 24);
-            this.label1.TabIndex = 9;
-            this.label1.Text = "Διαφορά τιμής σε  € :";
             // 
             // Main
             // 

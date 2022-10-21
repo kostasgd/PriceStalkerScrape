@@ -29,11 +29,11 @@ namespace PriceStalkerScrape
 {
     public partial class Main : MaterialForm
     {
-        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         #region "Initialize & load"
         public Main()
         {
             InitializeComponent();
+            log4net.Config.XmlConfigurator.Configure();
             LoadData();
             FillDatagridStats();
         }
@@ -433,6 +433,7 @@ namespace PriceStalkerScrape
                     pictureBox1.Visible = true;
                     await ScrapeBestPrice();
                 }
+                Logger.Instance.WriteDebug("Error from scrape button.");
             }
             catch (System.NullReferenceException ex)
             {
@@ -734,9 +735,9 @@ namespace PriceStalkerScrape
                 {
                     lblCompare.Invoke(new Action(() => lblCompare.Text = "Price loading.."));
                     var chromeOptions = new ChromeOptions();
-                    chromeOptions.AddArguments(
-                       "--disable-gpu", "--disable-extensions", "--start-minimized", "--headless", "--no-sandbox"
-                    );
+                    //chromeOptions.AddArguments(
+                    //   "--disable-gpu", "--disable-extensions", "--start-minimized", "--headless", "--no-sandbox"
+                    //);
                     var chromeDriverService = ChromeDriverService.CreateDefaultService();
                     chromeDriverService.HideCommandPromptWindow = true;
                     ChromeDriver browser = new ChromeDriver(chromeDriverService, chromeOptions);
@@ -793,8 +794,8 @@ namespace PriceStalkerScrape
                             {
                                 Regex re = new Regex(@"[0-9]{1,},[0-9]{0,2}€");
 
-                                var resultsPrices = driver?.FindElements(By.ClassName("prices__price"));
-                                var searchTitle = driver?.FindElements(By.ClassName("product__title"));//
+                                var resultsPrices = driver?.FindElements(By.ClassName("p__price--current")).FirstOrDefault();
+                                var searchTitle = driver?.FindElements(By.ClassName("p__title"));//
                                 var priceOnConteiner = driver?.FindElements(By.ClassName("product__cost-price")).FirstOrDefault();
                                 int index = 0, counter = 0;
                                 double max = 0;
@@ -807,16 +808,15 @@ namespace PriceStalkerScrape
                                     }
                                     counter++;
                                 }
-                                if (priceOnConteiner.Text != string.Empty)
+                                if (resultsPrices.Text != string.Empty)
                                 {
-                                    var searchResult = resultsPrices.FirstOrDefault();
                                     if (resultsPrices != null)
                                     {
-                                        if (re.IsMatch(priceOnConteiner.Text))
-                                        {
-                                            MatchCollection matchedAuthors = re.Matches(priceOnConteiner.Text);
+                                        //if (re.IsMatch(priceOnConteiner.Text))
+                                        //{
+                                            MatchCollection matchedAuthors = re.Matches(resultsPrices.Text);
                                             lblCompare.Invoke(new Action(() => lblCompare.Text = matchedAuthors[0].Value.ToString()));
-                                        }
+                                        //}
                                     }
                                 }
                                 else
