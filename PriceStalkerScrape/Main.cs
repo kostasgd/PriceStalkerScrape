@@ -10,11 +10,14 @@ using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Data.Entity.Validation;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,7 +39,43 @@ namespace PriceStalkerScrape
             log4net.Config.XmlConfigurator.Configure();
             LoadData();
             FillDatagridStats();
+            DownloadZip();
         }
+        private WebClient webClient = null;
+        private void DownloadZip()
+        {
+            WebClient webClient = new WebClient();
+            webClient.Headers.Add("Accept: text/html, application/xhtml+xml, */*");
+            webClient.Headers.Add("User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
+            webClient.DownloadFile(new Uri("https://chromedriver.storage.googleapis.com/107.0.5304.62/chromedriver_win32.zip"), "driverZipped.zip");
+            UnzipFile();
+        }
+        private void UnzipFile()
+        {
+            if (File.Exists(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\chromedriver.exe"))
+            {
+                File.Delete(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\chromedriver.exe");
+                if (File.Exists(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe"))
+                    File.Delete(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe");
+                ZipFile.ExtractToDirectory(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\test1.zip"
+                , @"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted");
+                MoveDriver();
+            }
+            
+        }
+        private void MoveDriver()
+        {
+            if (File.Exists(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe")) {
+                File.Move(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe"
+                    , @"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\chromedriver.exe");
+            }
+        }
+        private void Completed(object sender, AsyncCompletedEventArgs e)
+        {
+            webClient = null;
+            MessageBox.Show("Download completed!");
+        }
+
         public void FillDatagridStats()
         {
             try
@@ -212,6 +251,7 @@ namespace PriceStalkerScrape
             LoadData();
             FillDatagridStats();
         }
+        
 
         private void dgvProducts_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
