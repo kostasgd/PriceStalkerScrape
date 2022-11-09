@@ -7,12 +7,14 @@ using Microsoft.Toolkit.Uwp.Notifications;
 using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
+using OpenQA.Selenium.Edge;
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -37,45 +39,81 @@ namespace PriceStalkerScrape
         {
             InitializeComponent();
             log4net.Config.XmlConfigurator.Configure();
-            LoadData();
-            FillDatagridStats();
-            DownloadZip();
+            //LoadData();
+            //FillDatagridStats();
+            //DownloadZip();
         }
-        private WebClient webClient = null;
         private void DownloadZip()
         {
             WebClient webClient = new WebClient();
             webClient.Headers.Add("Accept: text/html, application/xhtml+xml, */*");
             webClient.Headers.Add("User-Agent: Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.1; WOW64; Trident/5.0)");
-            webClient.DownloadFile(new Uri("https://chromedriver.storage.googleapis.com/107.0.5304.62/chromedriver_win32.zip"), "driverZipped.zip");
+            webClient.DownloadFile(new Uri(GetLatestLinkVersion()), "driverZipped.zip");
             UnzipFile();
         }
         private void UnzipFile()
         {
-            if (File.Exists(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\chromedriver.exe"))
+            if (File.Exists(Directory.GetCurrentDirectory()+@"\chromedriver.exe"))
             {
-                File.Delete(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\chromedriver.exe");
-                if (File.Exists(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe"))
-                    File.Delete(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe");
-                ZipFile.ExtractToDirectory(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\test1.zip"
-                , @"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted");
+                File.Delete(Directory.GetCurrentDirectory()+@"\chromedriver.exe");
+                if (File.Exists(Directory.GetCurrentDirectory()+@"\extracted\chromedriver.exe"))
+                    File.Delete(Directory.GetCurrentDirectory() + @"\extracted\chromedriver.exe");
+                ZipFile.ExtractToDirectory(Directory.GetCurrentDirectory()+ @"\driverZipped.zip"
+                , Directory.GetCurrentDirectory() + @"\extracted");
                 MoveDriver();
             }
-            
         }
         private void MoveDriver()
         {
-            if (File.Exists(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe")) {
-                File.Move(@"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\extracted\chromedriver.exe"
-                    , @"C:\Users\Konstantinos\Source\Repos\PriceStalkerScrape\PriceStalkerScrape\bin\Debug\chromedriver.exe");
+            if (File.Exists(Directory.GetCurrentDirectory() + @"\extracted\chromedriver.exe")) {
+                File.Move(Directory.GetCurrentDirectory() + @"\extracted\chromedriver.exe"
+                    , Directory.GetCurrentDirectory() + @"\chromedriver.exe");
             }
         }
-        private void Completed(object sender, AsyncCompletedEventArgs e)
+        private string GetLatestLinkVersion()
         {
-            webClient = null;
-            MessageBox.Show("Download completed!");
+            var edgeOptions = new EdgeOptions();
+            edgeOptions.AddArguments(
+                "--headless"
+            );
+            var edgeDriverService = EdgeDriverService.CreateDefaultService();
+            edgeDriverService.HideCommandPromptWindow = true;
+            var driver = new EdgeDriver(edgeDriverService, edgeOptions);
+            driver.Navigate().GoToUrl("https://chromedriver.chromium.org/downloads");
+            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(60));
+            var latestLink = wait.Until(x => x.FindElements(By.XPath("//a[starts-with(text(), 'ChromeDriver ')]")));
+            string href = "";
+            string installedChromePath = GetChromeVersionFromPath();
+            foreach (var link in latestLink)
+            {
+                string hre = link.GetAttribute("href");
+                if (hre.Contains(installedChromePath))
+                {
+                    href = link.GetAttribute("href");
+                }
+            }
+            driver.Navigate().GoToUrl(href);
+            driver.Quit();
+            return CreateDownloadLink(href); 
         }
-
+        private string CreateDownloadLink(string latestVersionLink)
+        {
+            string baseLink = "https://chromedriver.storage.googleapis.com/";
+            String regex = @"[0-9]{1,}.[0-9]{1,}.[0-9]{1,}.[0-9]{1,}";
+            MatchCollection coll = Regex.Matches(latestVersionLink, regex);
+            String regResult = coll[0].Groups[0].Value;
+            string result = baseLink + regResult + "/chromedriver_win32.zip";
+            
+            return result;
+        }
+        private string GetChromeVersionFromPath()
+        {
+            string path = @"C:\Program Files\Google\Chrome\Application\chrome.exe";
+            var versionInfo = FileVersionInfo.GetVersionInfo(path);
+            int lastindex = versionInfo.FileVersion.LastIndexOf('.');
+            string result = versionInfo.FileVersion.Substring(0, lastindex - 1);
+            return result;
+        }
         public void FillDatagridStats()
         {
             try
@@ -100,12 +138,12 @@ namespace PriceStalkerScrape
             materialSkinManager.AddFormToManage(this);
             materialSkinManager.Theme = MaterialSkinManager.Themes.LIGHT;
             materialSkinManager.ColorScheme = new ColorScheme(Primary.BlueGrey600, Primary.BlueGrey900, Primary.BlueGrey700, Accent.Blue100, TextShade.WHITE);
-            dgvProducts.Columns[0].Width = 100;
-            dgvProducts.Columns[1].Width = 670;
-            dgvProducts.Columns[3].Width = 140;
-            dgvProducts.Columns[5].Width = 500;
-            dgvProductsForCheck.Columns[1].Width = 650;
-            dgvOrders.Columns[4].Width = 650;
+            //dgvProducts.Columns[0].Width = 100;
+            //dgvProducts.Columns[1].Width = 670;
+            //dgvProducts.Columns[3].Width = 140;
+            //dgvProducts.Columns[5].Width = 500;
+            //dgvProductsForCheck.Columns[1].Width = 650;
+            //dgvOrders.Columns[4].Width = 650;
         }
 
         public void RemoveOldPrices()
@@ -295,9 +333,12 @@ namespace PriceStalkerScrape
                 
                 var chromeDriverService = ChromeDriverService.CreateDefaultService();
                 chromeDriverService.HideCommandPromptWindow = true;
+                var driver = new DriverHelper.ChromeDriver();
+                var browser = driver.GetDriver();
                 try
                 {
-                    using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
+                    //using (var browser = new ChromeDriver(chromeDriverService, chromeOptions))
+                    using (browser)
                     {
                         browser.Manage().Cookies.DeleteAllCookies();
                         browser.Url = url;
@@ -307,7 +348,7 @@ namespace PriceStalkerScrape
                         var btn = wait.Until(x => x.FindElement(By.Id("accept-all")));
                         btn.Click();
                         var myElement = wait.Until(x => x.FindElements(By.XPath("//ul[contains(@class,'pros')]/li"))).ToList();
-                        var chars = wait.Until(x=> x.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']/li"))).ToList();
+                        var chars = wait.Until(x => x.FindElements(By.XPath("//ul[@class='sku-reviews-aggregation']/li"))).ToList();
                         if (myElement != null)
                         {
                             foreach (var pros in myElement.GroupBy(x => x.Text))
@@ -380,14 +421,14 @@ namespace PriceStalkerScrape
                             }
                             common = common.Remove(common.Length - 1);
                         }
-  
-                        GenerateRatingText(joinpros,rtbProsImpressions);
-                        GenerateRatingText(joinsoso,rtbSoso);
-                        GenerateRatingText(joincons,rtbCons);
+
+                        GenerateRatingText(joinpros, rtbProsImpressions);
+                        GenerateRatingText(joinsoso, rtbSoso);
+                        GenerateRatingText(joincons, rtbCons);
 
                         List<int> ListLengths = new List<int>();
-                        
-                        InsertLengths(safepros.Value,ListLengths);
+
+                        InsertLengths(safepros.Value, ListLengths);
                         InsertLengths(safesoso.Value, ListLengths);
                         InsertLengths(safecons.Value, ListLengths);
 
@@ -401,25 +442,25 @@ namespace PriceStalkerScrape
                         string rtg = "";
                         if (e.Count < 1)
                         {
-                            var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']"))).Text ?? "Title Not Found" ;
+                            var title = wait?.Until(x => x.FindElement(By.XPath("//h1[@class='page-title']"))).Text ?? "Title Not Found";
                             var prices = wait?.Until(x => x.FindElements(By.ClassName("dominant-price")))?.FirstOrDefault();
                             var defaultprices = wait?.Until(x => x.FindElements(By.XPath("//span[@class='default']/span/strong")))?.FirstOrDefault();
                             List<IWebElement> elementList = new List<IWebElement>();
                             elementList.AddRange(browser.FindElements(By.XPath("//span[@itemprop='ratingValue']")));
-                            if (elementList.Count()>0)
+                            if (elementList.Count() > 0)
                             {
                                 rtg = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text;
                             }
                             else
                             {
-                                rtg ="0";
+                                rtg = "0";
                             }
                             //var rating = wait?.Until(x => x.FindElement(By.XPath("//span[@itemprop='ratingValue']"))).Text ;
                             //https://www.skroutz.gr/s/37875447/Adidas-Adicolor-Classics-3-Stripes-%CE%91%CE%BD%CE%B4%CF%81%CE%B9%CE%BA%CF%8C-%CE%A6%CE%BF%CF%8D%CF%84%CE%B5%CF%81-Shadow-Maroon-HK7291.html?from=timeline
                             var summary = wait?.Until(x => x.FindElement(By.XPath("//div[contains(@class,'summary')]")))?.Text;
                             if (title != null && prices != null)
                             {
-                                Initialize(title.ToString(),prices.Text, rtg, summary);
+                                Initialize(title.ToString(), prices.Text, rtg, summary);
                             }
                             FillStatsChart(ListLengths, Labels);
                         }
@@ -460,7 +501,7 @@ namespace PriceStalkerScrape
         {
             try
             {
-                RemoveOldPrices();
+                //RemoveOldPrices();
                 if (txtLink.Text.StartsWith("https://www.skroutz.gr/"))
                 {
                     pictureBox1.Visible = false;
@@ -792,7 +833,7 @@ namespace PriceStalkerScrape
                             form.FindElement(By.Name("q")).SendKeys(lblProductTitle.Text);
                             form.Submit();
 
-                            Thread.Sleep(1250);
+                            Thread.Sleep(1000);
                             List<IWebElement> e = new List<IWebElement>();
                             e.AddRange(browser.FindElements(By.Id("full-price-container")));
                             if (e.Count > 0)

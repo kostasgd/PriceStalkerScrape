@@ -107,6 +107,9 @@
     <Compile Include="Data\tblProducts.cs">
       <DependentUpon>Stalker.tt</DependentUpon>
     </Compile>
+    <Compile Include="DriverHelper\AbstractDriver.cs" />
+    <Compile Include="DriverHelper\ChromeDriver.cs" />
+    <Compile Include="DriverHelper\DriverType.cs" />
     <Compile Include="Logger.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
